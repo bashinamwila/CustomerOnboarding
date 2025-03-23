@@ -1,0 +1,91 @@
+﻿@inject IJSRuntime JSRuntime
+
+<div id="mobile-menu" class="mobile-menu fixed inset-0 bg-white z-50 md:hidden h-full w-full overflow-y-auto @(_isOpen ? "open" : "")">
+    <div class="p-4">
+        <!-- Close button -->
+        <div class="flex justify-between items-center mb-6">
+            <a href="#" class="text-2xl font-bold text-blue-600">Benefito</a>
+            <button @onclick="Toggle" class="text-gray-600 hover:text-blue-600 focus:outline-none">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile navigation links -->
+        <div class="space-y-1">
+            <a href="#" class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600 rounded-md">
+                Why Benefito
+            </a>
+
+            <!-- Products Accordion -->
+            <MobileAccordion Title="Products">
+                <ChildContent>
+                    <div class="mb-4">
+                        <h4 class="text-sm font-bold text-gray-900 mb-2">Products</h4>
+                        <ul class="space-y-2 pl-2">
+                            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Payroll</a></li>
+                            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Employee Benefits</a></li>
+                            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">HR</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-900 mb-2">Features</h4>
+                        <ul class="space-y-2 pl-2">
+                            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Time and attendance</a></li>
+                            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Hiring and onboarding</a></li>
+                            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Talent Management</a></li>
+                            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Insights and Reporting</a></li>
+                            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Integrations</a></li>
+                        </ul>
+                    </div>
+                </ChildContent>
+            </MobileAccordion>
+
+            <!-- Solutions Accordion -->
+            <MobileAccordion Title="Solutions">
+                <ChildContent>
+                    <div class="mb-4">
+                        <h4 class="text-sm font-bold text-gray-900 mb-2">Business Size</h4>
+                        <ul class="space-y-2 pl-2">
+                            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">One employee</a></li>
+                            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Small Business</a></li>
+                            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Mid-size Business</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-900 mb-2">Business Type</h4>
+                        <ul class="space-y-2 pl-2">
+                            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">New Business and startups</a></li>
+                            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Switching Providers</a></li>
+                        </ul>
+                    </div>
+                </ChildContent>
+            </MobileAccordion>
+
+            <a href="#" class="block px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600 rounded-md">
+                Pricing
+            </a>
+
+            <!-- Action buttons -->
+            <div class="pt-4 space-y-3">
+                <a href="#" class="block text-center px-4 py-2 text-base font-medium text-blue-600 border border-blue-600 rounded-md hover:bg-blue-50">
+                    Sign In
+                </a>
+                <a href="#" class="block text-center px-4 py-2 text-base font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700">
+                    Create Account
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool _isOpen = false;
+
+    public void Toggle()
+    {
+        _isOpen = !_isOpen;
+        StateHasChanged();
+    }
+}

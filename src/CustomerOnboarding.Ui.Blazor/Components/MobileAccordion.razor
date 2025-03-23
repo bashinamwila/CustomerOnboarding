@@ -1,0 +1,26 @@
+﻿<div class="mobile-accordion">
+    <button @onclick="ToggleAccordion" class="mobile-accordion-button flex items-center justify-between w-full px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-blue-600 rounded-md">
+        @Title
+        <svg class="h-5 w-5 transform transition-transform @(_isOpen ? "rotate-180" : "")" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+    </button>
+    <div class="mobile-accordion-content @(_isOpen ? "" : "hidden") px-4 pt-2 pb-4">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Title { get; set; } = string.Empty;
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; } = default!;
+
+    private bool _isOpen = false;
+
+    private void ToggleAccordion()
+    {
+        _isOpen = !_isOpen;
+    }
+}
