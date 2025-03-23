@@ -1,30 +1,117 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">CustomerOnboarding.Ui.Blazor</a>
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+
+<nav class="bg-white shadow-md fixed w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <!-- Logo and desktop navigation -->
+            <div class="flex items-center">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="#" class="text-2xl font-bold text-blue-600">Benefito</a>
+                </div>
+
+                <!-- Desktop Navigation Menu -->
+                <div class="hidden md:ml-6 md:flex md:space-x-6">
+                    <!-- Why Benefito -->
+                    <a href="#" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+                        Why Benefito
+                    </a>
+
+                    <!-- Products Dropdown -->
+                    <div class="relative">
+                        <button @onclick="ToggleProductsMenu" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium inline-flex items-center">
+                            Products
+                            <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Products Mega Menu -->
+                        @if (showProductsMenu)
+                        {
+                            <ProductsMegaMenu OnClickOutside="() => showProductsMenu = false" />
+                        }
+                    </div>
+
+                    <!-- Solutions Dropdown -->
+                    <div class="relative">
+                        <button @onclick="ToggleSolutionsMenu" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium inline-flex items-center">
+                            Solutions
+                            <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+
+                        <!-- Solutions Mega Menu -->
+                        @if (showSolutionsMenu)
+                        {
+                            <SolutionsMegaMenu OnClickOutside="() => showSolutionsMenu = false" />
+                        }
+                    </div>
+
+                    <!-- Pricing -->
+                    <a href="#" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">
+                        Pricing
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right Side - Buttons -->
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="#" class="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">Sign In</a>
+                <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition duration-150">Create Account</a>
+            </div>
+
+            <!-- Mobile menu button -->
+            <div class="md:hidden flex items-center">
+                <button @onclick="ToggleMobileMenu" class="text-gray-600 hover:text-blue-600 focus:outline-none">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
     </div>
-</div>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+    <!-- Mobile menu -->
+    <MobileMenu @ref="mobileMenuComponent" />
+</nav>
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
+@code {
+    private MobileMenu mobileMenuComponent=default!;
+    private bool showProductsMenu = false;
+    private bool showSolutionsMenu = false;
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
+    private void ToggleMobileMenu()
+    {
+        mobileMenuComponent.Toggle();
+    }
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-    </nav>
-</div>
+    private void ToggleProductsMenu()
+    {
+        showProductsMenu = !showProductsMenu;
+        if (showProductsMenu)
+        {
+            showSolutionsMenu = false;
+        }
+    }
+
+    private void ToggleSolutionsMenu()
+    {
+        showSolutionsMenu = !showSolutionsMenu;
+        if (showSolutionsMenu)
+        {
+            showProductsMenu = false;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("import", "./js/navMenu.js");
+        }
+    }
+}
 

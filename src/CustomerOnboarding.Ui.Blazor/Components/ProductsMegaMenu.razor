@@ -1,0 +1,43 @@
+﻿@inject IJSRuntime JSRuntime
+
+<div class="mega-menu absolute left-0 mt-2 w-screen max-w-md bg-white shadow-lg rounded-lg p-6 grid grid-cols-2 gap-4 animate-fadeIn" @ref="menuElement">
+    <div>
+        <h3 class="text-sm font-bold text-gray-900 mb-3">Products</h3>
+        <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Payroll</a></li>
+            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Employee Benefits</a></li>
+            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">HR</a></li>
+        </ul>
+    </div>
+    <div>
+        <h3 class="text-sm font-bold text-gray-900 mb-3">Features</h3>
+        <ul class="space-y-2">
+            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Time and attendance</a></li>
+            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Hiring and onboarding</a></li>
+            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Talent Management</a></li>
+            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Insights and Reporting</a></li>
+            <li><a href="#" class="text-sm text-gray-700 hover:text-blue-600">Integrations</a></li>
+        </ul>
+    </div>
+</div>
+
+@code {
+    private ElementReference menuElement;
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClickOutside { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("setupClickOutside", menuElement, DotNetObjectReference.Create(this));
+        }
+    }
+
+    [JSInvokable]
+    public async Task HandleClickOutside()
+    {
+        await OnClickOutside.InvokeAsync();
+    }
+}
