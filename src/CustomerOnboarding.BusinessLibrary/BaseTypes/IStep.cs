@@ -9,6 +9,7 @@ namespace CustomerOnboarding.BusinessLibrary.BaseTypes
 {
     public interface IStep :IBusinessBase
     {
+        public int Id { get; }
         public string Name { get; }
         public StepType Type { get; }
         public int StepIndex { get; }

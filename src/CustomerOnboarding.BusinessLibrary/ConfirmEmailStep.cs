@@ -11,10 +11,9 @@ using System.Threading.Tasks;
 namespace CustomerOnboarding.BusinessLibrary
 {
     [Serializable]
-    public class SendEmailNotificationStep :
-        StepBase<SendEmailNotificationStep>
+    public class ConfirmEmailStep :
+        StepBase<ConfirmEmailStep>
     {
-
         public static readonly PropertyInfo<byte[]> TimeStampProperty =
            RegisterProperty<byte[]>(nameof(TimeStamp));
         [Browsable(false)]
@@ -23,18 +22,6 @@ namespace CustomerOnboarding.BusinessLibrary
         {
             get => GetProperty(TimeStampProperty);
             set => SetProperty(TimeStampProperty, value);
-        }
-
-        public override async Task ExecuteAsync()
-        {
-            var steps = (Steps)Parent;
-            Console.WriteLine($"Email sent to {((CreateAccountStep)steps[0]).WorkEmail}");
-            var portal = ApplicationContext.GetRequiredService<IDataPortal<SendEmailNotificationStepUpdater>>();
-            var parent = (CustomerOnboardingOrchestrator)Parent.Parent;
-            IsCompleted = true;
-            var updater = await portal.CreateAsync(parent.TenantId,this);
-            updater = await portal.ExecuteAsync(updater);
-            
         }
 
         [CreateChild]
@@ -46,15 +33,10 @@ namespace CustomerOnboarding.BusinessLibrary
                 Id = data.Id;
                 Name = data.Name;
                 Type = (StepType)Enum.Parse(typeof(StepType), data.Type.ToString());
-                StepIndex = 1;
+                StepIndex = 2;
                 IsCompleted = false;
 
             }
         }
-
-        [InsertChild]
-        private void Insert() { }
-        [UpdateChild]
-        private void Update() { }
     }
 }

@@ -10,4 +10,8 @@
     <PackageReference Include="Csla" Version="9.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\CustomerOnboarding.Dal\CustomerOnboarding.Dal.csproj" />
+  </ItemGroup>
+
 </Project>

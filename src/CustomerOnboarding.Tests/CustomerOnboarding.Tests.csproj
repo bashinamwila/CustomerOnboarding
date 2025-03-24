@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CustomerOnboarding.BusinessLibrary\CustomerOnboarding.BusinessLibrary.csproj" />
+    <ProjectReference Include="..\CustomerOnboardingDalMock\CustomerOnboarding.DalMock.csproj" />
   </ItemGroup>
 
   <ItemGroup>

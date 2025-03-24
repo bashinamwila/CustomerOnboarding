@@ -1,4 +1,5 @@
 ﻿using Csla;
+using CustomerOnboarding.Dal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,14 @@ namespace CustomerOnboarding.BusinessLibrary.BaseTypes
         where T : StepBase<T>
 
     {
+
+        public static readonly PropertyInfo<int> IdProperty =
+            RegisterProperty<int>(nameof(Id));
+        public int Id
+        {
+            get => GetProperty(IdProperty);
+            protected set => LoadProperty(IdProperty, value);
+        }
         public static readonly PropertyInfo<string> NameProperty =
             RegisterProperty<string>(nameof(Name));
         public string Name
@@ -48,5 +57,7 @@ namespace CustomerOnboarding.BusinessLibrary.BaseTypes
         {
             throw new NotImplementedException();
         }
+
+        
     }
 }

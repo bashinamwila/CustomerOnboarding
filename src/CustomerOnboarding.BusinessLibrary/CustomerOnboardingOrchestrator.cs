@@ -2,6 +2,9 @@
 using Csla.Core;
 using CustomerOnboarding.BusinessLibrary.BaseTypes;
 using CustomerOnboarding.BusinessLibrary.Rules;
+using CustomerOnboarding.Dal;
+using CustomerOnboarding.Dal.Dtos;
+using System.ComponentModel;
 
 
 namespace CustomerOnboarding.BusinessLibrary
@@ -43,6 +46,23 @@ namespace CustomerOnboarding.BusinessLibrary
             set => SetProperty(CurrentStepIndexProperty, value);
         }
 
+        public static readonly PropertyInfo<byte[]> TimeStampProperty =
+            RegisterProperty<byte[]>(nameof(TimeStamp));
+        [Browsable(false)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public byte[] TimeStamp
+        {
+            get => GetProperty(TimeStampProperty);
+            set => SetProperty(TimeStampProperty, value);
+        }
+
+        private async Task ExecuteAsync()
+        {
+            var portal=ApplicationContext.GetRequiredService<IDataPortal<CustomerOnboardingOrchestratorUpdater>>();
+            var updater = await portal.CreateAsync(this);
+            updater = await portal.ExecuteAsync(updater);
+        }
+
         public async Task MoveNextAsync()
         {
             if (CurrentStepIndex >= Steps.Count) return;
@@ -57,6 +77,7 @@ namespace CustomerOnboarding.BusinessLibrary
             if (step.IsCompleted || step.Type == StepType.Manual)
             {
                 CurrentStepIndex++;
+                await ExecuteAsync();
             }
         }
 
@@ -92,12 +113,68 @@ namespace CustomerOnboarding.BusinessLibrary
                 TenantId = Guid.NewGuid().ToString();
                 IsComplete = false;
                 Steps = await portal.GetPortal<Steps>().CreateChildAsync();
-                var createAccountStep=await portal.GetPortal<CreateAccountStep>().CreateChildAsync();
-                var sendEmailNotificationStep = await portal.GetPortal<SendEmailNotificationStep>().CreateChildAsync();
-                Steps.AddRange(new IStep[] { createAccountStep, sendEmailNotificationStep });
+                var createAccountStep=await portal.GetPortal<CreateAccountStep>().CreateChildAsync(1);
+                var sendEmailNotificationStep = await portal.GetPortal<SendEmailNotificationStep>().CreateChildAsync(2);
+                var confirmEmailStep=await portal.GetPortal<ConfirmEmailStep>().CreateChildAsync(3);
+                Steps.AddRange(new IStep[] { createAccountStep, sendEmailNotificationStep,confirmEmailStep });
 
             }
             await BusinessRules.CheckRulesAsync();
         }
+
+        [Insert]
+        private async Task InsertAsync([Inject]ICustomerOnboardingOrchestratorDal dal,
+            [Inject] IChildDataPortal<Steps> portal)
+        {
+            using (BypassPropertyChecks)
+            {
+                var data = new CustomerOnboardingOrchestratorDto
+                {
+                    TenantId=this.TenantId,
+                    CurrentStepIndex=this.CurrentStepIndex,
+
+                };
+                await dal.InsertAsync(data);
+                TimeStamp = data.LastChanged;
+                await portal.UpdateChildAsync(Steps,this);
+            }
+        }
+
+        [Update]
+        private async Task UpdateAsync([Inject] ICustomerOnboardingOrchestratorDal dal,
+            [Inject] IChildDataPortal<Steps> portal)
+        {
+            using (BypassPropertyChecks)
+            {
+                var data = new CustomerOnboardingOrchestratorDto
+                {
+                    TenantId = this.TenantId,
+                    CurrentStepIndex = this.CurrentStepIndex,
+                    LastChanged=this.TimeStamp
+
+                };
+                await dal.UpdateAsync(data);
+                TimeStamp = data.LastChanged;
+                await portal.UpdateChildAsync(Steps, this);
+            }
+        }
+
+        [Fetch]
+        private async Task FetchAsync(string tenantId, [Inject] ICustomerOnboardingOrchestratorDal dal,
+            [Inject] IChildDataPortal<Steps> portal)
+        {
+            using (BypassPropertyChecks)
+            {
+                var data = await dal.FetchAsync(tenantId);
+                
+                TenantId = data.TenantId;
+                CurrentStepIndex = data.CurrentStepIndex;
+                TimeStamp = data.LastChanged;
+                Steps=  await portal.FetchChildAsync(TenantId);
+                
+            }
+            await BusinessRules.CheckRulesAsync();
+        }
+
     }
 }

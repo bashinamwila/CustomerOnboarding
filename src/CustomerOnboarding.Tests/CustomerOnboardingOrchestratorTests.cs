@@ -16,7 +16,7 @@ public class CustomerOnboardingOrchestratorTests : IClassFixture<CslaTestFixture
         _serviceProvider = fixture.Services;
     }
     [Fact]
-    public async Task CreateAsync_InitializesWithTwoSteps()
+    public async Task CreateAsync_InitializesWithThreeSteps()
     {
         // Arrange
         var factory = _serviceProvider.GetRequiredService<IDataPortalFactory>();
@@ -29,9 +29,11 @@ public class CustomerOnboardingOrchestratorTests : IClassFixture<CslaTestFixture
         Assert.NotNull(orchestrator);
         Assert.False(string.IsNullOrWhiteSpace(orchestrator.TenantId));
         Assert.False(orchestrator.IsComplete);
-        Assert.Equal(2, orchestrator.Steps.Count);
+        Assert.Equal(3, orchestrator.Steps.Count);
         Assert.Contains(orchestrator.Steps, s => s.Name == "Create Account");
         Assert.Contains(orchestrator.Steps, s => s.Name == "Send Email Notification");
+        Assert.Contains(orchestrator.Steps, s => s.Name == "Confirm Email");
+
     }
 
     [Fact]
