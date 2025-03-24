@@ -40,10 +40,10 @@ namespace CustomerOnboarding.BusinessLibrary
 
         public static readonly PropertyInfo<int>CurrentStepIndexProperty=
             RegisterProperty<int>(nameof(CurrentStepIndex));
-        private int CurrentStepIndex
+        public int CurrentStepIndex
         {
             get => GetProperty(CurrentStepIndexProperty);
-            set => SetProperty(CurrentStepIndexProperty, value);
+            private set => SetProperty(CurrentStepIndexProperty, value);
         }
 
         public static readonly PropertyInfo<byte[]> TimeStampProperty =
@@ -56,30 +56,48 @@ namespace CustomerOnboarding.BusinessLibrary
             set => SetProperty(TimeStampProperty, value);
         }
 
-        private async Task ExecuteAsync()
-        {
-            var portal=ApplicationContext.GetRequiredService<IDataPortal<CustomerOnboardingOrchestratorUpdater>>();
-            var updater = await portal.CreateAsync(this);
-            updater = await portal.ExecuteAsync(updater);
-        }
+        
 
         public async Task MoveNextAsync()
         {
-            if (CurrentStepIndex >= Steps.Count) return;
-
-            var step = Steps[CurrentStepIndex];
-
-            if (step.Type == StepType.Automatic && !step.IsCompleted)
+            while (CurrentStepIndex < Steps.Count)
             {
-                await step.ExecuteAsync();
-            }
+                var step = Steps[CurrentStepIndex];
 
-            if (step.IsCompleted || step.Type == StepType.Manual)
-            {
-                CurrentStepIndex++;
-                await ExecuteAsync();
+                if (!step.IsCompleted && step.Type == StepType.Automatic)
+                {
+                    await step.ExecuteAsync();
+                    CurrentStepIndex++;
+
+                    var portal = ApplicationContext.GetRequiredService<IDataPortal<CustomerOnboardingOrchestratorCurrentStepUpdater>>();
+                    var cmd = await portal.CreateAsync(TenantId, CurrentStepIndex, TimeStamp);
+                    cmd = await portal.ExecuteAsync(cmd);
+                }
+                else if (step.Type == StepType.Manual)
+                {
+                    if (step.IsCompleted)
+                    {
+                        CurrentStepIndex++;
+                        var portal = ApplicationContext.GetRequiredService<IDataPortal<CustomerOnboardingOrchestratorUpdater>>();
+                        var updater = await portal.CreateAsync(this);
+                        updater = await portal.ExecuteAsync(updater);
+                        TimeStamp = updater.CustomerOnboardingOrchestrator.TimeStamp;
+                    }
+                    else
+                    {
+                        break; // wait for user to manually complete this step
+                    }
+                       
+                }
+                else
+                {
+                    break; // unexpected state
+                }
             }
         }
+
+
+       
 
         public IStep GoTo(int stepIndex)
         {
@@ -88,6 +106,9 @@ namespace CustomerOnboarding.BusinessLibrary
 
             return Steps[stepIndex];
         }
+
+       
+
 
         protected override void AddBusinessRules()
         {
@@ -134,7 +155,7 @@ namespace CustomerOnboarding.BusinessLibrary
                     CurrentStepIndex=this.CurrentStepIndex,
 
                 };
-                await dal.InsertAsync(data);
+                 dal.Insert(data);
                 TimeStamp = data.LastChanged;
                 await portal.UpdateChildAsync(Steps,this);
             }
@@ -153,7 +174,7 @@ namespace CustomerOnboarding.BusinessLibrary
                     LastChanged=this.TimeStamp
 
                 };
-                await dal.UpdateAsync(data);
+                dal.Update(data);
                 TimeStamp = data.LastChanged;
                 await portal.UpdateChildAsync(Steps, this);
             }
@@ -165,7 +186,7 @@ namespace CustomerOnboarding.BusinessLibrary
         {
             using (BypassPropertyChecks)
             {
-                var data = await dal.FetchAsync(tenantId);
+                var data = dal.Fetch(tenantId);
                 
                 TenantId = data.TenantId;
                 CurrentStepIndex = data.CurrentStepIndex;

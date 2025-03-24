@@ -37,67 +37,119 @@ public class CustomerOnboardingOrchestratorTests : IClassFixture<CslaTestFixture
     }
 
     [Fact]
-    public async Task GoTo_WithValidIndex_ReturnsCorrectStep()
+    public async Task CreateAccountStep_IsFirstStepInOrchestrator()
     {
-        var portal = _serviceProvider.GetRequiredService<IDataPortalFactory>()
-                      .GetPortal<CustomerOnboardingOrchestrator>();
+        // Arrange
+        var factory = _serviceProvider.GetRequiredService<IDataPortalFactory>();
+        var portal = factory.GetPortal<CustomerOnboardingOrchestrator>();
+
+        // Act
         var orchestrator = await portal.CreateAsync();
+        var createAccountStep = orchestrator.Steps.FirstOrDefault(s => s.Name == "Create Account");
 
-        var step = orchestrator.GoTo(0);
+        // Assert
+        Assert.NotNull(createAccountStep);
+        Assert.Equal(0, orchestrator.Steps.IndexOf(createAccountStep));
+        Assert.False(createAccountStep.IsCompleted);
+    }
 
+    [Fact]
+    public async Task Orchestrator_Initializes_CreateAccountStep_WithExpectedDefaults()
+    {
+        // Arrange
+        var factory = _serviceProvider.GetRequiredService<IDataPortalFactory>();
+        var portal = factory.GetPortal<CustomerOnboardingOrchestrator>();
+
+        // Act
+        var orchestrator = await portal.CreateAsync();
+        var step = (CreateAccountStep)orchestrator.Steps[0];
+
+        // Assert
+        Assert.NotNull(step);
+        Assert.Equal(0, step.StepIndex);
+        Assert.False(step.IsCompleted);
         Assert.Equal("Create Account", step.Name);
+        Assert.Equal(StepType.Manual, step.Type);
     }
 
     [Fact]
-    public async Task MoveNextAsync_ExecutesAutomaticStepAndIncrementsIndex()
+    public async Task CreateAccountStep_IsCompleted_ShouldBeTrue_WhenAllRequiredFieldsAreSet()
     {
-        var portal = _serviceProvider.GetRequiredService<IDataPortalFactory>()
-                      .GetPortal<CustomerOnboardingOrchestrator>();
+        // Arrange
+        var factory = _serviceProvider.GetRequiredService<IDataPortalFactory>();
+        var portal = factory.GetPortal<CustomerOnboardingOrchestrator>();
         var orchestrator = await portal.CreateAsync();
+        var step = (CreateAccountStep)orchestrator.Steps[0];
 
-        // Simulate completing first manual step to move to the automatic step
-        orchestrator.GoTo(0).GetType().GetProperty("IsCompleted")?.SetValue(orchestrator.GoTo(0), true);
+        step.FirstName = "John";
+        step.LastName = "Doe";
+        step.OrganisationName = "Acme Inc";
+        step.WorkEmail = "john.doe@example.com";
+        step.OrganisationPhone = "123456789";
+        step.Password = "P@ssw0rd";
+        step.Password2 = "P@ssw0rd";
+        step.NumberOfEmployees = 10;
 
-        await orchestrator.MoveNextAsync(); // Should trigger automatic step
+        // Act
+        var isValid = step.IsCompleted;
 
-        Assert.True(orchestrator.GoTo(1).IsCompleted || orchestrator.Steps.Count > 1);
+        // Assert
+        Assert.True(isValid);
     }
 
     [Fact]
-    public async Task IsComplete_ShouldBeTrue_WhenAllStepsCompleted()
+    public async Task CreateAccountStep_ShouldHaveBrokenRule_WhenPasswordsDoNotMatch()
     {
-        var portal = _serviceProvider.GetRequiredService<IDataPortalFactory>()
-                      .GetPortal<CustomerOnboardingOrchestrator>();
+        // Arrange
+        var factory = _serviceProvider.GetRequiredService<IDataPortalFactory>();
+        var portal = factory.GetPortal<CustomerOnboardingOrchestrator>();
         var orchestrator = await portal.CreateAsync();
+        var step = (CreateAccountStep)orchestrator.Steps[0];
 
-        foreach (var step in orchestrator.Steps)
-        {
-            step.GetType().GetProperty("IsCompleted")?.SetValue(step, true);
-        }
+        // Act
+        step.Password = "pass123";
+        step.Password2 = "diffpass";
 
-      //  await orchestrator.BusinessRules.CheckRulesAsync();
-
-        Assert.True(orchestrator.IsComplete);
+        // Assert
+        var brokenRules = step.BrokenRulesCollection;
+        Assert.Contains(brokenRules, r => r.Description.Contains("Passwords do not match"));
     }
 
     [Fact]
-    public async Task MoveNextAsync_DoesNothing_WhenAllStepsAreDone()
+    public async Task MoveNextAsync_AutomaticStep_CompletesStep_AndAdvancesIndex()
     {
-        var portal = _serviceProvider.GetRequiredService<IDataPortalFactory>()
-                      .GetPortal<CustomerOnboardingOrchestrator>();
+        // Arrange
+        var factory = _serviceProvider.GetRequiredService<IDataPortalFactory>();
+        var portal = factory.GetPortal<CustomerOnboardingOrchestrator>();
         var orchestrator = await portal.CreateAsync();
 
-        // Force index beyond last step
-        typeof(CustomerOnboardingOrchestrator)
-            .GetProperty("CurrentStepIndex", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!
-            .SetValue(orchestrator, orchestrator.Steps.Count);
+        // Populate CreateAccountStep (first step)
+        var step = orchestrator.Steps[0] as CreateAccountStep;
+        Assert.NotNull(step);
 
+        step.FirstName = "John";
+        step.LastName = "Doe";
+        step.OrganisationName = "Acme Corp";
+        step.WorkEmail = "john.doe@acme.com";
+        step.OrganisationPhone = "123456789";
+        step.Password = "Secure123!";
+        step.Password2 = "Secure123!";
+        step.NumberOfEmployees = 10;
+
+        // Check rules to ensure IsCompleted is updated
+        
+
+        // Act
         await orchestrator.MoveNextAsync();
 
-        // Still within bounds, no crash
-        Assert.True(true);
-    }
+       // await Task.Delay(500);
 
+        orchestrator =await portal.FetchAsync(orchestrator.TenantId);
+
+        // Assert
+
+        Assert.Equal(2,orchestrator.CurrentStepIndex);
+    }
 
 
 }

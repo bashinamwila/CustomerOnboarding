@@ -35,7 +35,7 @@ namespace CustomerOnboarding.BusinessLibrary
         }
 
         [Fetch]
-        private async Task FetchAsync(string tenantId,int id,
+        private async Task Fetch(string tenantId,int id,
             [Inject] IDataPortalFactory portal,
             [Inject] ApplicationContext appCtx)
         {
@@ -43,7 +43,7 @@ namespace CustomerOnboarding.BusinessLibrary
             var type = Type.GetType(info.FullTypeName);
             var dpType = typeof(IChildDataPortal<>).MakeGenericType(type!);
             var dp = (IChildDataPortal)appCtx.GetRequiredService(dpType);
-            Result = (IStep)await dp.FetchChildAsync(tenantId,id);
+            Result = (IStep)dp.FetchChild(tenantId,id);
         }
 
     }

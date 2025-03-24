@@ -30,25 +30,23 @@ namespace CustomerOnboarding.BusinessLibrary
         }
 
         [Create]
-        private async Task CreateAsync(string tenantId, SendEmailNotificationStep step)
+        private void Create(string tenantId, SendEmailNotificationStep step)
         {
             TenantId = tenantId;
             Step = step;
-            await Task.CompletedTask;
+            
         }
 
         [Execute]
-        private async Task ExecuteAsync([Inject]ISendEmailNotificationStepDal dal)
+        private void Execute([Inject]ISendEmailNotificationStepDal dal)
         {
             var data = new SendEmailNotificationStepDto
             {
                 TenantId = TenantId,
-                StepIndex = Step.StepIndex,
-                Name = Step.Name,
-                Type = (int)Step.Type,
+                Id = Step.Id,
                 IsCompleted = Step.IsCompleted
             };
-            await dal.InsertAsync(data);
+             dal.Insert(data);
         }
        
     }

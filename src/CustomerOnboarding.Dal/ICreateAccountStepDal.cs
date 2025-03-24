@@ -9,7 +9,8 @@ namespace CustomerOnboarding.Dal
 {
     public interface ICreateAccountStepDal
     {
-        public Task InsertAsync(CreateAccountStepDto data);
-        public Task UpdateAsync(CreateAccountStepDto data);
+        public void Insert(CreateAccountStepDto data);
+        public void Update(CreateAccountStepDto data);
+        public CreateAccountStepDto Fetch(string tenantId, int id);
     }
 }

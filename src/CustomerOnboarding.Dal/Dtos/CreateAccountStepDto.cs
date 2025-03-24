@@ -8,7 +8,7 @@ namespace CustomerOnboarding.Dal.Dtos
 {
     public class CreateAccountStepDto
     {
-        public int StepIndex { get; set; }
+        public int StepId { get; set; }
         public string TenantId { get; set; } = string.Empty;
         public string WorkEmail { get; set; } = string.Empty;
         public string OrganisationPhone { get; set; } = string.Empty;
@@ -17,8 +17,9 @@ namespace CustomerOnboarding.Dal.Dtos
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
         public byte[] LastChanged { get; set; } = default!;
-        public string Name { get; set;} = string.Empty;
+       public int NumberOfEmployees { get; set; }
+        public int StepIndex { get; set; }
+        public string Name { get; set; }= string.Empty;
         public int Type { get; set; }
-        public bool IsCompleted { get; set; }
     }
 }

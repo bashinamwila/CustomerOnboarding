@@ -53,8 +53,24 @@ namespace CustomerOnboarding.BusinessLibrary
         }
 
         [InsertChild]
-        private void Insert() { }
+        private void Insert(CustomerOnboardingOrchestrator parent) { }
         [UpdateChild]
-        private void Update() { }
+        private void Update(CustomerOnboardingOrchestrator parent) { }
+
+        [FetchChild]
+        private void Fetch(string tenantId,int id, [Inject] ISendEmailNotificationStepDal dal)
+        {
+            using (BypassPropertyChecks)
+            {
+                var data = dal.Fetch(tenantId, id);
+                Id = data.Id;
+                StepIndex = data.StepIndex;
+                Name = data.Name;
+                Type = (StepType)Enum.Parse(typeof(StepType), data.Type.ToString());
+                IsCompleted = data.IsCompleted;
+                TimeStamp = data.LastChanged;
+            }
+        }
+
     }
 }

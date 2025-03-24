@@ -13,6 +13,10 @@ namespace CustomerOnboarding.DalMock
         public static void AddDalMock(this IServiceCollection services)
         {
             services.AddTransient<IStepTypeDal, StepTypeDal>();
+            services.AddTransient<ICustomerOnboardingOrchestratorDal,CustomerOnboardingOrchestratorDal>();
+            services.AddTransient<ICreateAccountStepDal, CreateAccountStepDal>();
+            services.AddTransient<IStepDal, StepDal>();
+            services.AddTransient<ISendEmailNotificationStepDal, SendEmailNotificationStepDal>();
         }
     }
 }

@@ -21,7 +21,7 @@ namespace CustomerOnboarding.BusinessLibrary
         {
             var rlce = this.RaiseListChangedEvents;
             this.RaiseListChangedEvents = false;
-            var list= await dal.FetchAsyc(tenantId);
+            var list=  dal.Fetch(tenantId);
             foreach(var step in list)
             {
                 var factory=await portal.FetchAsync(step.TenantId, step.Id);

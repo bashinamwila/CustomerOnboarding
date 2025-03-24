@@ -37,6 +37,16 @@ namespace CustomerOnboarding.BusinessLibrary
                 IsCompleted = false;
 
             }
+
+           
+
         }
+
+        [InsertChild]
+        private void Insert(CustomerOnboardingOrchestrator parent)
+        { }
+        [UpdateChild]
+        private void Update(CustomerOnboardingOrchestrator parent)
+        { }
     }
 }

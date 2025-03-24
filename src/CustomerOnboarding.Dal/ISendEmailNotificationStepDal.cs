@@ -9,6 +9,8 @@ namespace CustomerOnboarding.Dal
 {
     public interface ISendEmailNotificationStepDal
     {
-        public Task InsertAsync(SendEmailNotificationStepDto data);
+        public void Insert(SendEmailNotificationStepDto data);
+        public SendEmailNotificationStepDto Fetch(string tenantId, int id);
+
     }
 }

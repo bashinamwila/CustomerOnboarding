@@ -9,6 +9,6 @@ namespace CustomerOnboarding.Dal
 {
     public interface IStepDal
     {
-        public Task<List<StepDto>> FetchAsyc(string tenantId);
+        public List<StepDto> Fetch(string tenantId);
     }
 }

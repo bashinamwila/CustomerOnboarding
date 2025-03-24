@@ -9,8 +9,9 @@ namespace CustomerOnboarding.Dal
 {
     public interface ICustomerOnboardingOrchestratorDal
     {
-        public Task InsertAsync(CustomerOnboardingOrchestratorDto data);
-        public Task UpdateAsync(CustomerOnboardingOrchestratorDto data);
-        public Task<CustomerOnboardingOrchestratorDto> FetchAsync(string tenantId);
+        public void Insert(CustomerOnboardingOrchestratorDto data);
+        public void Update(CustomerOnboardingOrchestratorDto data);
+        public CustomerOnboardingOrchestratorDto Fetch(string tenantId);
+        public void UpdateCurrentStepIndex(string tenantId, int currentStepIndex, byte[] timeStamp);
     }
 }
