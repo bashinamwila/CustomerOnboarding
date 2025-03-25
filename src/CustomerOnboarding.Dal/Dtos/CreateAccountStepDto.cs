@@ -21,5 +21,6 @@ namespace CustomerOnboarding.Dal.Dtos
         public int StepIndex { get; set; }
         public string Name { get; set; }= string.Empty;
         public int Type { get; set; }
+        public string RuleSet { get; set; } = string.Empty;
     }
 }

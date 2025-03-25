@@ -19,7 +19,8 @@ namespace CustomerOnboarding.DalMock
                               Id = r.Id,
                               Name = r.Name,
                               Type = r.Type,
-                              FullTypeName = r.FullTypeName
+                              FullTypeName = r.FullTypeName,
+                              RuleSet = r.RuleSet,
                           }).FirstOrDefault();
             if (result is null)
                 throw new DataNotFoundException("StepTypeInfo");

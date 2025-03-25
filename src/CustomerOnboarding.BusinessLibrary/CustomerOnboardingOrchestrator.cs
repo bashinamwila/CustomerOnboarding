@@ -134,7 +134,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 TenantId = Guid.NewGuid().ToString();
                 IsComplete = false;
                 Steps = await portal.GetPortal<Steps>().CreateChildAsync();
-                var createAccountStep=await portal.GetPortal<CreateAccountStep>().CreateChildAsync(1);
+                var createAccountStep=await portal.GetPortal<CreateAccountStep>().CreateChildAsync(TenantId,1);
                 var sendEmailNotificationStep = await portal.GetPortal<SendEmailNotificationStep>().CreateChildAsync(2);
                 var confirmEmailStep=await portal.GetPortal<ConfirmEmailStep>().CreateChildAsync(3);
                 Steps.AddRange(new IStep[] { createAccountStep, sendEmailNotificationStep,confirmEmailStep });

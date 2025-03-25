@@ -28,7 +28,7 @@ namespace CustomerOnboarding.BusinessLibrary
         public override async Task ExecuteAsync()
         {
             var steps = (Steps)Parent;
-            Console.WriteLine($"Email sent to {((CreateAccountStep)steps[0]).WorkEmail}");
+            Console.WriteLine($"Email sent to {((CreateAccountStep)steps[0]).User.Email}");
             var portal = ApplicationContext.GetRequiredService<IDataPortal<SendEmailNotificationStepUpdater>>();
             var parent = (CustomerOnboardingOrchestrator)Parent.Parent;
             IsCompleted = true;

@@ -62,6 +62,14 @@ namespace CustomerOnboarding.BusinessLibrary.Types
             private set { LoadProperty(ComponentTypeNameProperty, value); }
         }
 
+        public static readonly PropertyInfo<string> RuleSetProperty =
+      RegisterProperty<string>(nameof(RuleSet));
+        public string RuleSet
+        {
+            get { return GetProperty(RuleSetProperty); }
+            private set { LoadProperty(RuleSetProperty, value); }
+        }
+
         protected override void AddBusinessRules()
         {
             base.AddBusinessRules();
@@ -83,7 +91,8 @@ namespace CustomerOnboarding.BusinessLibrary.Types
             var data =dal.Fetch(id);
             Id = data.Id;
             Name = data.Name;
-            Type=(StepType)Enum.Parse(typeof(StepType), data.Type.ToString());
+            RuleSet = data.RuleSet;
+            Type =(StepType)Enum.Parse(typeof(StepType), data.Type.ToString());
             FullTypeName = data.FullTypeName;
             Name = data.Name;
             ComponentTypeName = data.ComponentTypeName;

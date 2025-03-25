@@ -13,17 +13,21 @@ namespace CustomerOnboarding.DalMock
         public static List<CustomerOnboardingEntity> Customers { get; private set; } = default!;
         public static List<CreateAccountStepEntity>CreateAccounts { get; private set; }=default!;
         public static List<SendEmailNotificationStepEntity> SendEmailNotifications { get; private set; } = default!;
+        public static List<OrganisationEntity> Organisations { get; private set; } = default!;
+        public static List<UserEntity> Users { get; private set; } = default!;
         static MockDb()
         {
             Steps = new List<StepEntity>
             {
-                new StepEntity{Id=1,Name="Create Account",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.CreateAccountStep,CustomerOnboarding.BusinessLibrary",LastChanged=GetTimeStamp()},
+                new StepEntity{Id=1,Name="Create Account",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.CreateAccountStep,CustomerOnboarding.BusinessLibrary",RuleSet="Create Account",LastChanged=GetTimeStamp()},
                 new StepEntity{Id=2,Name="Send Email Notification",Type=2,FullTypeName="CustomerOnboarding.BusinessLibrary.SendEmailNotificationStep,CustomerOnboarding.BusinessLibrary",LastChanged=GetTimeStamp()},
                 new StepEntity{Id=3,Name="Confirm Email",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.ConfirmEmailStep,CustomerOnboarding.BusinessLibrary", LastChanged = GetTimeStamp()}
             };
             Customers = new List<CustomerOnboardingEntity>();
             CreateAccounts = new List<CreateAccountStepEntity>();
             SendEmailNotifications = new List<SendEmailNotificationStepEntity>();
+            Organisations =new();
+            Users = new();
         }
 
         private static long _lastTimeStamp = 1;

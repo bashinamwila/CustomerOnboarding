@@ -17,6 +17,8 @@ namespace CustomerOnboarding.DalMock
             services.AddTransient<ICreateAccountStepDal, CreateAccountStepDal>();
             services.AddTransient<IStepDal, StepDal>();
             services.AddTransient<ISendEmailNotificationStepDal, SendEmailNotificationStepDal>();
+            services.AddTransient<IOrganisationDal, OrganisationDal>();
+            services.AddTransient<IUserDal, UserDal>();
         }
     }
 }

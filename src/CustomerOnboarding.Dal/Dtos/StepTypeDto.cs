@@ -12,7 +12,9 @@ namespace CustomerOnboarding.Dal.Dtos
         public string Name { get; set; } = string.Empty;
         public int Type { get; set; }
         public string FullTypeName { get; set;} = string.Empty;
-         
+
+        public string RuleSet { get; set; } = string.Empty;
+
         public string ComponentTypeName { get; set; } = string.Empty;
     }
 }

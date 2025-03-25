@@ -70,6 +70,7 @@ public class CustomerOnboardingOrchestratorTests : IClassFixture<CslaTestFixture
         Assert.False(step.IsCompleted);
         Assert.Equal("Create Account", step.Name);
         Assert.Equal(StepType.Manual, step.Type);
+        Assert.Equal("Create Account", step.RuleSet);
     }
 
     [Fact]
@@ -81,14 +82,15 @@ public class CustomerOnboardingOrchestratorTests : IClassFixture<CslaTestFixture
         var orchestrator = await portal.CreateAsync();
         var step = (CreateAccountStep)orchestrator.Steps[0];
 
-        step.FirstName = "John";
-        step.LastName = "Doe";
-        step.OrganisationName = "Acme Inc";
-        step.WorkEmail = "john.doe@example.com";
-        step.OrganisationPhone = "123456789";
-        step.Password = "P@ssw0rd";
-        step.Password2 = "P@ssw0rd";
-        step.NumberOfEmployees = 10;
+        step.User.FirstName = "John";
+        step.User.LastName = "Doe";
+        step.Organisation.Name = "Acme Inc";
+        step.User.Email = "john.doe@example.com";
+        step.User.PhoneNo = "123456789";
+        step.User.Password = "P@ssw0rd";
+        step.User.ConfirmPassword = "P@ssw0rd";
+        step.Organisation.NumberOfEmployees = 10;
+        step.Organisation.Country = 1;
 
         // Act
         var isValid = step.IsCompleted;
@@ -107,11 +109,11 @@ public class CustomerOnboardingOrchestratorTests : IClassFixture<CslaTestFixture
         var step = (CreateAccountStep)orchestrator.Steps[0];
 
         // Act
-        step.Password = "pass123";
-        step.Password2 = "diffpass";
+        step.User.Password = "pass123";
+        step.User.ConfirmPassword = "diffpass";
 
         // Assert
-        var brokenRules = step.BrokenRulesCollection;
+        var brokenRules = step.User.BrokenRulesCollection;
         Assert.Contains(brokenRules, r => r.Description.Contains("Passwords do not match"));
     }
 
@@ -127,14 +129,15 @@ public class CustomerOnboardingOrchestratorTests : IClassFixture<CslaTestFixture
         var step = orchestrator.Steps[0] as CreateAccountStep;
         Assert.NotNull(step);
 
-        step.FirstName = "John";
-        step.LastName = "Doe";
-        step.OrganisationName = "Acme Corp";
-        step.WorkEmail = "john.doe@acme.com";
-        step.OrganisationPhone = "123456789";
-        step.Password = "Secure123!";
-        step.Password2 = "Secure123!";
-        step.NumberOfEmployees = 10;
+        step.User.FirstName = "John";
+        step.User.LastName = "Doe";
+        step.Organisation.Name = "Acme Corp";
+        step.User.Email = "john.doe@acme.com";
+        step.User.PhoneNo = "123456789";
+        step.User.Password = "Secure123!";
+        step.User.ConfirmPassword = "Secure123!";
+        step.Organisation.NumberOfEmployees = 10;
+        step.Organisation.Country = 1;
 
         // Check rules to ensure IsCompleted is updated
         

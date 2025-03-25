@@ -21,16 +21,10 @@ namespace CustomerOnboarding.DalMock
                           {
                               TenantId = r.TenantId,
                               StepId = r.Id,
-                              FirstName = r.FirstName,
-                              LastName = r.LastName,
-                              OrganisationName = r.OrganisationName,
-                              WorkEmail = r.WorkEmail,
-                              OrganisationPhone = r.OrganisationPhone,
-                              Password = r.Password,
-                              NumberOfEmployees = r.NumberOfEmployees,
                               StepIndex=0,
                               Name= s.Name,
                               Type = s.Type,
+                              RuleSet=s.RuleSet,
                               LastChanged = r.LastChanged
                           }).FirstOrDefault();
             if (result is null)
@@ -45,13 +39,6 @@ namespace CustomerOnboarding.DalMock
             {
                 TenantId = data.TenantId,
                 Id = data.StepId,
-                FirstName = data.FirstName,
-                LastName = data.LastName,
-                OrganisationName = data.OrganisationName,
-                WorkEmail = data.WorkEmail,
-                OrganisationPhone = data.OrganisationPhone,
-                Password = data.Password,
-                NumberOfEmployees = data.NumberOfEmployees,
                 LastChanged = data.LastChanged
             };
             MockDb.CreateAccounts.Add(newItem);
