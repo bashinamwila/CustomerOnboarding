@@ -121,7 +121,7 @@ namespace CustomerOnboarding.BusinessLibrary
         }
 
         [InsertChild]
-        private void Insert(CustomerOnboardingOrchestrator parent,
+        private void Insert(UserOnboardingOrchestrator parent,
             [Inject]IUserDal dal)
         {
             var data = new UserDto
@@ -139,7 +139,7 @@ namespace CustomerOnboarding.BusinessLibrary
         }
 
         [UpdateChild]
-        private void Update(CustomerOnboardingOrchestrator parent,
+        private void Update(UserOnboardingOrchestrator parent,
             [Inject] IUserDal dal)
         {
             var data = new UserDto

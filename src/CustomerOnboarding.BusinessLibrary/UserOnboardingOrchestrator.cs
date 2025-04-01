@@ -13,7 +13,7 @@ namespace CustomerOnboarding.BusinessLibrary
     /// Supports progression logic and workflow state management.
     /// </summary>
     [Serializable]
-    public class CustomerOnboardingOrchestrator : BusinessBase<CustomerOnboardingOrchestrator>
+    public class UserOnboardingOrchestrator : BusinessBase<UserOnboardingOrchestrator>
     {
         #region Properties
 
@@ -109,7 +109,7 @@ namespace CustomerOnboarding.BusinessLibrary
                     CurrentStepIndex++;        // Move to the next index
 
                     // Persist the CurrentStepIndex change using a dedicated command
-                    var portal = ApplicationContext.GetRequiredService<IDataPortal<CustomerOnboardingOrchestratorCurrentStepUpdater>>();
+                    var portal = ApplicationContext.GetRequiredService<IDataPortal<UserOnboardingOrchestratorCurrentStepUpdater>>();
                     // Create the command with necessary data (tenant ID, new index, timestamp for concurrency)
                     var cmd = await portal.CreateAsync(TenantId, CurrentStepIndex, TimeStamp);
                     // Execute the command to update the database
@@ -126,7 +126,7 @@ namespace CustomerOnboarding.BusinessLibrary
                         CurrentStepIndex++;
                         // Persist the CurrentStepIndex change and any potential changes in completed steps
                         // using a dedicated updater object.
-                        var portal = ApplicationContext.GetRequiredService<IDataPortal<CustomerOnboardingOrchestratorUpdater>>();
+                        var portal = ApplicationContext.GetRequiredService<IDataPortal<UserOnboardingOrchestratorUpdater>>();
                         var updater = await portal.CreateAsync(this); // Pass the current orchestrator instance
                         updater = await portal.ExecuteAsync(updater); // Execute the save logic within the updater
                         // Update the local timestamp from the updater result
@@ -253,13 +253,13 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [Insert]
         private async Task InsertAsync(
-            [Inject] ICustomerOnboardingOrchestratorDal dal,
+            [Inject] IUserOnboardingOrchestratorDal dal,
             [Inject] IChildDataPortal<Steps> portal)
         {
             using (BypassPropertyChecks)
             {
                 // Create the DTO for the orchestrator itself
-                var dto = new CustomerOnboardingOrchestratorDto
+                var dto = new UserOnboardingOrchestratorDto
                 {
                     TenantId = this.TenantId,
                     CurrentStepIndex = this.CurrentStepIndex
@@ -286,13 +286,13 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [Update]
         private async Task UpdateAsync(
-            [Inject] ICustomerOnboardingOrchestratorDal dal,
+            [Inject] IUserOnboardingOrchestratorDal dal,
             [Inject] IChildDataPortal<Steps> portal)
         {
             using (BypassPropertyChecks)
             {
                 // Create the DTO, including the current TimeStamp for concurrency checking
-                var dto = new CustomerOnboardingOrchestratorDto
+                var dto = new UserOnboardingOrchestratorDto
                 {
                     TenantId = this.TenantId,
                     CurrentStepIndex = this.CurrentStepIndex,
@@ -321,7 +321,7 @@ namespace CustomerOnboarding.BusinessLibrary
         [Fetch]
         private async Task FetchAsync(
             string tenantId,
-            [Inject] ICustomerOnboardingOrchestratorDal dal,
+            [Inject] IUserOnboardingOrchestratorDal dal,
             [Inject] IChildDataPortal<Steps> portal)
         {
             using (BypassPropertyChecks)

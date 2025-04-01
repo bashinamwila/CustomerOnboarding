@@ -113,7 +113,7 @@ namespace CustomerOnboarding.BusinessLibrary
         /// Placeholder method — no insert logic needed.
         /// </summary>
         [InsertChild]
-        private void Insert(CustomerOnboardingOrchestrator parent, [Inject]IConfirmEmailStepDal dal)
+        private void Insert(UserOnboardingOrchestrator parent, [Inject]IConfirmEmailStepDal dal)
         {
             using(BypassPropertyChecks)
             {
@@ -130,7 +130,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
        
         [UpdateChild]
-        private async Task UpdateAsync(CustomerOnboardingOrchestrator parent, [Inject]IChildDataPortal<UserConfirmation>portal)
+        private async Task UpdateAsync(UserOnboardingOrchestrator parent, [Inject]IChildDataPortal<UserConfirmation>portal)
         {
            
             if(parent.CurrentStepIndex==StepIndex)
