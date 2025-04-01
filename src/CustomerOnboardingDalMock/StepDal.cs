@@ -28,6 +28,13 @@ namespace CustomerOnboarding.DalMock
                               TenantId = r.TenantId,
                               Id = r.Id
                           });
+            list.AddRange(from r in MockDb.EmailConfirmations
+                          where r.TenantId == tenantId
+                          select new StepDto
+                          {
+                              TenantId = r.TenantId,
+                              Id = r.Id
+                          });
             return list;
         }
     }

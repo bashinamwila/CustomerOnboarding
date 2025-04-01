@@ -2,32 +2,59 @@
 using CustomerOnboarding.BusinessLibrary.BaseTypes;
 using CustomerOnboarding.Dal;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CustomerOnboarding.BusinessLibrary
 {
+    /// <summary>
+    /// Represents a list of onboarding steps (manual or automatic) in the customer onboarding workflow.
+    /// Each item implements the IStep interface.
+    /// </summary>
     [Serializable]
-    public class Steps :BusinessListBase<Steps, IStep>
+    public class Steps : BusinessListBase<Steps, IStep>
     {
-        [CreateChild]
-        private void Create() { }
+        #region DataPortal Methods
 
-        [FetchChild]
-        private async Task FetchAsync(string tenantId, [Inject]IDataPortal<StepFactory> portal,
-            [Inject]IStepDal dal)
+        /// <summary>
+        /// Creates a new (empty) list of onboarding steps.
+        /// This is typically used when initializing a new orchestrator.
+        /// </summary>
+        [CreateChild]
+        private void Create()
         {
-            var rlce = this.RaiseListChangedEvents;
+            // Intentionally empty: steps are added externally after creation.
+        }
+
+        /// <summary>
+        /// Fetches and builds a list of steps for an existing tenant.
+        /// This uses StepFactory to instantiate the correct step type per ID.
+        /// </summary>
+        /// <param name="tenantId">The tenant's unique ID</param>
+        /// <param name="portal">Factory for creating step instances</param>
+        /// <param name="dal">Step data access layer</param>
+        [FetchChild]
+        private async Task FetchAsync(
+            string tenantId,int currentStepIndex,
+            [Inject] IDataPortal<StepFactory> portal,
+            [Inject] IStepDal dal)
+        {
+            var raiseEvents = this.RaiseListChangedEvents;
             this.RaiseListChangedEvents = false;
-            var list=  dal.Fetch(tenantId);
-            foreach(var step in list)
+
+            // Get metadata from database
+            var stepMetadataList = dal.Fetch(tenantId);
+
+            // Resolve and instantiate each step
+            foreach (var stepMeta in stepMetadataList)
             {
-                var factory=await portal.FetchAsync(step.TenantId, step.Id);
+                var factory = await portal.FetchAsync(stepMeta.TenantId, stepMeta.Id,currentStepIndex);
+
                 this.Add(factory.Result);
             }
-            this.RaiseListChangedEvents = rlce;
+
+            this.RaiseListChangedEvents = raiseEvents;
         }
+
+        #endregion
     }
 }

@@ -86,11 +86,11 @@ public class CustomerOnboardingOrchestratorTests : IClassFixture<CslaTestFixture
         step.User.LastName = "Doe";
         step.Organisation.Name = "Acme Inc";
         step.User.Email = "john.doe@example.com";
-        step.User.PhoneNo = "123456789";
+        step.User.PhoneNumber = "123456789";
         step.User.Password = "P@ssw0rd";
         step.User.ConfirmPassword = "P@ssw0rd";
         step.Organisation.NumberOfEmployees = 10;
-        step.Organisation.Country = 1;
+        step.Organisation.Country = "ZM";
 
         // Act
         var isValid = step.IsCompleted;
@@ -133,11 +133,11 @@ public class CustomerOnboardingOrchestratorTests : IClassFixture<CslaTestFixture
         step.User.LastName = "Doe";
         step.Organisation.Name = "Acme Corp";
         step.User.Email = "john.doe@acme.com";
-        step.User.PhoneNo = "123456789";
+        step.User.PhoneNumber = "123456789";
         step.User.Password = "Secure123!";
         step.User.ConfirmPassword = "Secure123!";
         step.Organisation.NumberOfEmployees = 10;
-        step.Organisation.Country = 1;
+        step.Organisation.Country = "ZM";
 
         // Check rules to ensure IsCompleted is updated
         

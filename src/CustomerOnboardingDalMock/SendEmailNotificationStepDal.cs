@@ -23,7 +23,7 @@ namespace CustomerOnboarding.DalMock
                               LastChanged = r.LastChanged,
                               Name = s.Name,
                               Type = s.Type,
-                              StepIndex = 1,
+                              StepIndex = r.StepIndex,
                               IsCompleted = r.IsCompleted
                           }).FirstOrDefault();
             if (result is null)
@@ -38,7 +38,8 @@ namespace CustomerOnboarding.DalMock
             {
                 TenantId= data.TenantId,
                 Id = data.Id,
-                IsCompleted= data.IsCompleted,
+                StepIndex = data.StepIndex,
+                IsCompleted = data.IsCompleted,
                 LastChanged = data.LastChanged
             };
             MockDb.SendEmailNotifications.Add(newItem);
