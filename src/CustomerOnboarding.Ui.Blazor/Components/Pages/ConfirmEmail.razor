@@ -1,0 +1,14 @@
+﻿@page "/confirm-email"
+@layout MinimalLayout
+@rendermode InteractiveServer
+
+<EmailConfirmation Email="user@example.com" OnResendClicked="ResendEmailAsync" />
+
+@code {
+    private async Task ResendEmailAsync()
+    {
+        // Simulated API logic
+        await Task.Delay(500);
+    }
+}
+

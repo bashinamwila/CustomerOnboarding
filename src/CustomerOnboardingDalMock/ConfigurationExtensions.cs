@@ -19,6 +19,9 @@ namespace CustomerOnboarding.DalMock
             services.AddTransient<ISendEmailNotificationStepDal, SendEmailNotificationStepDal>();
             services.AddTransient<IOrganisationDal, OrganisationDal>();
             services.AddTransient<IUserDal, UserDal>();
+            services.AddTransient<ICountryDal, CountryDal>();
+            services.AddTransient<IEmailTemplateDal, EmailTemplateDal>();
+            services.AddTransient<IConfirmEmailStepDal, ConfirmEmailStepDal>();
         }
     }
 }

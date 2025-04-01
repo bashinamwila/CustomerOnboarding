@@ -10,7 +10,7 @@ namespace CustomerOnboarding.Dal.Dtos
     {
         public string Id { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
-        public int Country { get; set; }
+        public string Country { get; set; } = string.Empty;
         public byte[]? Logo { get; set; } = default!;
         public string AddressLine1 { get; set; } = string.Empty;
         public string AddressLine2 { get; set; } = string.Empty;

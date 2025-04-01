@@ -49,13 +49,13 @@ namespace CustomerOnboarding.BusinessLibrary
             set => SetProperty(EmailProperty, value);
         }
 
-        public static readonly PropertyInfo<string> PhoneNoProperty
-           = RegisterProperty<string>(nameof(PhoneNo));
+        public static readonly PropertyInfo<string> PhoneNumberProperty
+           = RegisterProperty<string>(nameof(PhoneNumber));
 
-        public string PhoneNo
+        public string PhoneNumber
         {
-            get => GetProperty(PhoneNoProperty);
-            set => SetProperty(PhoneNoProperty, value);
+            get => GetProperty(PhoneNumberProperty);
+            set => SetProperty(PhoneNumberProperty, value);
         }
 
         public static readonly PropertyInfo<string> PasswordProperty
@@ -75,6 +75,7 @@ namespace CustomerOnboarding.BusinessLibrary
             set => SetProperty(ConfirmPasswordProperty, value);
         }
 
+        
         public static readonly PropertyInfo<byte[]> TimeStampProperty = RegisterProperty<byte[]>(nameof(TimeStamp));
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -89,8 +90,10 @@ namespace CustomerOnboarding.BusinessLibrary
         override protected void AddBusinessRules()
         {
             base.AddBusinessRules();
+            BusinessRules.RuleSet= "Create Account";
             BusinessRules.AddRule(new CustomerOnboarding.BusinessLibrary.Rules.Required(EmailProperty) { MessageText = "Email is Required" });
             BusinessRules.AddRule(new CustomerOnboarding.BusinessLibrary.Rules.Required(PasswordProperty) { MessageText = "Password is required" });
+            BusinessRules.AddRule(new CustomerOnboarding.BusinessLibrary.Rules.Required(ConfirmPasswordProperty) { MessageText = "Password confirmation required" });
             BusinessRules.AddRule(new ContainsAtLeastOneNumericCharacter(PasswordProperty));
             BusinessRules.AddRule(new ValidateEmailAddress(EmailProperty));
             BusinessRules.AddRule(new ContainsAtLeastOneUpperCaseCharacter(PasswordProperty));
@@ -99,17 +102,21 @@ namespace CustomerOnboarding.BusinessLibrary
             BusinessRules.AddRule(new Csla.Rules.CommonRules.MinLength(PasswordProperty, 8));
             BusinessRules.AddRule(new Csla.Rules.CommonRules.Dependency(PasswordProperty, ConfirmPasswordProperty));
             BusinessRules.AddRule(new CustomerOnboarding.BusinessLibrary.Rules.Required(FirstNameProperty) { MessageText = "First Name is required" });
-            BusinessRules.AddRule(new CustomerOnboarding.BusinessLibrary.Rules.Required(PhoneNoProperty) { MessageText = "Phone No. is required" });
+            BusinessRules.AddRule(new CustomerOnboarding.BusinessLibrary.Rules.Required(PhoneNumberProperty) { MessageText = "Phone No. is required" });
             BusinessRules.AddRule(new CustomerOnboarding.BusinessLibrary.Rules.Required(LastNameProperty) { MessageText = "Last Name is required" });
             BusinessRules.AddRule(new FullNameRule(FirstNameProperty, FullNameProperty));
             BusinessRules.AddRule(new FullNameRule(LastNameProperty, FullNameProperty));
             BusinessRules.AddRule(new CheckIfPasswordsMatch(PasswordProperty, ConfirmPasswordProperty));
+
+            
+           
         }
 
 
         [CreateChild]
-        private void Create()
+        private void Create(string ruleSet)
         {
+            BusinessRules.RuleSet = ruleSet;
             BusinessRules.CheckRules();
         }
 
@@ -123,15 +130,30 @@ namespace CustomerOnboarding.BusinessLibrary
                 FirstName=this.FirstName,
                 LastName=this.LastName,
                 Email=this.Email,
-                PhoneNo=this.PhoneNo,
-                Password=this.Password
+                PhoneNumber=this.PhoneNumber,
+                Password=this.Password,
+               
             };
             dal.Insert(data);
             TimeStamp = data.LastChanged;
         }
 
+        [UpdateChild]
+        private void Update(CustomerOnboardingOrchestrator parent,
+            [Inject] IUserDal dal)
+        {
+            var data = new UserDto
+            {
+                TenantId = parent.TenantId,
+                Email = this.Email,
+                LastChanged=this.TimeStamp
+            };
+            dal.Update(data);
+            TimeStamp = data.LastChanged;
+        }
+
         [FetchChild]
-        private void Fetch(string tenantId,
+        private void Fetch(string tenantId,string ruleSet,
             [Inject]IUserDal dal)
         {
             using (BypassPropertyChecks)
@@ -139,12 +161,14 @@ namespace CustomerOnboarding.BusinessLibrary
                 var data = dal.Fetch(tenantId);
                 FirstName = data.FirstName;
                 LastName = data.LastName;
-                PhoneNo = data.PhoneNo;
+                PhoneNumber = data.PhoneNumber;
                 Email = data.Email;
                 Password = data.Password;
                 TimeStamp = data.LastChanged;
+                BusinessRules.RuleSet = ruleSet;
 
             }
+            BusinessRules.CheckRules();
         }
     }
 }

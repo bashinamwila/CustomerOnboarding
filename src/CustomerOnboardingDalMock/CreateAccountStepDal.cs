@@ -21,7 +21,7 @@ namespace CustomerOnboarding.DalMock
                           {
                               TenantId = r.TenantId,
                               StepId = r.Id,
-                              StepIndex=0,
+                              StepIndex=r.StepIndex,
                               Name= s.Name,
                               Type = s.Type,
                               RuleSet=s.RuleSet,
@@ -39,6 +39,7 @@ namespace CustomerOnboarding.DalMock
             {
                 TenantId = data.TenantId,
                 Id = data.StepId,
+                StepIndex = data.StepIndex,
                 LastChanged = data.LastChanged
             };
             MockDb.CreateAccounts.Add(newItem);
