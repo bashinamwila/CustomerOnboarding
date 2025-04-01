@@ -19,9 +19,10 @@ namespace CustomerOnboarding.DalMock
                           {
                               FirstName=r.FirstName,
                               LastName=r.LastName,
-                              PhoneNo=r.PhoneNo,
+                              PhoneNumber=r.PhoneNo,
                               Email=r.Email,
-                              Password=r.Password
+                              Password=r.Password,
+                              IsConfirmed= r.IsConfirmed,
                           }).FirstOrDefault();
             if (result is null)
                 throw new DataNotFoundException("User");
@@ -36,12 +37,27 @@ namespace CustomerOnboarding.DalMock
                 TenantId = data.TenantId,
                 FirstName = data.FirstName,
                 LastName = data.LastName,
-                PhoneNo = data.PhoneNo,
+                PhoneNo = data.PhoneNumber,
                 Email = data.Email,
                 Password = data.Password,
+                IsConfirmed = data.IsConfirmed,
                 LastChanged = data.LastChanged
             };
             MockDb.Users.Add(newItem);
+        }
+
+        public void Update(UserDto data)
+        {
+            var result=(from r in MockDb.Users
+                        where r.TenantId == data.TenantId
+                        && r.Email == data.Email
+                        select r).FirstOrDefault();
+            if(result is null)
+                throw new DataNotFoundException("User");
+            if(!result.LastChanged.Matches(data.LastChanged))
+                throw new ConcurrencyException("User");
+            data.LastChanged = MockDb.GetTimeStamp();
+            result.IsConfirmed = data.IsConfirmed;
         }
     }
 }

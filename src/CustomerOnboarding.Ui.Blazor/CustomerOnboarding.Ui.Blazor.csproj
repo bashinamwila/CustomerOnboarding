@@ -6,4 +6,28 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+	<ItemGroup>
+		<PackageReference Include="Csla" Version="9.0.0" />
+		<PackageReference Include="Csla.AspNetCore" Version="9.0.0" />
+		<PackageReference Include="Csla.Blazor" Version="9.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="templates\*.html">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CustomerOnboarding.BusinessLibrary\CustomerOnboarding.BusinessLibrary.csproj" />
+    <ProjectReference Include="..\CustomerOnboarding.Dal\CustomerOnboarding.Dal.csproj" />
+    <ProjectReference Include="..\CustomerOnboardingDalMock\CustomerOnboarding.DalMock.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\templates\ConfirmEmailTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>

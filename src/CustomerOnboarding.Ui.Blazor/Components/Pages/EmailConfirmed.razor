@@ -1,0 +1,95 @@
+﻿@page "/email-confirmed/{organisationId}"
+@layout MinimalLayout
+@rendermode InteractiveServer
+@inject ViewModel<CustomerOnboardingOrchestrator> ViewModel
+@inject IDataPortalFactory portal
+@inject ILogger<EmailConfirmed> logger
+@inject Csla.Blazor.State.StateManager StateManager
+
+
+@if(ViewModel.Model is null)
+{
+    <Spinner />
+}
+else
+{
+    if (IsBusy)
+    {
+        <Spinner />
+    }
+    else
+    {
+        <div class="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+            @if (isSuccess)
+            {
+                <div>
+                    <div class="flex items-center justify-center mb-4">
+                        <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-2">Email Confirmed</h2>
+                    <p class="text-gray-600 mb-6">Your email has been successfully confirmed. You can now log in to your account.</p>
+                    <a href="/login" class="inline-block px-6 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">Go to Login</a>
+                </div>
+            }
+            else
+            {
+                <div>
+                    <div class="flex items-center justify-center mb-4">
+                        <svg class="w-12 h-12 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </div>
+                    <h2 class="text-2xl font-semibold text-gray-800 mb-2">Email Confirmation Failed</h2>
+                    <p class="text-gray-600 mb-6">@errorMessage</p>
+                    <a href="/resend-confirmation" class="inline-block px-6 py-2 bg-gray-800 text-white rounded-xl hover:bg-gray-900 transition">Resend Confirmation</a>
+                </div>
+            }
+        </div>
+    }
+}
+
+
+
+@code {
+
+    [Parameter]
+    public string OrganisationId { get; set; } = string.Empty;
+
+
+    private bool isSuccess = false;
+    private string? errorMessage;
+    private bool IsBusy = false;
+
+    protected override  async Task OnParametersSetAsync()
+    {
+        IsBusy = true;
+        await ViewModel.RefreshAsync(() => portal.GetPortal<CustomerOnboardingOrchestrator>().FetchAsync(OrganisationId));
+        IsBusy = false;
+        if(ViewModel.Model is not null)
+        {
+            logger.LogInformation($"The id of the organisation is {ViewModel.Model.TenantId} and the current step is {ViewModel.Model.CurrentStepIndex}");
+            var currentStep = ViewModel.Model.Steps[ViewModel.Model.CurrentStepIndex];
+            logger.LogInformation($"The type of current step is {currentStep.GetType().Name}");
+            logger.LogInformation($"The number of steps is {ViewModel.Model.Steps.Count}");
+            foreach(var step in ViewModel.Model.Steps)
+            {
+                logger.LogInformation($"At index {ViewModel.Model.Steps.IndexOf(step)} is of type {step.GetType().Name}");
+            }
+            if (currentStep is ConfirmEmailStep confirmEmailStep)
+            {
+                confirmEmailStep.User.MarkAsConfirmed();
+                await ViewModel.SaveAsync();
+                isSuccess = true;
+
+            }
+            else
+            {
+                isSuccess = false;
+                errorMessage = "Email confirmation failed. Please try again.";
+            }
+        }
+        
+    }
+}

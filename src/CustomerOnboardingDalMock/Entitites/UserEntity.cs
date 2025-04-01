@@ -14,6 +14,8 @@ namespace CustomerOnboarding.DalMock.Entitites
         public string PhoneNo { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
+
+        public bool IsConfirmed { get; set; }
         public byte[] LastChanged { get; set; } = default!;
     }
 }

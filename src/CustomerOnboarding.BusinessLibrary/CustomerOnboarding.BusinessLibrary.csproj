@@ -8,7 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Csla" Version="9.0.0" />
+    <PackageReference Include="MailKit" Version="4.11.0" />
   </ItemGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CustomerOnboarding.Dal\CustomerOnboarding.Dal.csproj" />

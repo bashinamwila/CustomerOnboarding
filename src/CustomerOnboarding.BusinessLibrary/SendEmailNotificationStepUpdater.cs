@@ -44,9 +44,11 @@ namespace CustomerOnboarding.BusinessLibrary
             {
                 TenantId = TenantId,
                 Id = Step.Id,
+                StepIndex = Step.StepIndex,
                 IsCompleted = Step.IsCompleted
             };
              dal.Insert(data);
+            Step.TimeStamp = data.LastChanged;
         }
        
     }

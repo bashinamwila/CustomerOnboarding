@@ -1,0 +1,42 @@
+﻿@code {
+    [Parameter]
+    public string Email { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback OnResendClicked { get; set; }
+
+    private async Task ResendLink()
+    {
+        if (OnResendClicked.HasDelegate)
+        {
+            await OnResendClicked.InvokeAsync();
+        }
+    }
+}
+
+<div class="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+    <div class="max-w-md w-full bg-white shadow-lg rounded-2xl p-6 sm:p-8 text-center">
+        <div class="flex justify-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-blue-600" fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M16 12H8m0 0l4-4m-4 4l4 4M4 6h16M4 6v12c0 1.1.9 2 2 2h12a2 2 0 002-2V6M4 6l8 6 8-6" />
+            </svg>
+        </div>
+
+        <h2 class="text-xl font-semibold text-gray-800 mb-2">Confirmation Link Sent</h2>
+        <p class="text-gray-600 text-sm mb-4">
+            We’ve sent a confirmation link to <span class="font-medium text-gray-800">@Email</span>. Please check your inbox and click the link to continue.
+        </p>
+
+        <button @onclick="ResendLink"
+                class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-lg transition duration-200">
+            Resend Link
+        </button>
+
+        <p class="text-xs text-gray-400 mt-4">
+            Didn't receive the email? Make sure to check your spam folder.
+        </p>
+    </div>
+</div>
+

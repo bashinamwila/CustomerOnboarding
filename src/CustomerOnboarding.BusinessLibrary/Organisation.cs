@@ -32,9 +32,9 @@ namespace CustomerOnboarding.BusinessLibrary
             set => SetProperty(NameProperty, value);
         }
 
-        public static readonly PropertyInfo<int?> CountryProperty =
-           RegisterProperty<int?>(nameof(Country));
-        public int? Country
+        public static readonly PropertyInfo<string> CountryProperty =
+           RegisterProperty<string>(nameof(Country));
+        public string Country
         {
             get => GetProperty(CountryProperty);
             set => SetProperty(CountryProperty, value);
@@ -82,12 +82,12 @@ namespace CustomerOnboarding.BusinessLibrary
             private set => LoadProperty(DbConnectionStringProperty, value);
         }
 
-        public static readonly PropertyInfo<string> PhoneNoProperty =
-          RegisterProperty<string>(nameof(PhoneNo));
-        public string PhoneNo
+        public static readonly PropertyInfo<string> PhoneNumberProperty =
+          RegisterProperty<string>(nameof(PhoneNumber));
+        public string PhoneNumber
         {
-            get => GetProperty(PhoneNoProperty);
-            set => SetProperty(PhoneNoProperty, value);
+            get => GetProperty(PhoneNumberProperty);
+            set => SetProperty(PhoneNumberProperty, value);
         }
 
         public static readonly PropertyInfo<string> EmailProperty =
@@ -143,10 +143,10 @@ namespace CustomerOnboarding.BusinessLibrary
             set { SetProperty(BankAccountNumberProperty, value); }
         }
 
-        public static readonly PropertyInfo<int> NumberOfEmployeesProperty =
-            RegisterProperty<int>(nameof(NumberOfEmployees));
+        public static readonly PropertyInfo<int?> NumberOfEmployeesProperty =
+            RegisterProperty<int?>(nameof(NumberOfEmployees));
 
-        public int NumberOfEmployees
+        public int? NumberOfEmployees
         {
             get => GetProperty(NumberOfEmployeesProperty);
             set => SetProperty(NumberOfEmployeesProperty, value);
@@ -236,7 +236,7 @@ namespace CustomerOnboarding.BusinessLibrary
             BusinessRules.RuleSet = "Create Account";
             BusinessRules.AddRule(new CustomerOnboarding.BusinessLibrary.Rules.Required(NameProperty) { MessageText = "Organisation Name is required" });
             BusinessRules.AddRule(new CustomerOnboarding.BusinessLibrary.Rules.Required(CountryProperty) { MessageText = "Country is required" });
-            BusinessRules.AddRule(new CustomerOnboarding.BusinessLibrary.Rules.Required(NumberOfEmployeesProperty) { MessageText = "Number of Employee is required" });
+            BusinessRules.AddRule(new CustomerOnboarding.BusinessLibrary.Rules.Required(NumberOfEmployeesProperty) { MessageText = "Number of Employees is required" });
 
         }
 
@@ -260,7 +260,8 @@ namespace CustomerOnboarding.BusinessLibrary
             {
                 Id = parent.TenantId,
                 Name = this.Name,
-                Country = this.Country!.Value
+                Country = this.Country,
+                NumberOfEmployees=this.NumberOfEmployees!.Value
             };
             dal.Insert(data);
             TimeStamp = data.LastChanged;
@@ -279,13 +280,14 @@ namespace CustomerOnboarding.BusinessLibrary
                 this.Country = data.Country;
                 this.AddressLine1 = data.AddressLine1;
                 this.AddressLine2 = data.AddressLine2;
-                this.PhoneNo = data.PhoneNo;
+                this.PhoneNumber = data.PhoneNo;
                 this.Email = data.Email;
                 this.TPIN = data.TPIN;
                 this.NAPSAAccountNumber = data.NAPSAAccountNumber;
                 this.NHIMAAccountNumber = data.NHIMAAccountNumber;
                 this.BankAccountNumber = data.BankAccountNumber;
                 this.DbConnectionString = data.DbConnectionString;
+                this.NumberOfEmployees = data.NumberOfEmployees;
                 this.BankId = data.BankId;
                 this.BranchId = data.BranchId;
                 this.BranchCode = data.BranchCode;
