@@ -1,6 +1,11 @@
 ﻿@page "/dashboard"
+@using CustomerOnboarding.BusinessLibrary.Multitenancy
 @layout MinimalLayout
+
 @rendermode InteractiveServer
+@inject TenantInfo tenantInfo
+
+<p>@tenantInfo.Name Payroll</p>
 
 <h1>Welcome to Benefito HR & Payroll Dashboard</h1>
 

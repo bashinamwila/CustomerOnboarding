@@ -8,6 +8,8 @@ using CustomerOnboarding.BusinessLibrary.Services.BaseTypes;
 using CustomerOnboarding.BusinessLibrary.Services;
 using Csla;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using CustomerOnboarding.BusinessLibrary.Multitenancy.Extensions;
+using CustomerOnboarding.BusinessLibrary.Multitenancy;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,7 @@ builder.Services.AddCascadingAuthenticationState();
 
 // Add render mode detection services
 //builder.Services.AddRenderModeDetection();
+builder.Services.AddMultitenancy<TenantInfo, TenantResolver>();
 
 
 builder.Services.AddCascadingAuthenticationState();
