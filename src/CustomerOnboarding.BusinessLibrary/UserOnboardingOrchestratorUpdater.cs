@@ -8,19 +8,19 @@ using System.Threading.Tasks;
 namespace CustomerOnboarding.BusinessLibrary
 {
     [Serializable]
-    public class CustomerOnboardingOrchestratorUpdater :
-        CommandBase<CustomerOnboardingOrchestratorUpdater>
+    public class UserOnboardingOrchestratorUpdater :
+        CommandBase<UserOnboardingOrchestratorUpdater>
     {
-        public static readonly PropertyInfo<CustomerOnboardingOrchestrator> CustomerOnboardingOrchestratorProperty =
-            RegisterProperty<CustomerOnboardingOrchestrator>(nameof(CustomerOnboardingOrchestrator));
-        public CustomerOnboardingOrchestrator CustomerOnboardingOrchestrator
+        public static readonly PropertyInfo<UserOnboardingOrchestrator> CustomerOnboardingOrchestratorProperty =
+            RegisterProperty<UserOnboardingOrchestrator>(nameof(CustomerOnboardingOrchestrator));
+        public UserOnboardingOrchestrator CustomerOnboardingOrchestrator
         {
             get=>ReadProperty(CustomerOnboardingOrchestratorProperty);
             private set=>LoadProperty(CustomerOnboardingOrchestratorProperty, value);
         }
 
         [Create]
-        private async Task CreateAsync(CustomerOnboardingOrchestrator customerOnboardingOrchestrator)
+        private async Task CreateAsync(UserOnboardingOrchestrator customerOnboardingOrchestrator)
         {
             CustomerOnboardingOrchestrator=customerOnboardingOrchestrator;
             await Task.CompletedTask;

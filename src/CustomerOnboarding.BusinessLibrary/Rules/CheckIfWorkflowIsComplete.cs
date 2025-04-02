@@ -18,7 +18,7 @@ namespace CustomerOnboarding.BusinessLibrary.Rules
         }
         protected override void Execute(IRuleContext context)
         {
-            var steps = ((CustomerOnboardingOrchestrator)context.Target).Steps;
+            var steps = ((UserOnboardingOrchestrator)context.Target).Steps;
             var isComplete = steps.All(s => s.IsCompleted);
             context.AddOutValue(AffectedProperties[1],isComplete);
         }

@@ -47,7 +47,7 @@ namespace CustomerOnboarding.BusinessLibrary
             var userFirstName = ((CreateAccountStep)steps[0]).User.FirstName;
             var template = portal.GetPortal<TemplateFactory>().Fetch(1).Result;
             ((EmailConfirmationTemplate)template).UserFirstName=userFirstName;
-            var parent = (CustomerOnboardingOrchestrator)Parent.Parent;
+            var parent = (UserOnboardingOrchestrator)Parent.Parent;
             ((EmailConfirmationTemplate)template).ConfirmationLink = $"https://localhost:7074/email-confirmed/{parent.TenantId}";
             await emailSender.SendEmailAsync(userEmail, "Welcome to our platform", template.Template);
                 
@@ -106,7 +106,7 @@ namespace CustomerOnboarding.BusinessLibrary
         /// Placeholder insert method (step is inserted via Command in ExecuteAsync).
         /// </summary>
         [InsertChild]
-        private void Insert(CustomerOnboardingOrchestrator parent, [Inject]ISendEmailNotificationStepDal dal)
+        private void Insert(UserOnboardingOrchestrator parent, [Inject]ISendEmailNotificationStepDal dal)
         {
             
         }
@@ -115,7 +115,7 @@ namespace CustomerOnboarding.BusinessLibrary
         /// Placeholder update method (step is updated via Command in ExecuteAsync).
         /// </summary>
         [UpdateChild]
-        private void Update(CustomerOnboardingOrchestrator parent) { }
+        private void Update(UserOnboardingOrchestrator parent) { }
 
         #endregion
     }

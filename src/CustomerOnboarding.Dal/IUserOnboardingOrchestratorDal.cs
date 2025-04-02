@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace CustomerOnboarding.Dal
 {
-    public interface ICustomerOnboardingOrchestratorDal
+    public interface IUserOnboardingOrchestratorDal
     {
-        public void Insert(CustomerOnboardingOrchestratorDto data);
-        public void Update(CustomerOnboardingOrchestratorDto data);
-        public CustomerOnboardingOrchestratorDto Fetch(string tenantId);
+        public void Insert(UserOnboardingOrchestratorDto data);
+        public void Update(UserOnboardingOrchestratorDto data);
+        public UserOnboardingOrchestratorDto Fetch(string tenantId);
         public void UpdateCurrentStepIndex(string tenantId, int currentStepIndex, byte[] timeStamp);
     }
 }

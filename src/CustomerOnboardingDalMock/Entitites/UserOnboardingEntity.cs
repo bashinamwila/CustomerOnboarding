@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CustomerOnboarding.DalMock.Entitites
 {
-    public class CustomerOnboardingEntity
+    public class UserOnboardingEntity
     {
         public string TenantId {  get; set; }=string.Empty;
         public int CurrentStepIndex { get; set; }

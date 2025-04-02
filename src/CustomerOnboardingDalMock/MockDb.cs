@@ -10,7 +10,7 @@ namespace CustomerOnboarding.DalMock
     public static class MockDb
     {
         public static List<StepEntity> Steps { get; private set; } = default!;
-        public static List<CustomerOnboardingEntity> Customers { get; private set; } = default!;
+        public static List<UserOnboardingEntity> Customers { get; private set; } = default!;
         public static List<CreateAccountStepEntity>CreateAccounts { get; private set; }=default!;
         public static List<SendEmailNotificationStepEntity> SendEmailNotifications { get; private set; } = default!;
         public static List<OrganisationEntity> Organisations { get; private set; } = default!;
@@ -26,7 +26,7 @@ namespace CustomerOnboarding.DalMock
                 new StepEntity{Id=2,Name="Send Email Notification",Type=2,FullTypeName="CustomerOnboarding.BusinessLibrary.SendEmailNotificationStep,CustomerOnboarding.BusinessLibrary",LastChanged=GetTimeStamp()},
                 new StepEntity{Id=3,Name="Confirm Account",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.ConfirmEmailStep,CustomerOnboarding.BusinessLibrary",RuleSet="Confirm Email", LastChanged = GetTimeStamp()}
             };
-            Customers = new List<CustomerOnboardingEntity>();
+            Customers = new List<UserOnboardingEntity>();
             CreateAccounts = new List<CreateAccountStepEntity>();
             SendEmailNotifications = new List<SendEmailNotificationStepEntity>();
             EmailConfirmations = new List<ConfirmEmailStepEntity>();

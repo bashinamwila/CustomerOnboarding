@@ -1,7 +1,7 @@
 ﻿@page "/email-confirmed/{organisationId}"
 @layout MinimalLayout
 @rendermode InteractiveServer
-@inject ViewModel<CustomerOnboardingOrchestrator> ViewModel
+@inject ViewModel<UserOnboardingOrchestrator> ViewModel
 @inject IDataPortalFactory portal
 @inject ILogger<EmailConfirmed> logger
 @inject Csla.Blazor.State.StateManager StateManager
@@ -65,7 +65,7 @@ else
     protected override  async Task OnParametersSetAsync()
     {
         IsBusy = true;
-        await ViewModel.RefreshAsync(() => portal.GetPortal<CustomerOnboardingOrchestrator>().FetchAsync(OrganisationId));
+        await ViewModel.RefreshAsync(() => portal.GetPortal<UserOnboardingOrchestrator>().FetchAsync(OrganisationId));
         IsBusy = false;
         if(ViewModel.Model is not null)
         {
