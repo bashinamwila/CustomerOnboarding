@@ -7,12 +7,20 @@ using CustomerOnboarding.DalMock;
 using CustomerOnboarding.BusinessLibrary.Services.BaseTypes;
 using CustomerOnboarding.BusinessLibrary.Services;
 using Csla;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+  .AddCookie();
+builder.Services.AddCascadingAuthenticationState();
+
+// Add render mode detection services
+//builder.Services.AddRenderModeDetection();
 
 
 builder.Services.AddCascadingAuthenticationState();
