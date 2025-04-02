@@ -253,7 +253,7 @@ namespace CustomerOnboarding.BusinessLibrary
         }
 
         [InsertChild]
-        private void Insert(CustomerOnboardingOrchestrator parent,
+        private void Insert(UserOnboardingOrchestrator parent,
             [Inject]IOrganisationDal dal)
         {
             var data = new OrganisationDto

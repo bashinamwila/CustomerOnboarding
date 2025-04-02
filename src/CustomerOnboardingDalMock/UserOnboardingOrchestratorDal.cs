@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace CustomerOnboarding.DalMock
 {
-    public class CustomerOnboardingOrchestratorDal :
-        ICustomerOnboardingOrchestratorDal
+    public class UserOnboardingOrchestratorDal :
+        IUserOnboardingOrchestratorDal
     {
-        public CustomerOnboardingOrchestratorDto Fetch(string tenantId)
+        public UserOnboardingOrchestratorDto Fetch(string tenantId)
         {
             var result = (from r in MockDb.Customers
                           where r.TenantId == tenantId
-                          select new CustomerOnboardingOrchestratorDto
+                          select new UserOnboardingOrchestratorDto
                           {
                               TenantId = tenantId,
                               CurrentStepIndex = r.CurrentStepIndex,
@@ -27,10 +27,10 @@ namespace CustomerOnboarding.DalMock
             return result;
         }
 
-        public void Insert(CustomerOnboardingOrchestratorDto data)
+        public void Insert(UserOnboardingOrchestratorDto data)
         {
             data.LastChanged = MockDb.GetTimeStamp();
-            var newItem = new CustomerOnboardingEntity
+            var newItem = new UserOnboardingEntity
             {
                 TenantId = data.TenantId,
                 CurrentStepIndex = data.CurrentStepIndex,
@@ -40,7 +40,7 @@ namespace CustomerOnboarding.DalMock
 
         }
 
-        public void Update(CustomerOnboardingOrchestratorDto data)
+        public void Update(UserOnboardingOrchestratorDto data)
         {
             throw new NotImplementedException();
         }

@@ -20,7 +20,7 @@ public class CustomerOnboardingOrchestratorTests : IClassFixture<CslaTestFixture
     {
         // Arrange
         var factory = _serviceProvider.GetRequiredService<IDataPortalFactory>();
-        var portal = factory.GetPortal<CustomerOnboardingOrchestrator>();
+        var portal = factory.GetPortal<UserOnboardingOrchestrator>();
 
         // Act
         var orchestrator = await portal.CreateAsync();
@@ -41,7 +41,7 @@ public class CustomerOnboardingOrchestratorTests : IClassFixture<CslaTestFixture
     {
         // Arrange
         var factory = _serviceProvider.GetRequiredService<IDataPortalFactory>();
-        var portal = factory.GetPortal<CustomerOnboardingOrchestrator>();
+        var portal = factory.GetPortal<UserOnboardingOrchestrator>();
 
         // Act
         var orchestrator = await portal.CreateAsync();
@@ -58,7 +58,7 @@ public class CustomerOnboardingOrchestratorTests : IClassFixture<CslaTestFixture
     {
         // Arrange
         var factory = _serviceProvider.GetRequiredService<IDataPortalFactory>();
-        var portal = factory.GetPortal<CustomerOnboardingOrchestrator>();
+        var portal = factory.GetPortal<UserOnboardingOrchestrator>();
 
         // Act
         var orchestrator = await portal.CreateAsync();
@@ -78,7 +78,7 @@ public class CustomerOnboardingOrchestratorTests : IClassFixture<CslaTestFixture
     {
         // Arrange
         var factory = _serviceProvider.GetRequiredService<IDataPortalFactory>();
-        var portal = factory.GetPortal<CustomerOnboardingOrchestrator>();
+        var portal = factory.GetPortal<UserOnboardingOrchestrator>();
         var orchestrator = await portal.CreateAsync();
         var step = (CreateAccountStep)orchestrator.Steps[0];
 
@@ -104,7 +104,7 @@ public class CustomerOnboardingOrchestratorTests : IClassFixture<CslaTestFixture
     {
         // Arrange
         var factory = _serviceProvider.GetRequiredService<IDataPortalFactory>();
-        var portal = factory.GetPortal<CustomerOnboardingOrchestrator>();
+        var portal = factory.GetPortal<UserOnboardingOrchestrator>();
         var orchestrator = await portal.CreateAsync();
         var step = (CreateAccountStep)orchestrator.Steps[0];
 
@@ -122,7 +122,7 @@ public class CustomerOnboardingOrchestratorTests : IClassFixture<CslaTestFixture
     {
         // Arrange
         var factory = _serviceProvider.GetRequiredService<IDataPortalFactory>();
-        var portal = factory.GetPortal<CustomerOnboardingOrchestrator>();
+        var portal = factory.GetPortal<UserOnboardingOrchestrator>();
         var orchestrator = await portal.CreateAsync();
 
         // Populate CreateAccountStep (first step)

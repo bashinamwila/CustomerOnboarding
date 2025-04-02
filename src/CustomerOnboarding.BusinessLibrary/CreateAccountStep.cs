@@ -174,7 +174,7 @@ namespace CustomerOnboarding.BusinessLibrary
         /// </summary>
         [InsertChild]
         private async Task InsertAsync(
-            CustomerOnboardingOrchestrator parent,
+            UserOnboardingOrchestrator parent,
             [Inject] ICreateAccountStepDal dal,
             [Inject] IChildDataPortalFactory portal)
         {
@@ -202,7 +202,7 @@ namespace CustomerOnboarding.BusinessLibrary
         /// </summary>
         [UpdateChild]
         private void Update(
-            CustomerOnboardingOrchestrator parent,
+            UserOnboardingOrchestrator parent,
             [Inject] ICreateAccountStepDal dal)
         {
             using (BypassPropertyChecks)

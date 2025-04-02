@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 namespace CustomerOnboarding.BusinessLibrary
 {
     [Serializable]
-    public class CustomerOnboardingOrchestratorCurrentStepUpdater :
-        CommandBase<CustomerOnboardingOrchestratorCurrentStepUpdater>
+    public class UserOnboardingOrchestratorCurrentStepUpdater :
+        CommandBase<UserOnboardingOrchestratorCurrentStepUpdater>
     {
         public static readonly PropertyInfo<string>TenantIdProperty=
             RegisterProperty<string>(nameof(TenantId));
@@ -48,7 +48,7 @@ namespace CustomerOnboarding.BusinessLibrary
             await Task.CompletedTask;
         }
         [Execute]
-        private void Execute([Inject]ICustomerOnboardingOrchestratorDal dal)
+        private void Execute([Inject]IUserOnboardingOrchestratorDal dal)
         {
              dal.UpdateCurrentStepIndex(TenantId, CurrentStepIndex, TimeStamp);
         }
