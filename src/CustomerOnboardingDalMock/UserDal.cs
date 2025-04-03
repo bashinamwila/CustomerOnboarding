@@ -17,16 +17,33 @@ namespace CustomerOnboarding.DalMock
                           where r.TenantId == id
                           select new UserDto
                           {
+                              TenantId = r.TenantId,
                               FirstName=r.FirstName,
                               LastName=r.LastName,
                               PhoneNumber=r.PhoneNo,
                               Email=r.Email,
-                              Password=r.Password,
                               IsConfirmed= r.IsConfirmed,
                           }).FirstOrDefault();
             if (result is null)
                 throw new DataNotFoundException("User");
             return result;
+        }
+
+        public UserDto? Fetch(string email, string password)
+        {
+            var result = (from r in MockDb.Users
+                          where r.Email == email && r.Password == password
+                          select new UserDto
+                          {
+                              TenantId = r.TenantId,
+                              FirstName = r.FirstName,
+                              LastName = r.LastName,
+                              PhoneNumber = r.PhoneNo,
+                              Email = r.Email,
+                              IsConfirmed = r.IsConfirmed,
+                          }).FirstOrDefault();
+            return result;
+
         }
 
         public void Insert(UserDto data)

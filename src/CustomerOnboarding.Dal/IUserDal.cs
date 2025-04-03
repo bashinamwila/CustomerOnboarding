@@ -12,5 +12,6 @@ namespace CustomerOnboarding.Dal
         public void Insert(UserDto data);
         public void Update(UserDto data);
         public UserDto Fetch(string id);
+        public UserDto? Fetch(string email,string password);
     }
 }

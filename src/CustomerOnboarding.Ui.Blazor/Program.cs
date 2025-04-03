@@ -7,12 +7,23 @@ using CustomerOnboarding.DalMock;
 using CustomerOnboarding.BusinessLibrary.Services.BaseTypes;
 using CustomerOnboarding.BusinessLibrary.Services;
 using Csla;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using CustomerOnboarding.BusinessLibrary.Multitenancy.Extensions;
+using CustomerOnboarding.BusinessLibrary.Multitenancy;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+  .AddCookie();
+builder.Services.AddCascadingAuthenticationState();
+
+// Add render mode detection services
+//builder.Services.AddRenderModeDetection();
+builder.Services.AddMultitenancy<TenantInfo, TenantResolver>();
 
 
 builder.Services.AddCascadingAuthenticationState();
@@ -27,12 +38,15 @@ builder.Services.AddScoped(typeof(CircuitHandler), typeof(CustomerOnboarding.Ui.
 
 // CSLA requires AddHttpContextAccessor
 builder.Services.AddHttpContextAccessor();
-
+builder.Services.AddMemoryCache();
 
 
 // Add CSLA
 builder.Services.AddCsla(o => o
   .AddAspNetCore()
+  .DataPortal(o=>o
+  .AddClientSideDataPortal(o=>o
+  .DataPortalCacheType=typeof(MultitenancyDataPortalCache)))
   .AddServerSideBlazor(ssb => ssb.UseInMemoryApplicationContextManager = false));
 
 // Required by CSLA data portal controller. If using Kestrel:
