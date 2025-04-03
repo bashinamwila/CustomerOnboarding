@@ -38,12 +38,15 @@ builder.Services.AddScoped(typeof(CircuitHandler), typeof(CustomerOnboarding.Ui.
 
 // CSLA requires AddHttpContextAccessor
 builder.Services.AddHttpContextAccessor();
-
+builder.Services.AddMemoryCache();
 
 
 // Add CSLA
 builder.Services.AddCsla(o => o
   .AddAspNetCore()
+  .DataPortal(o=>o
+  .AddClientSideDataPortal(o=>o
+  .DataPortalCacheType=typeof(MultitenancyDataPortalCache)))
   .AddServerSideBlazor(ssb => ssb.UseInMemoryApplicationContextManager = false));
 
 // Required by CSLA data portal controller. If using Kestrel:
