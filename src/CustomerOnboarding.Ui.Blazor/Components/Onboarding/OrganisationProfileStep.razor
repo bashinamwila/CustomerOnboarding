@@ -1,75 +1,99 @@
-﻿
-<div id="tab-1" class="tab-content active">
-    <div class="bg-white rounded-lg shadow-sm p-6">
-        <!-- Header -->
-        <h2 class="text-xl font-semibold text-gray-800 mb-6">Company Profile</h2>
+﻿@rendermode InteractiveServer
 
-        <!-- Form Fields -->
-        <div class="space-y-6">
-            <!-- Organisation Name -->
-            <div class="form-group">
-                <label class="block text-gray-700 text-sm font-medium mb-1">Organisation Name</label>
-                <label class="block text-gray-500 text-xs mb-2">Legal name of your business</label>
-                <div class="w-3/4">
-                    <input type="text" class="w-full py-2 px-1 focus:outline-none focus:border-blue-500 focus:bg-blue-50 border-b-2 border-gray-400 bg-gray-50" placeholder="Enter organisation name">
+@if(ViewModel.Model is not null)
+{
+    <div id="tab-1" class="tab-content active">
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <!-- Header -->
+            <h2 class="text-xl font-semibold text-gray-800 mb-6">Company Profile</h2>
+
+            <!-- Form Fields -->
+            <div class="space-y-6">
+                <!-- Organisation Name -->
+                <div class="form-group">
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Organisation Name</label>
+                    <label class="block text-gray-500 text-xs mb-2">Legal name of your business</label>
+                    <div class="w-3/4">
+                        <input type="text" class="w-full py-2 px-1 focus:outline-none focus:border-blue-500 focus:bg-blue-50 border-b-2 border-gray-400 bg-gray-50"
+                               placeholder="Enter organisation name" @bind-value="@(((CustomerOnboarding.BusinessLibrary.OrganisationProfileStep)ViewModel.Model.Steps[0]).OrganisationProfile.Name)" @bind-value:event="oninput">
+                        <ErrorText PropertyInfo=@(ViewModel.GetPropertyInfo(()=>((CustomerOnboarding.BusinessLibrary.OrganisationProfileStep)ViewModel.Model.Steps[0]).OrganisationProfile.Name)) />
+                    </div>
                 </div>
-            </div>
 
-            <!-- Address Line 1 -->
-            <div class="form-group">
-                <label class="block text-gray-700 text-sm font-medium mb-1">Address Line 1</label>
-                <label class="block text-gray-500 text-xs mb-2">Street address</label>
-                <div class="w-3/4">
-                    <input type="text" class="w-full py-2 px-1 focus:outline-none focus:border-blue-500 focus:bg-blue-50 border-b-2 border-gray-400 bg-gray-50" placeholder="Enter address line 1">
+                <!-- Address Line 1 -->
+                <div class="form-group">
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Address Line 1</label>
+                    <label class="block text-gray-500 text-xs mb-2">Street address</label>
+                    <div class="w-3/4">
+                        <input type="text" class="w-full py-2 px-1 focus:outline-none focus:border-blue-500 focus:bg-blue-50 border-b-2 border-gray-400 bg-gray-50"
+                               placeholder="Enter address line 1" @bind-value="@(((CustomerOnboarding.BusinessLibrary.OrganisationProfileStep)ViewModel.Model.Steps[0]).OrganisationProfile.AddressLine1)" @bind-value:event="oninput">
+                        <ErrorText PropertyInfo=@(ViewModel.GetPropertyInfo(()=>((CustomerOnboarding.BusinessLibrary.OrganisationProfileStep)ViewModel.Model.Steps[0]).OrganisationProfile.AddressLine1)) />
+                    </div>
                 </div>
-            </div>
 
-            <!-- Address Line 2 -->
-            <div class="form-group">
-                <label class="block text-gray-700 text-sm font-medium mb-1">Address Line 2</label>
-                <label class="block text-gray-500 text-xs mb-2">Apartment, suite, unit, etc.</label>
-                <div class="w-3/4">
-                    <input type="text" class="w-full py-2 px-1 focus:outline-none focus:border-blue-500 focus:bg-blue-50 border-b-2 border-gray-400 bg-gray-50" placeholder="Enter address line 2">
+                <!-- Address Line 2 -->
+                <div class="form-group">
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Address Line 2</label>
+                    <label class="block text-gray-500 text-xs mb-2">Apartment, suite, unit, etc.</label>
+                    <div class="w-3/4">
+                        <input type="text" class="w-full py-2 px-1 focus:outline-none focus:border-blue-500 focus:bg-blue-50 border-b-2 border-gray-400 bg-gray-50"
+                               placeholder="Enter address line 2" @bind-value="@(((CustomerOnboarding.BusinessLibrary.OrganisationProfileStep)ViewModel.Model.Steps[0]).OrganisationProfile.AddressLine2)" @bind-value:event="oninput">
+                        <ErrorText PropertyInfo=@(ViewModel.GetPropertyInfo(()=>((CustomerOnboarding.BusinessLibrary.OrganisationProfileStep)ViewModel.Model.Steps[0]).OrganisationProfile.AddressLine2)) />
+                    </div>
                 </div>
-            </div>
 
-            <!-- City -->
-            <div class="form-group">
-                <label class="block text-gray-700 text-sm font-medium mb-1">City</label>
-                <label class="block text-gray-500 text-xs mb-2">City or town</label>
-                <div class="w-3/4">
-                    <input type="text" class="w-full py-2 px-1 focus:outline-none focus:border-blue-500 focus:bg-blue-50 border-b-2 border-gray-400 bg-gray-50" placeholder="Enter city">
+                <!-- City -->
+                <div class="form-group">
+                    <label class="block text-gray-700 text-sm font-medium mb-1">City</label>
+                    <label class="block text-gray-500 text-xs mb-2">City or town</label>
+                    <div class="w-3/4">
+                        <input type="text" class="w-full py-2 px-1 focus:outline-none focus:border-blue-500 focus:bg-blue-50 border-b-2 border-gray-400 bg-gray-50"
+                               placeholder="Enter city" @bind-value="@(((CustomerOnboarding.BusinessLibrary.OrganisationProfileStep)ViewModel.Model.Steps[0]).OrganisationProfile.City)" @bind-value:event="oninput">
+                        <ErrorText PropertyInfo=@(ViewModel.GetPropertyInfo(()=>((CustomerOnboarding.BusinessLibrary.OrganisationProfileStep)ViewModel.Model.Steps[0]).OrganisationProfile.AddressLine2)) />
+                    </div>
                 </div>
-            </div>
 
-            <!-- Email -->
-            <div class="form-group">
-                <label class="block text-gray-700 text-sm font-medium mb-1">Email</label>
-                <label class="block text-gray-500 text-xs mb-2">Business email address</label>
-                <div class="w-3/4">
-                    <input type="email" class="w-full py-2 px-1 focus:outline-none focus:border-blue-500 focus:bg-blue-50 border-b-2 border-gray-400 bg-gray-50" placeholder="Enter email address">
+                <!-- Email -->
+                <div class="form-group">
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Email</label>
+                    <label class="block text-gray-500 text-xs mb-2">Business email address</label>
+                    <div class="w-3/4">
+                        <input type="email" class="w-full py-2 px-1 focus:outline-none focus:border-blue-500 focus:bg-blue-50 border-b-2 border-gray-400 bg-gray-50"
+                               placeholder="Enter email address" @bind-value="@(((CustomerOnboarding.BusinessLibrary.OrganisationProfileStep)ViewModel.Model.Steps[0]).OrganisationProfile.Email)" @bind-value:event="oninput">
+                        <ErrorText PropertyInfo=@(ViewModel.GetPropertyInfo(()=>((CustomerOnboarding.BusinessLibrary.OrganisationProfileStep)ViewModel.Model.Steps[0]).OrganisationProfile.Email)) />
+                    </div>
                 </div>
-            </div>
 
-            <!-- Phone # -->
-            <div class="form-group">
-                <label class="block text-gray-700 text-sm font-medium mb-1">Phone #</label>
-                <label class="block text-gray-500 text-xs mb-2">Business phone number</label>
-                <div class="w-3/4">
-                    <input type="tel" class="w-full py-2 px-1 focus:outline-none focus:border-blue-500 focus:bg-blue-50 border-b-2 border-gray-400 bg-gray-50" placeholder="Enter phone number">
+                <!-- Phone # -->
+                <div class="form-group">
+                    <label class="block text-gray-700 text-sm font-medium mb-1">Phone #</label>
+                    <label class="block text-gray-500 text-xs mb-2">Business phone number</label>
+                    <div class="w-3/4">
+                        <input type="tel" class="w-full py-2 px-1 focus:outline-none focus:border-blue-500 focus:bg-blue-50 border-b-2 border-gray-400 bg-gray-50"
+                               placeholder="Enter phone number" @bind-value="@(((CustomerOnboarding.BusinessLibrary.OrganisationProfileStep)ViewModel.Model.Steps[0]).OrganisationProfile.PhoneNumber)" @bind-value:event="oninput">
+                        <ErrorText PropertyInfo=@(ViewModel.GetPropertyInfo(()=>((CustomerOnboarding.BusinessLibrary.OrganisationProfileStep)ViewModel.Model.Steps[0]).OrganisationProfile.PhoneNumber)) />
+                    </div>
                 </div>
-            </div>
 
-            <!-- Save & Continue Button -->
-            <div class="w-3/4 flex justify-end mt-8">
-                <button class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-md font-medium">
-                    Save & Continue
-                </button>
+                <!-- Save & Continue Button -->
+                <div class="w-3/4 flex justify-end mt-8">
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-md font-medium">
+                        Save & Continue
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+}
 
 @code {
+    [Parameter]
+    public ViewModel<TenantOnboardingOrchestrator> ViewModel { get; set; } = default!;
 
+
+    protected override void OnParametersSet()
+    {
+        ((CustomerOnboarding.BusinessLibrary.OrganisationProfileStep)ViewModel.Model.Steps[0]).OrganisationProfile.PropertyChanged += async (s, e) => await InvokeAsync(() => StateHasChanged());
+    }
 }

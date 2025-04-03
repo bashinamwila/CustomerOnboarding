@@ -1,6 +1,7 @@
 ﻿using Csla;
 using CustomerOnboarding.BusinessLibrary.Rules;
 using CustomerOnboarding.Dal;
+using CustomerOnboarding.Dal.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -109,6 +110,25 @@ namespace CustomerOnboarding.BusinessLibrary
             [Inject]IUserDal dal)
         {
 
+        }
+
+        [UpdateChild]
+        private void Update(UserOnboardingOrchestrator parent,
+            [Inject] IUserDal dal)
+        {
+            using (BypassPropertyChecks)
+            {
+                var dto = new UserDto
+                {
+                    TenantId = parent.TenantId,
+                    Email = this.Email,
+                    IsConfirmed = this.IsConfirmed,
+                    LastChanged=this.TimeStamp
+                };
+                dal.Update(dto);
+                TimeStamp = dto.LastChanged;
+
+            }
         }
 
         [FetchChild]

@@ -1,13 +1,35 @@
 ﻿@page "/onboarding"
 @layout AdminLayout
+@rendermode InteractiveServer
 @using CustomerOnboarding.Ui.Blazor.Components.Onboarding
+@inject ViewModel<TenantOnboardingOrchestrator> ViewModel
+@inject IDataPortalFactory portal
+@inject Csla.Blazor.State.StateManager StateManager
+@inject ILogger<Onboarding> logger
 
-<Sidebar ProgressPercent="17%" ActiveStep="1" Steps="@OnboardingSteps" OnStepClick="HandleStepClick" />
-<div class="flex-1 p-4 md:p-6 overflow-y-auto">
-    <OrganisationProfileStep />
-</div>
+@if(ViewModel.Model is null)
+{
+    <Spinner />
+}
+else
+{
+    if (IsBusy)
+    {
+        <Spinner />
+    }
+    else
+    {
+        <Sidebar ProgressPercent="17%" ActiveStep="1" Steps="@OnboardingSteps" OnStepClick="HandleStepClick" />
+        <div class="flex-1 p-4 md:p-6 overflow-y-auto">
+            <OrganisationProfileStep ViewModel="ViewModel" />
+        </div>
+
+    }
+}
 
 @code {
+    private bool IsBusy = false;
+
     private List<Sidebar.SidebarStep> OnboardingSteps = new()
     {
         new() { Index = 1, Title = "Company Profile" },
@@ -29,5 +51,34 @@
     private void HandleStepClick(Sidebar.SidebarStep step)
     {
         Console.WriteLine($"User clicked step: {step.Index} - {step.Title}");
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        IsBusy = true;
+        logger.LogInformation("Fetching Tenant onboarding orchestrator...");
+        await ViewModel.RefreshAsync(() => portal.GetPortal<TenantOnboardingOrchestrator>().CreateAsync());
+        logger.LogInformation("Tenant onboarding orchestrator fetched");
+        if (ViewModel.Model is not null)
+            logger.LogInformation("ViewModel model is not null");
+        else
+            logger.LogInformation("ViewModel model is  null");
+        IsBusy = false;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ViewModel.ModelPropertyChanged += async (s, e) =>
+        {
+            await InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
+        };
+
+
+
+        await StateManager.InitializeAsync();
+       
     }
 }

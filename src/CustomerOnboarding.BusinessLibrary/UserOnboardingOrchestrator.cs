@@ -13,7 +13,7 @@ namespace CustomerOnboarding.BusinessLibrary
     /// Supports progression logic and workflow state management.
     /// </summary>
     [Serializable]
-    public class UserOnboardingOrchestrator : BusinessBase<UserOnboardingOrchestrator>
+    public class UserOnboardingOrchestrator : BusinessBase<UserOnboardingOrchestrator>,IOnboardingOrchestrator
     {
         #region Properties
 

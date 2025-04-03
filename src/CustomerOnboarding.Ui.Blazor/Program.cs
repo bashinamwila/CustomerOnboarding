@@ -42,11 +42,17 @@ builder.Services.AddMemoryCache();
 
 
 // Add CSLA
+/*
 builder.Services.AddCsla(o => o
   .AddAspNetCore()
   .DataPortal(o=>o
   .AddClientSideDataPortal(o=>o
   .DataPortalCacheType=typeof(MultitenancyDataPortalCache)))
+  .AddServerSideBlazor(ssb => ssb.UseInMemoryApplicationContextManager = false));
+*/
+
+builder.Services.AddCsla(o => o
+  .AddAspNetCore()
   .AddServerSideBlazor(ssb => ssb.UseInMemoryApplicationContextManager = false));
 
 // Required by CSLA data portal controller. If using Kestrel:
