@@ -42,7 +42,7 @@ namespace CustomerOnboarding.DalMock
 
         public void Update(UserOnboardingOrchestratorDto data)
         {
-           // throw new NotImplementedException();
+            UpdateCurrentStepIndex(data.TenantId,data.CurrentStepIndex,data.LastChanged);
         }
 
         public void UpdateCurrentStepIndex(string tenantId, int currentStepIndex, byte[] timeStamp)
