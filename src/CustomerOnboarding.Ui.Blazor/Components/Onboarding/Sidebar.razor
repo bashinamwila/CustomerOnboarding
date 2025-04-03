@@ -1,0 +1,70 @@
+﻿@rendermode InteractiveServer
+
+<div class="hidden md:block w-64 bg-white shadow-sm overflow-y-auto h-full">
+
+    <!-- Explore Benefito link -->
+    <div class="px-4 py-3 border-b">
+        <a href="#" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+            Explore Benefito
+        </a>
+    </div>
+
+    <!-- Progress section -->
+    <div class="p-4 border-b">
+        <h3 class="text-sm font-medium text-gray-700 mb-2">Onboarding Progress</h3>
+        <div class="w-full bg-gray-200 rounded-full h-2.5">
+            <div class="bg-blue-600 h-2.5 rounded-full" style="width:@ProgressPercent"></div>
+        </div>
+        <p class="text-xs text-gray-500 mt-1 text-right">@ProgressPercent completed</p>
+    </div>
+
+    <!-- Steps navigation -->
+    <div class="py-2">
+        <ul>
+            @foreach (var step in Steps)
+            {
+                <li class="@GetStepClass(step)" @onclick="@(() => OnStepClick.InvokeAsync(step))">
+                    <div class="flex items-center">
+                        <div class="@GetCircleClass(step)">
+                            @if (step.Index == ActiveStep)
+                            {
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            }
+                            else
+                            {
+                                <span class="text-xs text-blue-600">@step.Index</span>
+                            }
+                        </div>
+                        <span>@step.Title</span>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+@code {
+    [Parameter] public int ActiveStep { get; set; }
+    [Parameter] public List<SidebarStep> Steps { get; set; } = new();
+    [Parameter] public string ProgressPercent { get; set; } = "0%";
+    [Parameter] public EventCallback<SidebarStep> OnStepClick { get; set; }
+
+    private string GetStepClass(SidebarStep step) =>
+        $"sidebar-step py-2 px-4 {(step.Index == ActiveStep ? "step-active" : "text-gray-600")}";
+
+    private string GetCircleClass(SidebarStep step) =>
+        step.Index == ActiveStep
+            ? "h-6 w-6 mr-3 rounded-full bg-blue-600 flex items-center justify-center"
+            : "h-6 w-6 mr-3 rounded-full border border-blue-600 flex items-center justify-center";
+
+    public class SidebarStep
+    {
+        public int Index { get; set; }
+        public string Title { get; set; } = string.Empty;
+    }
+}

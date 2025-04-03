@@ -1,0 +1,33 @@
+﻿@page "/onboarding"
+@layout AdminLayout
+@using CustomerOnboarding.Ui.Blazor.Components.Onboarding
+
+<Sidebar ProgressPercent="17%" ActiveStep="1" Steps="@OnboardingSteps" OnStepClick="HandleStepClick" />
+<div class="flex-1 p-4 md:p-6 overflow-y-auto">
+    <OrganisationProfileStep />
+</div>
+
+@code {
+    private List<Sidebar.SidebarStep> OnboardingSteps = new()
+    {
+        new() { Index = 1, Title = "Company Profile" },
+        new() { Index = 2, Title = "Banking Details" },
+        new() { Index = 3, Title = "Compliance Info" },
+        new() { Index = 4, Title = "Payroll Configuration" },
+        new() { Index = 5, Title = "Payroll Structure" },
+        new() { Index = 6, Title = "Compensation Components" },
+        new() { Index = 7, Title = "Deductions Setup" },
+        new() { Index = 8, Title = "Employer Contributions" },
+        new() { Index = 9, Title = "Accruals" },
+        new() { Index = 10, Title = "Loans" },
+        new() { Index = 11, Title = "Add Employees" },
+        new() { Index = 12, Title = "Integrations" },
+        new() { Index = 13, Title = "Select Payment Plan" },
+        new() { Index = 14, Title = "Completion" }
+    };
+
+    private void HandleStepClick(Sidebar.SidebarStep step)
+    {
+        Console.WriteLine($"User clicked step: {step.Index} - {step.Title}");
+    }
+}
