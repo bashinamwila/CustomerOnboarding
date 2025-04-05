@@ -29,7 +29,7 @@
                 <li class="@GetStepClass(step)" @onclick="@(() => OnStepClick.InvokeAsync(step))">
                     <div class="flex items-center">
                         <div class="@GetCircleClass(step)">
-                            @if (step.Index == ActiveStep)
+                            @if (step.Index == ActiveStep || step.IsCompleted)
                             {
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="20 6 9 17 4 12"></polyline>
@@ -53,12 +53,13 @@
     [Parameter] public List<SidebarStep> Steps { get; set; } = new();
     [Parameter] public string ProgressPercent { get; set; } = "0%";
     [Parameter] public EventCallback<SidebarStep> OnStepClick { get; set; }
+    [Parameter] public Steps OnboardingSteps { get; set; } = default!;
 
     private string GetStepClass(SidebarStep step) =>
         $"sidebar-step py-2 px-4 {(step.Index == ActiveStep ? "step-active" : "text-gray-600")}";
 
     private string GetCircleClass(SidebarStep step) =>
-        step.Index == ActiveStep
+        step.Index == ActiveStep || step.IsCompleted
             ? "h-6 w-6 mr-3 rounded-full bg-blue-600 flex items-center justify-center"
             : "h-6 w-6 mr-3 rounded-full border border-blue-600 flex items-center justify-center";
 
@@ -66,5 +67,6 @@
     {
         public int Index { get; set; }
         public string Title { get; set; } = string.Empty;
+        public bool IsCompleted { get; set; } = false;
     }
 }

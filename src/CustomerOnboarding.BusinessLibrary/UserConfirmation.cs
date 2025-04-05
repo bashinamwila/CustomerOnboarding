@@ -123,10 +123,10 @@ namespace CustomerOnboarding.BusinessLibrary
                     TenantId = parent.TenantId,
                     Email = this.Email,
                     IsConfirmed = this.IsConfirmed,
-                    LastChanged=this.TimeStamp
+                    LastChanged = ((CreateAccountStep)parent.Steps[0]).User.TimeStamp
                 };
                 dal.Update(dto);
-                TimeStamp = dto.LastChanged;
+               // TimeStamp = dto.LastChanged;
 
             }
         }
@@ -142,7 +142,6 @@ namespace CustomerOnboarding.BusinessLibrary
                 Email = data.Email;
                 PhoneNumber = data.PhoneNumber;
                 Password = data.Password;
-                TimeStamp = data.LastChanged;
                 IsConfirmed = data.IsConfirmed;
                 BusinessRules.RuleSet = ruleSet;
             }

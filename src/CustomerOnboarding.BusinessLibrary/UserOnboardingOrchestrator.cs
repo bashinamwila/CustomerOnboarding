@@ -259,7 +259,7 @@ namespace CustomerOnboarding.BusinessLibrary
             using (BypassPropertyChecks)
             {
                 // Create the DTO for the orchestrator itself
-                var dto = new UserOnboardingOrchestratorDto
+                var dto = new OnboardingOrchestratorDto
                 {
                     TenantId = this.TenantId,
                     CurrentStepIndex = this.CurrentStepIndex
@@ -292,7 +292,7 @@ namespace CustomerOnboarding.BusinessLibrary
             using (BypassPropertyChecks)
             {
                 // Create the DTO, including the current TimeStamp for concurrency checking
-                var dto = new UserOnboardingOrchestratorDto
+                var dto = new OnboardingOrchestratorDto
                 {
                     TenantId = this.TenantId,
                     CurrentStepIndex = this.CurrentStepIndex,

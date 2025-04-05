@@ -2,9 +2,11 @@
 @layout AdminLayout
 @rendermode InteractiveServer
 @using CustomerOnboarding.Ui.Blazor.Components.Onboarding
+@using CustomerOnboarding.BusinessLibrary.Multitenancy
 @inject ViewModel<TenantOnboardingOrchestrator> ViewModel
 @inject IDataPortalFactory portal
 @inject Csla.Blazor.State.StateManager StateManager
+@inject TenantInfo tenant
 @inject ILogger<Onboarding> logger
 
 @if(ViewModel.Model is null)
@@ -19,10 +21,14 @@ else
     }
     else
     {
-        <Sidebar ProgressPercent="17%" ActiveStep="1" Steps="@OnboardingSteps" OnStepClick="HandleStepClick" />
-        <div class="flex-1 p-4 md:p-6 overflow-y-auto">
-            <OrganisationProfileStep ViewModel="ViewModel" />
+        <Sidebar ProgressPercent="17%" ActiveStep=@ViewModel.Model.CurrentStepIndex Steps="@OnboardingSteps" OnStepClick="HandleStepClick" />
+        <div class=@($"flex-1 p-4 md:p-6 overflow-y-auto {(ViewModel.Model.CurrentStepIndex==0?null:"hidden")}")>
+            <OrganisationProfileStep ViewModel="ViewModel" OnClickSaveAndContinue=@SaveAndContinueStep1 />
         </div>
+        <div class=@($"flex-1 p-4 md:p-6 overflow-y-auto {(ViewModel.Model.CurrentStepIndex==1?null:"hidden")}")>
+            <BankingDetailsStep ViewModel="ViewModel" OnClickSaveAndContinue=@SaveAndContinueStep2 />
+        </div>
+
 
     }
 }
@@ -32,20 +38,20 @@ else
 
     private List<Sidebar.SidebarStep> OnboardingSteps = new()
     {
-        new() { Index = 1, Title = "Company Profile" },
-        new() { Index = 2, Title = "Banking Details" },
-        new() { Index = 3, Title = "Compliance Info" },
-        new() { Index = 4, Title = "Payroll Configuration" },
-        new() { Index = 5, Title = "Payroll Structure" },
-        new() { Index = 6, Title = "Compensation Components" },
-        new() { Index = 7, Title = "Deductions Setup" },
-        new() { Index = 8, Title = "Employer Contributions" },
-        new() { Index = 9, Title = "Accruals" },
-        new() { Index = 10, Title = "Loans" },
-        new() { Index = 11, Title = "Add Employees" },
-        new() { Index = 12, Title = "Integrations" },
-        new() { Index = 13, Title = "Select Payment Plan" },
-        new() { Index = 14, Title = "Completion" }
+        new() { Index = 0, Title = "Company Profile" },
+        new() { Index = 1, Title = "Banking Details" },
+        new() { Index = 2, Title = "Compliance Info" },
+        new() { Index = 3, Title = "Payroll Configuration" },
+        new() { Index = 4, Title = "Payroll Structure" },
+        new() { Index = 5, Title = "Compensation Components" },
+        new() { Index = 6, Title = "Deductions Setup" },
+        new() { Index = 7, Title = "Employer Contributions" },
+        new() { Index = 8, Title = "Accruals" },
+        new() { Index = 9, Title = "Loans" },
+        new() { Index = 10, Title = "Add Employees" },
+        new() { Index = 11, Title = "Integrations" },
+        new() { Index = 12, Title = "Select Payment Plan" },
+        new() { Index = 13, Title = "Completion" }
     };
 
     private void HandleStepClick(Sidebar.SidebarStep step)
@@ -56,13 +62,16 @@ else
     protected override async Task OnParametersSetAsync()
     {
         IsBusy = true;
-        logger.LogInformation("Fetching Tenant onboarding orchestrator...");
+
         await ViewModel.RefreshAsync(() => portal.GetPortal<TenantOnboardingOrchestrator>().CreateAsync());
-        logger.LogInformation("Tenant onboarding orchestrator fetched");
-        if (ViewModel.Model is not null)
-            logger.LogInformation("ViewModel model is not null");
-        else
-            logger.LogInformation("ViewModel model is  null");
+        if(ViewModel.Model is not null)
+        {
+            foreach (var step in ViewModel.Model.Steps)
+            {
+                OnboardingSteps[step.StepIndex].IsCompleted = step.IsCompleted;
+            }
+        }
+        StateHasChanged();
         IsBusy = false;
     }
 
@@ -79,6 +88,30 @@ else
 
 
         await StateManager.InitializeAsync();
-       
+
     }
+
+    private async Task SaveAndContinueStep1()
+    {
+        IsBusy = true;
+        await ViewModel.Model.MoveNextAsync();
+        ViewModel.Model = null!;
+        await ViewModel.RefreshAsync(() => portal.GetPortal<TenantOnboardingOrchestrator>().FetchAsync(tenant.Id));
+        if (ViewModel.Model is not null)
+        {
+            foreach (var step in ViewModel.Model.Steps)
+            {
+                OnboardingSteps[step.StepIndex].IsCompleted = step.IsCompleted;
+            }
+        }
+        IsBusy = false;
+
+    }
+
+    private async Task SaveAndContinueStep2()
+    {
+        
+    }
+
+    
 }

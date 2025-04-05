@@ -1,4 +1,5 @@
 ﻿using Csla.Rules;
+using CustomerOnboarding.BusinessLibrary.BaseTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace CustomerOnboarding.BusinessLibrary.Rules
         }
         protected override void Execute(IRuleContext context)
         {
-            var steps = ((UserOnboardingOrchestrator)context.Target).Steps;
+            var steps = ((IOnboardingOrchestrator)context.Target).Steps;
             var isComplete = steps.All(s => s.IsCompleted);
             context.AddOutValue(AffectedProperties[1],isComplete);
         }

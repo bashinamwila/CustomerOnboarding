@@ -1,0 +1,17 @@
+﻿@rendermode InteractiveServer
+@inject Csla.Blazor.State.StateManager StateManager
+
+<h3>Banking Details step data here</h3>
+
+@code {
+
+    [Parameter]
+    public ViewModel<TenantOnboardingOrchestrator> ViewModel { get; set; } = default!;
+    [Parameter] public EventCallback OnClickSaveAndContinue { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await StateManager.InitializeAsync();
+    }
+
+}

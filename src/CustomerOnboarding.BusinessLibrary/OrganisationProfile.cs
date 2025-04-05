@@ -1,6 +1,8 @@
 ﻿using Csla;
+using Csla.Rules;
 using CustomerOnboarding.BusinessLibrary.Rules;
 using CustomerOnboarding.Dal;
+using CustomerOnboarding.Dal.Dtos;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -57,9 +59,9 @@ namespace CustomerOnboarding.BusinessLibrary
             set => SetProperty(AddressLine2Property, value);
         }
 
-        public static readonly PropertyInfo<string?> CityProperty =
-           RegisterProperty<string?>(nameof(City));
-        public string? City
+        public static readonly PropertyInfo<string> CityProperty =
+           RegisterProperty<string>(nameof(City));
+        public string City
         {
             get => GetProperty(CityProperty);
             set => SetProperty(CityProperty, value);
@@ -75,7 +77,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
         public static readonly PropertyInfo<string> EmailProperty =
            RegisterProperty<string>(nameof(Email));
-        [EmailAddress]
+        
         public string Email
         {
             get => GetProperty(EmailProperty);
@@ -94,6 +96,8 @@ namespace CustomerOnboarding.BusinessLibrary
         protected override void AddBusinessRules()
         {
             base.AddBusinessRules();
+            
+            BusinessRules.RuleSet = "Organisation Profile";
             BusinessRules.AddRule(new BusinessLibrary.Rules.Required(NameProperty) { MessageText = "Organisation Name is required" });
             BusinessRules.AddRule(new BusinessLibrary.Rules.Required(EmailProperty) { MessageText = "Email Address is required" });
             BusinessRules.AddRule(new BusinessLibrary.Rules.Required(AddressLine1Property) { MessageText = "Address Line 1 is required" });
@@ -103,13 +107,50 @@ namespace CustomerOnboarding.BusinessLibrary
 
 
         [CreateChild]
-        private async Task CreateAsync(string id, [Inject]IOrganisationDal dal)
+        private async Task CreateAsync(string id,string ruleSet, [Inject]IOrganisationDal dal)
         {
             using (BypassPropertyChecks)
             {
                 var dto = dal.Fetch(id);
                 Id = dto.Id;
                 Name = dto.Name;
+                BusinessRules.RuleSet = ruleSet;
+            }
+            await BusinessRules.CheckRulesAsync();
+        }
+
+        [InsertChild]
+        private void Insert(TenantOnboardingOrchestrator parent,
+            [Inject]IOrganisationProfileDal dal)
+        {
+            using (BypassPropertyChecks)
+            {
+                var dto = new OrganisationProfileDto
+                {
+                    Email = this.Email,
+                    AddressLine1 = this.AddressLine1,
+                    AddressLine2 = this.AddressLine2,
+                    PhoneNumber = this.PhoneNumber,
+                    TenantId=parent.TenantId
+                };
+                dal.Insert(dto);
+                TimeStamp = dto.LastChanged;
+            }
+        }
+
+        [FetchChild]
+        private async Task FetchAsync(string id,string ruleSet,
+            [Inject] IOrganisationProfileDal dal)
+        {
+            using(BypassPropertyChecks)
+            {
+                var dto = dal.Fetch(id);
+                Name = dto.Name;
+                Email= dto.Email;
+                AddressLine1= dto.AddressLine1;
+                AddressLine2= dto.AddressLine2;
+                PhoneNumber= dto.PhoneNumber;
+                BusinessRules.RuleSet = ruleSet;
             }
             await BusinessRules.CheckRulesAsync();
         }

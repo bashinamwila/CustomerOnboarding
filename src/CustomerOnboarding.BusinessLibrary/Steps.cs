@@ -42,6 +42,7 @@ namespace CustomerOnboarding.BusinessLibrary
             this.RaiseListChangedEvents = false;
 
             // Get metadata from database
+            
             var stepMetadataList = dal.Fetch(tenantId);
 
             // Resolve and instantiate each step
@@ -54,6 +55,9 @@ namespace CustomerOnboarding.BusinessLibrary
 
             this.RaiseListChangedEvents = raiseEvents;
         }
+
+        [FetchChild]
+        private void Fetch() { }
 
         #endregion
     }
