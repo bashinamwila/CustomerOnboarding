@@ -21,6 +21,7 @@ namespace CustomerOnboarding.BusinessLibrary.Rules
         protected override void Execute(IRuleContext context)
         {
             var target = (IStep)context.Target;
+            
             var isComplete = target.IsValid;
             context.AddOutValue(AffectedProperties[1], isComplete);
         }

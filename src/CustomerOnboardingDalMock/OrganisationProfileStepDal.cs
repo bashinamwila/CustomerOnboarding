@@ -9,45 +9,48 @@ using System.Threading.Tasks;
 
 namespace CustomerOnboarding.DalMock
 {
-    public class CreateAccountStepDal : ICreateAccountStepDal
+    public class OrganisationProfileStepDal :
+        IOrganisationProfileStepDal
     {
-        public CreateAccountStepDto Fetch(string tenantId, int id)
+        public OrganisationProfileStepDto Fetch(string tenantId, int id)
         {
-            var result = (from r in MockDb.CreateAccounts
+            var result = (from r in MockDb.OrganisationProfileSteps
                           join s in MockDb.Steps on r.Id equals s.Id
                           where r.TenantId == tenantId
                           && r.Id == id
-                          select new CreateAccountStepDto
+                          select new OrganisationProfileStepDto
                           {
                               TenantId = r.TenantId,
                               StepId = r.Id,
-                              StepIndex=r.StepIndex,
-                              Name= s.Name,
+                              StepIndex = r.StepIndex,
+                              Name = s.Name,
                               Type = s.Type,
-                              RuleSet=s.RuleSet,
+                              RuleSet = s.RuleSet,
+                              IsCompleted=r.IsCompleted,
                               LastChanged = r.LastChanged
                           }).FirstOrDefault();
             if (result is null)
-                throw new DataNotFoundException("CreateAccountStep");
+                throw new DataNotFoundException("OrganisationProfileStep");
             return result;
         }
 
-        public void Insert(CreateAccountStepDto data)
+        public void Insert(OrganisationProfileStepDto data)
         {
             data.LastChanged = MockDb.GetTimeStamp();
-            var newItem = new CreateAccountStepEntity
+            var newItem = new OrganisationProfileStepEntity
             {
                 TenantId = data.TenantId,
                 Id = data.StepId,
                 StepIndex = data.StepIndex,
+                IsCompleted = data.IsCompleted,
                 LastChanged = data.LastChanged
             };
-            MockDb.CreateAccounts.Add(newItem);
+            MockDb.OrganisationProfileSteps.Add(newItem);
         }
 
-        public void Update(CreateAccountStepDto data)
+        public void Update(OrganisationProfileStepDto data)
         {
-           // throw new NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

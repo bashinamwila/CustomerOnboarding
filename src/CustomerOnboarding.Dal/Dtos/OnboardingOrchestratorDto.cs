@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CustomerOnboarding.Dal.Dtos
 {
-    public class UserOnboardingOrchestratorDto
+    public class OnboardingOrchestratorDto
     {
         public string TenantId { get; set; }=string.Empty;
         public int CurrentStepIndex { get; set; }

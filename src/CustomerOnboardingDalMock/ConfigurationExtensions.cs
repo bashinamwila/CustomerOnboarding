@@ -22,6 +22,14 @@ namespace CustomerOnboarding.DalMock
             services.AddTransient<ICountryDal, CountryDal>();
             services.AddTransient<IEmailTemplateDal, EmailTemplateDal>();
             services.AddTransient<IConfirmEmailStepDal, ConfirmEmailStepDal>();
+            services.AddTransient<ITenantOnboardingOrchestratorDal, TenantOnboardingOrchestratorDal>();
+            services.AddTransient<IOrganisationProfileStepDal,OrganisationProfileStepDal>();
+            services.AddTransient<IOrganisationProfileDal, OrganisationProfileDal>(); 
+            services.AddTransient<IBankingDetailsStepDal, BankingDetailsStepDal>();
+            services.AddTransient<IBankingDetailsDal, BankingDetailsDal>();
+            services.AddTransient<ITenantOnboardingStepsDal, TenantOnboardingStepsDal>();
+            services.AddTransient<IBankDal, BankDal>();
+            services.AddTransient<IBranchDal, BranchDal>();
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CustomerOnboarding.Dal
 {
-    public interface IUserOnboardingOrchestratorDal
+    public interface ITenantOnboardingOrchestratorDal
     {
         public void Insert(OnboardingOrchestratorDto data);
         public void Update(OnboardingOrchestratorDto data);

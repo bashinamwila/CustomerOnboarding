@@ -1,0 +1,50 @@
+﻿@rendermode InteractiveServer
+
+<nav class="bg-white shadow-sm fixed w-full z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <!-- Logo and Brand -->
+            <div class="flex items-center">
+                <div class="flex-shrink-0 flex items-center">
+                    <div class="h-8 w-8 bg-blue-600 rounded-md flex items-center justify-center text-white font-bold">
+                        HR
+                    </div>
+                    <span class="ml-2 text-gray-900 font-medium">HR Payroll</span>
+                </div>
+            </div>
+
+            <!-- User Menu -->
+            <div class="flex items-center">
+                <div class="relative ml-3">
+                    <button @onclick="ToggleMenu" class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <span class="sr-only">Open user menu</span>
+                        <span class="mr-2 text-gray-700">John Doe</span>
+                        <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+                            <span class="text-sm font-medium text-gray-600">JD</span>
+                        </div>
+                        <svg class="ml-1 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+
+                    @if (showDropdown)
+                    {
+                        <div class="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 z-50">
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Switch to Employee Profile</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Log out</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+@code {
+    private bool showDropdown = false;
+
+    private void ToggleMenu()
+    {
+        showDropdown = !showDropdown;
+    }
+}

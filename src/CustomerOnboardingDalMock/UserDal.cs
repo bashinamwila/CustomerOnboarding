@@ -71,8 +71,10 @@ namespace CustomerOnboarding.DalMock
                         select r).FirstOrDefault();
             if(result is null)
                 throw new DataNotFoundException("User");
+            /*
             if(!result.LastChanged.Matches(data.LastChanged))
                 throw new ConcurrencyException("User");
+            */
             data.LastChanged = MockDb.GetTimeStamp();
             result.IsConfirmed = data.IsConfirmed;
         }

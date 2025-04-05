@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-public class CustomerOnboardingOrchestratorTests : IClassFixture<CslaTestFixture>
+public class UserOnboardingOrchestratorTests : IClassFixture<CslaTestFixture>
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public CustomerOnboardingOrchestratorTests(CslaTestFixture fixture)
+    public UserOnboardingOrchestratorTests(CslaTestFixture fixture)
     {
         _serviceProvider = fixture.Services;
     }
