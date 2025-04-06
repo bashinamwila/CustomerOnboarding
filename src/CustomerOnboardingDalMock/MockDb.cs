@@ -27,6 +27,7 @@ namespace CustomerOnboarding.DalMock
         public static List<BankEntity> Banks { get; private set; } = default!;
 
         public static List<BranchEntity> Branches { get; private set; } = default!;
+        public static List<ComplianceInfoStepEntity> ComplianceInfoSteps { get; private set; } = default!;
         static MockDb()
         {
             Steps = new List<StepEntity>
@@ -35,7 +36,8 @@ namespace CustomerOnboarding.DalMock
                 new StepEntity{Id=2,Name="Send Email Notification",Type=2,FullTypeName="CustomerOnboarding.BusinessLibrary.SendEmailNotificationStep,CustomerOnboarding.BusinessLibrary",LastChanged=GetTimeStamp()},
                 new StepEntity{Id=3,Name="Confirm Account",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.ConfirmEmailStep,CustomerOnboarding.BusinessLibrary",RuleSet="Confirm Email", LastChanged = GetTimeStamp()},
                 new StepEntity{Id=4,Name="Organisation Profile",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.OrganisationProfileStep,CustomerOnboarding.BusinessLibrary",RuleSet="Organisation Profile", LastChanged = GetTimeStamp()},
-                new StepEntity{Id=5,Name="Banking Details",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.BankingDetailsStep,CustomerOnboarding.BusinessLibrary",RuleSet="Banking Details", LastChanged = GetTimeStamp()}
+                new StepEntity{Id=5,Name="Banking Details",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.BankingDetailsStep,CustomerOnboarding.BusinessLibrary",RuleSet="Banking Details", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=6,Name="Compliance Info",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.ComplianceInfoStep,CustomerOnboarding.BusinessLibrary",RuleSet="Compliance Info", LastChanged = GetTimeStamp()}
 
             };
             UserOnboardingWorkflows = new List<UserOnboardingEntity>();
@@ -48,7 +50,8 @@ namespace CustomerOnboarding.DalMock
             OrganisationProfiles = new();
             Users = new();
             BankingDetailsSteps = new();
-            BankingDetails = new(); 
+            BankingDetails = new();
+            ComplianceInfoSteps = new();
             Countries = new List<CountryEntity>
             {
                 new CountryEntity
@@ -100,7 +103,8 @@ namespace CustomerOnboarding.DalMock
                 {
                     BankId="02",
                     Name="Absa Bank Zambia PLC",
-                    SwiftCode="XXXX"
+                    SwiftCode="XXXX",
+                    LogoUrl="/images/bank-icons/Absa.svg"
 
                 },
                 new BankEntity
@@ -115,20 +119,23 @@ namespace CustomerOnboarding.DalMock
                 {
                     BankId="19",
                     Name="Bank of China Zambia Limited",
-                     SwiftCode="XXXX"
+                     SwiftCode="XXXX",
+                     LogoUrl="/images/bank-icons/Bank of China.svg"
 
                 },
                 new BankEntity
                 {
                     BankId="03",
                     Name="Citibank Zambia Limited",
-                     SwiftCode="XXXX"
+                     SwiftCode="XXXX",
+                     LogoUrl="/images/bank-icons/Citi.svg"
 
                 },
                 new BankEntity
                 {
                     BankId="36",
-                    Name="Ecobank Zambia Limited"
+                    Name="Ecobank Zambia Limited",
+                    LogoUrl="/images/bank-icons/EcoBank.svg"
 
                 },
                 new BankEntity
@@ -149,14 +156,16 @@ namespace CustomerOnboarding.DalMock
                 {
                     BankId="26",
                     Name="First National Bank Zambia Limited",
-                     SwiftCode="XXXX"
+                     SwiftCode="XXXX",
+                     LogoUrl="/images/bank-icons/FNB.svg"
 
                 },
                 new BankEntity
                 {
                     BankId="09",
                     Name="Indo-Zambia Bank Zambia Limited",
-                     SwiftCode="XXXX"
+                     SwiftCode="XXXX",
+                     LogoUrl="/images/bank-icons/IZB.svg"
 
                 },
 
@@ -171,28 +180,32 @@ namespace CustomerOnboarding.DalMock
                 {
                     BankId="06",
                     Name="Standard Chartered Bank Zambia PLC",
-                    SwiftCode="XXXX"
+                    SwiftCode="XXXX",
+                    LogoUrl="/images/bank-icons/Stanchart.svg"
 
                 },
                 new BankEntity
                 {
                     BankId="37",
                     Name="United Bank for Africa Zambia Limited",
-                    SwiftCode="XXXX"
+                    SwiftCode="XXXX",
+                    LogoUrl="/images/bank-icons/UBA.svg"
 
                 },
                 new BankEntity
                 {
                     BankId="15",
                     Name="Zambia Industrial Commercial Bank Limited",
-                    SwiftCode="XXXX"
+                    SwiftCode="XXXX",
+                     LogoUrl="/images/bank-icons/ZICB.svg"
 
                 },
                  new BankEntity
                 {
                     BankId="01",
                     Name="Zambia National Commercial Bank PLC",
-                    SwiftCode="XXXX"
+                    SwiftCode="XXXX",
+                    LogoUrl="/images/bank-icons/Zanaco.svg"
 
                 },
                    new BankEntity

@@ -28,7 +28,9 @@ else
         <div class=@($"flex-1 p-4 md:p-6 overflow-y-auto {(ViewModel.Model.CurrentStepIndex==1?null:"hidden")}")>
             <BankingDetailsStep ViewModel="ViewModel" OnClickSaveAndContinue=@SaveAndContinueStep2 />
         </div>
-
+          <div class=@($"flex-1 p-4 md:p-6 overflow-y-auto {(ViewModel.Model.CurrentStepIndex==2?null:"hidden")}")>
+              <ComplianceInfoStep />
+          </div>
 
     }
 }
@@ -91,7 +93,13 @@ else
 
     }
 
-    private async Task SaveAndContinueStep1()
+    private async Task SaveAndContinueStep1() => await SaveAndContinueStep();
+    
+
+    private async Task SaveAndContinueStep2() => await SaveAndContinueStep();
+    
+
+    private async Task SaveAndContinueStep()
     {
         IsBusy = true;
         await ViewModel.Model.MoveNextAsync();
@@ -105,13 +113,8 @@ else
             }
         }
         IsBusy = false;
-
     }
 
-    private async Task SaveAndContinueStep2()
-    {
-        
-    }
-
+    
     
 }

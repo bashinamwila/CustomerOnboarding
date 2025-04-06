@@ -58,7 +58,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
             // Step is complete only if both child objects are valid
             BusinessRules.AddRule(new CheckIfStepIsComplete(BankingDetailsProperty, IsCompletedProperty));
-            
+
         }
 
         protected override void OnChildChanged(ChildChangedEventArgs e)
@@ -70,7 +70,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [CreateChild]
         private async Task CreateAsync(
-            string tenantId, int id,
+            int id,
             int currentStepIndex,
           [Inject] IStepTypeDal dal,
             [Inject] IChildDataPortalFactory portal)
@@ -89,7 +89,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 IsCompleted = false;
                 BankingDetails = await portal.GetPortal<BankingDetails>().CreateChildAsync(RuleSet);
             }
-            if(currentStepIndex== StepIndex)
+            if (currentStepIndex == StepIndex)
                 await BusinessRules.CheckRulesAsync();
         }
 
@@ -105,12 +105,12 @@ namespace CustomerOnboarding.BusinessLibrary
                     TenantId = parent.TenantId,
                     StepId = this.Id,
                     StepIndex = this.StepIndex,
-                    IsCompleted=(parent.CurrentStepIndex-1)==this.StepIndex?this.IsCompleted : false, // Only mark as completed if it's the current step
+                    IsCompleted = (parent.CurrentStepIndex - 1) == this.StepIndex ? this.IsCompleted : false, // Only mark as completed if it's the current step
                 };
                 dal.Insert(dto);
                 TimeStamp = dto.LastChanged;
-                if((parent.CurrentStepIndex-1)==StepIndex)
-                        await portal.UpdateChildAsync(BankingDetails, parent);
+                if ((parent.CurrentStepIndex - 1) == StepIndex)
+                    await portal.UpdateChildAsync(BankingDetails, parent);
             }
         }
 
@@ -124,26 +124,54 @@ namespace CustomerOnboarding.BusinessLibrary
         {
             using (BypassPropertyChecks)
             {
-                var data = dal.Fetch(tenantId,id);
+                var data = dal.Fetch(tenantId, id);
                 Id = data.StepId;
                 Name = data.Name;
                 Type = (StepType)Enum.Parse(typeof(StepType), data.Type.ToString());
                 StepIndex = data.StepIndex;
-                if(currentStepIndex== StepIndex)
+                TimeStamp = data.LastChanged;
+                if (currentStepIndex == StepIndex)
                     RuleSet = data.RuleSet;
                 else
-                   RuleSet = "";
-                
+                    RuleSet = "";
+
                 IsCompleted = data.IsCompleted;
-                if(dalBankingDetails.Exists(tenantId))
-                    BankingDetails = await portal.GetPortal<BankingDetails>().FetchChildAsync(tenantId,RuleSet);
-                
+                if (dalBankingDetails.Exists(tenantId))
+                    BankingDetails = await portal.GetPortal<BankingDetails>().FetchChildAsync(tenantId, RuleSet);
+
                 else
                     BankingDetails = await portal.GetPortal<BankingDetails>().CreateChildAsync(RuleSet);
             }
 
             if (currentStepIndex == StepIndex)
                 await BusinessRules.CheckRulesAsync();
+        }
+
+        [UpdateChild]
+        private async Task UpdateAsync(TenantOnboardingOrchestrator parent,
+             [Inject] IBankingDetailsStepDal dal,
+            [Inject] IChildDataPortal<BankingDetails> portal)
+
+
+        {
+            using (BypassPropertyChecks)
+            {
+                var dto = new BankingDetailsStepDto
+                {
+                    TenantId = parent.TenantId,
+                    StepId = this.Id,
+                    StepIndex = this.StepIndex,
+                    IsCompleted = (parent.CurrentStepIndex - 1) == this.StepIndex ? this.IsCompleted : false,
+                    LastChanged=this.TimeStamp
+                    // Only mark as completed if it's the current step
+                };
+                dal.Update(dto);
+                TimeStamp = dto.LastChanged;
+                if ((parent.CurrentStepIndex - 1) == StepIndex)
+                    await portal.UpdateChildAsync(BankingDetails, parent);
+            }
+
+
         }
     }
 }

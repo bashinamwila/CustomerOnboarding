@@ -49,7 +49,7 @@ namespace CustomerOnboarding.BusinessLibrary
             var dp = (IChildDataPortal)appCtx.GetRequiredService(dpType);
 
             // Create the step instance
-            Result = (IStep)await dp.CreateChildAsync(id,currentStepIndex);
+            Result = (IStep)dp.CreateChild(id,currentStepIndex);
         }
 
         /// <summary>

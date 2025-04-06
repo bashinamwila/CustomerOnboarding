@@ -30,6 +30,7 @@ namespace CustomerOnboarding.DalMock
             services.AddTransient<ITenantOnboardingStepsDal, TenantOnboardingStepsDal>();
             services.AddTransient<IBankDal, BankDal>();
             services.AddTransient<IBranchDal, BranchDal>();
+            services.AddTransient<IComplianceInfoStepDal, ComplianceInfoStepDal>();
         }
     }
 }

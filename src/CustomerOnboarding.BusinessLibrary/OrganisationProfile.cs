@@ -1,5 +1,6 @@
 ﻿using Csla;
 using Csla.Rules;
+using CustomerOnboarding.BusinessLibrary.Multitenancy;
 using CustomerOnboarding.BusinessLibrary.Rules;
 using CustomerOnboarding.Dal;
 using CustomerOnboarding.Dal.Dtos;
@@ -107,13 +108,14 @@ namespace CustomerOnboarding.BusinessLibrary
 
 
         [CreateChild]
-        private async Task CreateAsync(string id,string ruleSet, [Inject]IOrganisationDal dal)
+        private async Task CreateAsync(string ruleSet,
+            [Inject]TenantInfo tenant)
         {
             using (BypassPropertyChecks)
             {
-                var dto = dal.Fetch(id);
-                Id = dto.Id;
-                Name = dto.Name;
+
+                Id = tenant.Id;
+                Name = tenant.Name;
                 BusinessRules.RuleSet = ruleSet;
             }
             await BusinessRules.CheckRulesAsync();

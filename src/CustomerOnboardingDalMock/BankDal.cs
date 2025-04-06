@@ -41,6 +41,7 @@ namespace CustomerOnboarding.DalMock
                               Id = r.BankId,
                               Name = r.Name,
                               SwiftCode = r.SwiftCode,
+                              LogoUrl=r.LogoUrl,
                               LastChanged = r.LastChanged
                           }).ToList();
             return result;

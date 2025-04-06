@@ -148,6 +148,7 @@ namespace CustomerOnboarding.BusinessLibrary
         [Create]
         private async Task CreateAsync([Inject]TenantInfo tenant,
             [Inject]IChildDataPortalFactory portal,
+            [Inject]IDataPortal<TenantOnboardingStepsFactory>factory,
             [Inject]ILogger<TenantOnboardingOrchestrator>logger)
         {
             using (BypassPropertyChecks)
@@ -155,12 +156,10 @@ namespace CustomerOnboarding.BusinessLibrary
                 IsComplete = false;
                 TenantId = tenant.Id;
                 CurrentStepIndex = 0;
-                Steps = await portal.GetPortal<Steps>().CreateChildAsync();
+                var creator = await factory.FetchAsync(new int[] { 4, 5, 6 }, CurrentStepIndex);
+                Steps = creator.Steps;
                
-                var organisationProfileStep = await portal.GetPortal<OrganisationProfileStep>().CreateChildAsync(tenant.Id,4,CurrentStepIndex);
-                var bankingDetailsStep = await portal.GetPortal<BankingDetailsStep>().CreateChildAsync(tenant.Id, 5, CurrentStepIndex);
-
-                Steps.AddRange(new IStep [] {organisationProfileStep,bankingDetailsStep });
+                
             }
             await BusinessRules.CheckRulesAsync();
         }
@@ -194,7 +193,7 @@ namespace CustomerOnboarding.BusinessLibrary
         private async Task FetchAsync(
             string tenantId,
             [Inject] ITenantOnboardingOrchestratorDal dal,
-            [Inject] IDataPortal<TenantOnboardingStepsGetter> portal)
+            [Inject] IDataPortal<TenantOnboardingStepsFactory> portal)
         {
             using (BypassPropertyChecks)
             {
@@ -210,5 +209,33 @@ namespace CustomerOnboarding.BusinessLibrary
             // Check rules after fetching (e.g., IsComplete)
             await BusinessRules.CheckRulesAsync();
         }
+
+        [Update]
+        private async Task UpdateAsync([Inject] ITenantOnboardingOrchestratorDal dal,
+            [Inject] IChildDataPortal<Steps> portal)
+        {
+            using (BypassPropertyChecks)
+            {
+                // Create the DTO for the orchestrator itself
+                var dto = new OnboardingOrchestratorDto
+                {
+                    TenantId = this.TenantId,
+                    CurrentStepIndex = this.CurrentStepIndex,
+                    LastChanged=this.TimeStamp
+                    // TimeStamp will be set by the DAL upon insertion
+                };
+                // Persist the orchestrator data
+                dal.Update(dto);
+                // Update the object's timestamp with the value returned from the DAL
+                TimeStamp = dto.LastChanged;
+
+                // Cascade the insert/update operation to the child Steps collection
+                // This will trigger the appropriate InsertChild/UpdateChild methods on each IStep
+
+                await portal.UpdateChildAsync(Steps, this); // Pass 'this' as the parent context
+            }
+        }
     }
+
+
 }

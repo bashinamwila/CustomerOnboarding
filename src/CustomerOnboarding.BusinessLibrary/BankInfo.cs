@@ -35,6 +35,15 @@ namespace CustomerOnboarding.BusinessLibrary
             private set { LoadProperty(SwiftCodeProperty, value); }
         }
 
+
+        public static readonly PropertyInfo<string> LogoUrlProperty =
+           RegisterProperty<string>(nameof(LogoUrl));
+        public string LogoUrl
+        {
+            get { return GetProperty(LogoUrlProperty); }
+            private set { LoadProperty(LogoUrlProperty, value); }
+        }
+
         public static readonly PropertyInfo<BranchList> BranchesProperty =
             RegisterProperty<BranchList>(nameof(Branches));
         public BranchList Branches
@@ -49,6 +58,7 @@ namespace CustomerOnboarding.BusinessLibrary
             Id = data.Id;
             Name = data.Name;
             SwiftCode = data.SwiftCode;
+            LogoUrl=data.LogoUrl;
             Branches = portal.FetchChild(Id);
         }
     }

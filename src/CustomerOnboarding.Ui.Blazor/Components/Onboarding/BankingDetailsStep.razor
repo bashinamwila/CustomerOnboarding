@@ -1,17 +1,167 @@
 ﻿@rendermode InteractiveServer
 @inject Csla.Blazor.State.StateManager StateManager
+@inject IDataPortalFactory Portal
 
-<h3>Banking Details step data here</h3>
+<div class="container mx-auto px-4 py-8 max-w-6xl">
+    <!-- Header -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white shadow-sm">
+        <div class="flex items-center justify-start h-16">
+            <!-- Bank Icon (Using Heroicons 'building-library') -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-indigo-600 mr-3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z" />
+            </svg>
+            <h1 class="text-xl font-semibold text-gray-800">Add Bank Account</h1>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex flex-col md:flex-row gap-10">
+        @if (!showBankDetailsTab)
+        {
+            <!-- Tab 1: Main Content -->
+            <div class="flex flex-col md:flex-row gap-10">
+                <div class="flex-1 bg-white p-8 rounded-lg">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Why do we need to ask for this information?</h3>
+                    <p class="text-gray-600 mb-4">We use your bank account details securely to generate the Direct Debit and Credit (DDACC) file required for processing payroll and statutory payments like NAPSA and NHIMA through your bank.</p>
+
+                    <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">
+                        Coming Soon
+                    </span>
+
+                    <p class="text-gray-600 mb-8">
+                        You will be able to link Benefito to your online Banking portal to make it easier for you.
+                        You will be able to pay taxes, NAPSA, NHIMA, wages and our monthly fee directly from Benefito.
+                    </p>
+
+                    <button @onclick="ShowBankDetailsTab" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md transition duration-200 flex items-center">
+                        <i class="fas fa-plus-circle mr-2"></i>
+                        Add Bank Account
+                    </button>
+                </div>
+
+                <div class="flex-1 bg-white p-8 rounded-lg">
+                    <h3 class="text-lg font-medium text-gray-700 mb-6">What to have ready</h3>
+                    <div class="flex items-start mb-3">
+                        <span class="flex-shrink-0 mt-1">
+                            <i class="fas fa-check-circle text-blue-500 mr-2"></i>
+                        </span>
+                        <span class="font-medium">Banking Details</span>
+                    </div>
+                    <ul class="list-disc pl-10 mb-8 text-gray-600">
+                        <li class="mb-2">Account Number</li>
+                        <li class="mb-2">Branch Name</li>
+                        <li>Bank Name</li>
+                    </ul>
+
+                    <div class="mt-auto pt-6 border-t border-gray-100">
+                        <h4 class="text-lg font-medium text-gray-800 mb-3">Do you need any help?</h4>
+                        <a href="#" class="text-blue-600 hover:text-blue-800 flex items-center">
+                            <i class="fas fa-play-circle mr-2"></i>
+                            Getting Started: Adding a bank Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            @if(ViewModel is not null)
+            {
+                <!-- Tab 2: Bank Details -->
+                <div class="w-full bg-white p-8 rounded-lg space-y-6">
+                    <!-- Bank Id -->
+                    <div class="form-group">
+                        <label class="block text-gray-700 text-sm font-medium mb-1">Bank</label>
+                        <label class="block text-gray-500 text-xs mb-2">The bank from which payroll payments will be paid from</label>
+                        <div class="w-3/4">
+                            @if (banks is not null)
+                            {
+                                <BanksDropDown Banks="banks" IsOpen=@isOpen OnIsOpenChanged="HandleIsOpenChanged"
+                                SelectedBankChanged="HandleSelectedBankChanged" />
+                            }
+                            <ErrorText PropertyInfo=@(ViewModel.GetPropertyInfo(()=>((CustomerOnboarding.BusinessLibrary.BankingDetailsStep)ViewModel.Model.Steps[1]).BankingDetails.BankId)) />
+                        </div>
+                    </div>
+
+                    <!-- Branch -->
+                    <div class="form-group">
+                        <label class="block text-gray-700 text-sm font-medium mb-1">Branch</label>
+                        <label class="block text-gray-500 text-xs mb-2">The Bank branch at which the account is held</label>
+                        <div class="w-3/4">
+                            <select class="w-full py-2 px-1 focus:outline-none focus:border-blue-500 focus:bg-blue-50 border-b-2 border-gray-400 bg-gray-50"
+                            @bind-value="@(((CustomerOnboarding.BusinessLibrary.BankingDetailsStep)ViewModel.Model.Steps[1]).BankingDetails.BranchId)" @bind-value:event="onchange">
+                                <option value="">Select Branch</option>
+                                @if (branches is not null)
+                                {
+                                    @foreach (var branch in branches)
+                                    {
+                                        <option value="@branch.Id">@branch.Name</option>
+                                    }
+                                }
+                            </select>
+                            <ErrorText PropertyInfo=@(ViewModel.GetPropertyInfo(()=>((CustomerOnboarding.BusinessLibrary.BankingDetailsStep)ViewModel.Model.Steps[1]).BankingDetails.BranchId)) />
+                        </div>
+                    </div>
+
+                    <!-- Account Number -->
+                    <div class="form-group">
+                        <label class="block text-gray-700 text-sm font-medium mb-1">Account Number</label>
+                        <label class="block text-gray-500 text-xs mb-2">The account from which the payroll payments are made</label>
+                        <div class="w-3/4">
+                            <input type="text" class="w-full py-2 px-1 focus:outline-none focus:border-blue-500 focus:bg-blue-50 border-b-2 border-gray-400 bg-gray-50"
+                            placeholder="Enter account number" @bind-value="@(((CustomerOnboarding.BusinessLibrary.BankingDetailsStep)ViewModel.Model.Steps[1]).BankingDetails.BankAccountNumber)" @bind-value:event="oninput">
+                            <ErrorText PropertyInfo=@(ViewModel.GetPropertyInfo(()=>((CustomerOnboarding.BusinessLibrary.BankingDetailsStep)ViewModel.Model.Steps[1]).BankingDetails.BankAccountNumber)) />
+                        </div>
+                    </div>
+
+                    <div class="w-3/4 flex justify-end mt-8">
+                        <button @onclick=@SaveAndContinueAsync class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-md font-semibold transition disabled:bg-blue-300 disabled:cursor-not-allowed"
+                        disabled="@(!((CustomerOnboarding.BusinessLibrary.BankingDetailsStep)ViewModel.Model.Steps[1]).IsValid)">
+                            Save & Continue
+                        </button>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
 
 @code {
-
     [Parameter]
     public ViewModel<TenantOnboardingOrchestrator> ViewModel { get; set; } = default!;
     [Parameter] public EventCallback OnClickSaveAndContinue { get; set; }
+    private BranchList branches = default!;
+
+    private BankList banks = default!;
 
     protected override async Task OnInitializedAsync()
     {
         await StateManager.InitializeAsync();
+        banks = await Portal.GetPortal<BankList>().FetchAsync();
     }
 
+    private bool showBankDetailsTab = false;
+
+    private void ShowBankDetailsTab()
+    {
+        showBankDetailsTab = true;
+    }
+
+    private bool isOpen = false;
+
+    private void HandleIsOpenChanged(bool isOpen)
+    {
+        this.isOpen = isOpen;
+    }
+
+    private BankInfo? selectedBank;
+
+    private void HandleSelectedBankChanged(BankInfo bank)
+    {
+        selectedBank = bank;
+        ((CustomerOnboarding.BusinessLibrary.BankingDetailsStep)ViewModel.Model.Steps[1]).BankingDetails.BankId = bank.Id;
+        branches = bank.Branches;
+    }
+
+    private async Task SaveAndContinueAsync() => await OnClickSaveAndContinue.InvokeAsync();
 }

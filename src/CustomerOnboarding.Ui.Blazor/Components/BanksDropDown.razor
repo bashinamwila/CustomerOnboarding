@@ -1,0 +1,82 @@
+﻿@rendermode InteractiveServer
+@inject Csla.Blazor.State.StateManager StateManager
+
+
+@if(Banks is not null)
+{
+    <div class="relative">
+        <button type="button"
+                @onclick="ToggleDropdown"
+                class="w-full bg-gray-100 border-b border-gray-300 px-3 py-2 text-left flex items-center justify-between focus:outline-none focus:bg-blue-50 focus:border-blue-500">
+            @if (SelectedBank is not null)
+            {
+                <span class="flex items-center gap-2">
+                    <img src="@SelectedBank?.LogoUrl" alt=@($"{SelectedBank?.Name} Logo") class="h-5 w-5" />
+                    <span>@SelectedBank?.Name</span>
+                </span>
+            }
+            else
+            {
+                <span class="flex items-center gap-2">
+                    <img src="" alt="" class="h-5 w-5" />
+                    <span>Select Bank</span>
+                </span>
+            }
+            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+
+        @if (IsOpen)
+        {
+            <ul class="absolute z-10 mt-2 w-full bg-white border rounded-lg shadow-md">
+                @foreach (var option in Banks)
+                {
+                    <li @onclick="@(() => SelectOption(option))"
+                        class="flex items-center px-3 py-2 hover:bg-blue-50 cursor-pointer">
+                        <img src="@option.LogoUrl" class="h-5 w-5 mr-2" />
+                        @option.Name
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public bool IsOpen { get; set; } = false;
+
+    [Parameter]
+    public BankInfo? SelectedBank { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnIsOpenChanged { get; set; }
+
+    [Parameter]
+    public string Class { get; set; } = string.Empty;
+
+
+    [Parameter]
+    public BankList Banks { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<BankInfo> SelectedBankChanged { get; set; }
+
+    private async Task SelectOption(BankInfo option)
+    {
+        SelectedBank = option;
+        IsOpen = false;
+        await SelectedBankChanged.InvokeAsync(option);
+    }
+
+    private async Task ToggleDropdown()
+    {
+        IsOpen = !IsOpen;
+        await OnIsOpenChanged.InvokeAsync(IsOpen);
+    } 
+
+    protected override async Task OnInitializedAsync() => await StateManager.InitializeAsync();
+
+}

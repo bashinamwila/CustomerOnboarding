@@ -6,39 +6,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CustomerOnboarding.DalMock
 {
-    public class BankingDetailsStepDal :
-        IBankingDetailsStepDal
+    public class ComplianceInfoStepDal : IComplianceInfoStepDal
     {
-        public BankingDetailsStepDto Fetch(string tenantId, int id)
+        public ComplianceInfoStepDto Fetch(string tenantId, int id)
         {
-            var result = (from r in MockDb.BankingDetailsSteps
+            var result = (from r in MockDb.ComplianceInfoSteps
                           join s in MockDb.Steps on r.Id equals s.Id
                           where r.TenantId == tenantId
                           && r.Id == id
-                          select new BankingDetailsStepDto
+                          select new ComplianceInfoStepDto
                           {
                               TenantId = r.TenantId,
                               StepId = r.Id,
                               StepIndex = r.StepIndex,
                               Name = s.Name,
                               Type = s.Type,
-                              IsCompleted=r.IsCompleted,
+                              IsCompleted = r.IsCompleted,
                               RuleSet = s.RuleSet,
                               LastChanged = r.LastChanged
                           }).FirstOrDefault();
             if (result is null)
-                throw new DataNotFoundException("BankingDetailsStep");
+                throw new DataNotFoundException("ComplianceInfoStep");
             return result;
         }
 
-        public void Insert(BankingDetailsStepDto dto)
+        public void Insert(ComplianceInfoStepDto dto)
         {
             dto.LastChanged = MockDb.GetTimeStamp();
-            var newItem = new BankingDetailsStepEntity
+            var newItem = new ComplianceInfoStepEntity
             {
                 TenantId = dto.TenantId,
                 Id = dto.StepId,
@@ -46,22 +44,12 @@ namespace CustomerOnboarding.DalMock
                 IsCompleted = dto.IsCompleted,
                 LastChanged = dto.LastChanged
             };
-            MockDb.BankingDetailsSteps.Add(newItem);
-            
+            MockDb.ComplianceInfoSteps.Add(newItem);
         }
 
-        public void Update(BankingDetailsStepDto dto)
+        public void Update(ComplianceInfoStepDto dto)
         {
-            var result = (from r in MockDb.BankingDetailsSteps
-                          where r.TenantId == dto.TenantId
-                          select r).FirstOrDefault();
-            if (result is null)
-                throw new DataNotFoundException("BankingDetailsStep");
-            if (!result.LastChanged.Matches(dto.LastChanged))
-                throw new ConcurrencyException("BankingDetailsStep");
-            dto.LastChanged = MockDb.GetTimeStamp();
-            result.IsCompleted=dto.IsCompleted;
-            result.LastChanged = dto.LastChanged;
+            throw new NotImplementedException();
         }
     }
 }
