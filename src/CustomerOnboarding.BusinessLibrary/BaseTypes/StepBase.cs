@@ -41,13 +41,13 @@ namespace CustomerOnboarding.BusinessLibrary.BaseTypes
             protected set => LoadProperty(NameProperty, value);
         }
 
-        public static readonly PropertyInfo<StepType> TypeProperty =
-            RegisterProperty<StepType>(nameof(Type));
+        public static readonly PropertyInfo<StepTypes> TypeProperty =
+            RegisterProperty<StepTypes>(nameof(Type));
 
         /// <summary>
         /// Indicates whether the step is Manual or Automatic.
         /// </summary>
-        public StepType Type
+        public StepTypes Type
         {
             get => GetProperty(TypeProperty);
             protected set => LoadProperty(TypeProperty, value);

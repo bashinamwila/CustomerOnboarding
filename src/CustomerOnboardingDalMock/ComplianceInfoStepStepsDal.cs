@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace CustomerOnboarding.DalMock
 {
-    public class TenantOnboardingStepsDal :
-        ITenantOnboardingStepsDal
+    public class ComplianceInfoStepStepsDal : IComplianceInfoStepStepsDal
     {
         public List<StepDto> Fetch(string tenantId)
         {
@@ -19,20 +18,18 @@ namespace CustomerOnboarding.DalMock
                 Id = r.Id
             };
 
-            var orgSteps = MockDb.OrganisationProfileSteps
+            var complianceInfo = MockDb.GeneralComplianceInformation
                 .Where(r => r.TenantId == tenantId)
                 .Select(OnboardinStep);
 
-            var bankingSteps = MockDb.BankingDetailsSteps
+            var registrations = MockDb.StatutoryRegistrationsSteps
                 .Where(r => r.TenantId == tenantId)
                 .Select(OnboardinStep);
 
-            var statutorySteps = MockDb.ComplianceInfoSteps
-                .Where(r => r.TenantId == tenantId)
-                .Select(OnboardinStep);
+           
 
 
-            return orgSteps.Concat(bankingSteps).Concat(statutorySteps).ToList();
+            return complianceInfo.Concat(registrations).ToList(); ;
         }
     }
 }

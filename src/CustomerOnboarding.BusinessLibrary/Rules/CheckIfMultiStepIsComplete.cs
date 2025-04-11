@@ -8,21 +8,25 @@ using System.Threading.Tasks;
 
 namespace CustomerOnboarding.BusinessLibrary.Rules
 {
-    public class CheckIfWorkflowIsComplete :
+    public class CheckIfMultiStepIsComplete :
         BusinessRule
     {
-        public CheckIfWorkflowIsComplete(Csla.Core.IPropertyInfo primaryProperty,Csla.Core.IPropertyInfo affectedProperty) :
-            base(primaryProperty)
+        public CheckIfMultiStepIsComplete(Csla.Core.IPropertyInfo primaryProperty,
+            Csla.Core.IPropertyInfo affectedProperty)
+            : base(primaryProperty)
         {
             InputProperties.AddRange(new[] { primaryProperty, affectedProperty });
             AffectedProperties.Add(affectedProperty);
         }
+
         protected override void Execute(IRuleContext context)
         {
-            var workflow = (IOnboardingOrchestrator)context.Target;
-            var steps = workflow.Steps;
-            var isComplete = steps.All(s => s.IsCompleted);
-            context.AddOutValue(AffectedProperties[1],isComplete);
+            var target = context.Target as IOnboardingOrchestrator;
+            if(target is not null)
+            {
+                var isComplete = target.Steps.All(r => r.IsCompleted);
+                context.AddOutValue(AffectedProperties[1], isComplete);
+            }
         }
     }
 }

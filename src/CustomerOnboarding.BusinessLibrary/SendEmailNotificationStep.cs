@@ -78,7 +78,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 var data = dal.Fetch(id);
                 Id = data.Id;
                 Name = data.Name;
-                Type = (StepType)Enum.Parse(typeof(StepType), data.Type.ToString());
+                Type = (StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());
                 StepIndex = 1;
                 IsCompleted = false;
             }
@@ -96,7 +96,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 Id = data.Id;
                 Name = data.Name;
                 StepIndex = data.StepIndex;
-                Type = (StepType)Enum.Parse(typeof(StepType), data.Type.ToString());
+                Type = (StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());
                 IsCompleted = data.IsCompleted;
                 TimeStamp = data.LastChanged;
             }

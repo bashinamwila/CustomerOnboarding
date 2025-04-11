@@ -13,5 +13,7 @@ namespace CustomerOnboarding.Dal
         public void Update(OnboardingOrchestratorDto data);
         public OnboardingOrchestratorDto Fetch(string tenantId);
         public void UpdateCurrentStepIndex(string tenantId, int currentStepIndex, byte[] timeStamp);
+
+        public bool Exits(string tenantId);
     }
 }

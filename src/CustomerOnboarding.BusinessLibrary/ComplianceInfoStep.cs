@@ -15,20 +15,10 @@ namespace CustomerOnboarding.BusinessLibrary
 {
     [Serializable]
     public class ComplianceInfoStep :
-        StepBase<ComplianceInfoStep>
+        StepBase<ComplianceInfoStep>,IOnboardingOrchestrator
     {
 
-        public static readonly PropertyInfo<string> RuleSetProperty =
-            RegisterProperty<string>(nameof(RuleSet));
-
-        /// <summary>
-        /// Name of the rule set used to validate this step's children.
-        /// </summary>
-        public string RuleSet
-        {
-            get => GetProperty(RuleSetProperty);
-            private set => LoadProperty(RuleSetProperty, value);
-        }
+       
         public static readonly PropertyInfo<byte[]> TimeStampProperty =
             RegisterProperty<byte[]>(nameof(TimeStamp));
 
@@ -40,16 +30,48 @@ namespace CustomerOnboarding.BusinessLibrary
             set => SetProperty(TimeStampProperty, value);
         }
 
-        public static readonly PropertyInfo<StatutoryRegistrations> StatutoryRegistrationsProperty =
-           RegisterProperty<StatutoryRegistrations>(nameof(StatutoryRegistrations));
+
+
+        public static readonly PropertyInfo<bool> IsCompleteProperty =
+           RegisterProperty<bool>(nameof(IsComplete));
 
         /// <summary>
-        /// Organisation details provided by the customer.
+        /// Indicates whether all steps in the workflow have been completed.
+        /// This is managed by the CheckIfWorkflowIsComplete business rule.
         /// </summary>
-        public StatutoryRegistrations StatutoryRegistrations
+        public bool IsComplete
         {
-            get => GetProperty(StatutoryRegistrationsProperty);
-            private set => LoadProperty(StatutoryRegistrationsProperty, value);
+            get => GetProperty(IsCompleteProperty);
+            private set => SetProperty(IsCompleteProperty, value); // Rule sets this
+        }
+
+        public static readonly PropertyInfo<Steps> StepsProperty =
+            RegisterProperty<Steps>(nameof(Steps));
+
+        /// <summary>
+        /// A collection of steps representing the onboarding process.
+        /// </summary>
+        public Steps Steps
+        {
+            get => GetProperty(StepsProperty);
+            private set => LoadProperty(StepsProperty, value);
+        }
+
+        public static readonly PropertyInfo<int> CurrentStepIndexProperty =
+            RegisterProperty<int>(nameof(CurrentStepIndex));
+
+        /// <summary>
+        /// Index of the currently active step in the onboarding workflow.
+        /// </summary>
+        public int CurrentStepIndex
+        {
+            get => GetProperty(CurrentStepIndexProperty);
+            internal set => SetProperty(CurrentStepIndexProperty, value);
+        }
+
+        public async Task MoveNextAsync()
+        {
+
         }
 
         protected override void AddBusinessRules()
@@ -57,14 +79,14 @@ namespace CustomerOnboarding.BusinessLibrary
             base.AddBusinessRules();
 
             // Step is complete only if both child objects are valid
-            BusinessRules.AddRule(new CheckIfStepIsComplete(StatutoryRegistrationsProperty, IsCompletedProperty));
+            BusinessRules.AddRule(new CheckIfMultiStepIsComplete(StepsProperty, IsCompletedProperty));
 
         }
 
         protected override void OnChildChanged(ChildChangedEventArgs e)
         {
-            if (e.ChildObject is StatutoryRegistrations)
-                BusinessRules.CheckRules(StatutoryRegistrationsProperty);
+            if (e.ChildObject is IStep || e.ChildObject is Steps)
+                BusinessRules.CheckRules(StepsProperty);
             base.OnChildChanged(e);
         }
 
@@ -73,6 +95,7 @@ namespace CustomerOnboarding.BusinessLibrary
             int id,
             int currentStepIndex,
           [Inject] IStepTypeDal dal,
+          [Inject]IDataPortalFactory factory,
             [Inject] IChildDataPortalFactory portal)
         {
             using (BypassPropertyChecks)
@@ -80,23 +103,21 @@ namespace CustomerOnboarding.BusinessLibrary
                 var data = dal.Fetch(id);
                 Id = data.Id;
                 Name = data.Name;
-                Type = (StepType)Enum.Parse(typeof(StepType), data.Type.ToString());
-                StepIndex = 1;
-                if (currentStepIndex == StepIndex)
-                    RuleSet = data.RuleSet;
-                else
-                    RuleSet = "";
-                IsCompleted = false;
-                StatutoryRegistrations = await portal.GetPortal<StatutoryRegistrations>().CreateChildAsync(RuleSet);
+                Type = (StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());
+                StepIndex = 2;
+                 IsCompleted = false;
+                CurrentStepIndex = 0;
+                var _factory = await factory.GetPortal<ComplianceInfoStepStepsFactory>().FetchAsync(new[] { 7, 8 },CurrentStepIndex);
+                Steps = _factory.Steps;
             }
-            if (currentStepIndex == StepIndex)
+            
                 await BusinessRules.CheckRulesAsync();
         }
 
         [InsertChild]
-        private async Task InsertAsync(TenantOnboardingOrchestrator parent,
+        private async Task Insert(TenantOnboardingOrchestrator parent,int nextStep,
           [Inject] IComplianceInfoStepDal dal,
-          [Inject] IChildDataPortal<StatutoryRegistrations> portal)
+          [Inject] IChildDataPortal<Steps> portal)
         {
             using (BypassPropertyChecks)
             {
@@ -105,12 +126,38 @@ namespace CustomerOnboarding.BusinessLibrary
                     TenantId = parent.TenantId,
                     StepId = this.Id,
                     StepIndex = this.StepIndex,
-                    IsCompleted = (parent.CurrentStepIndex - 1) == this.StepIndex ? this.IsCompleted : false, // Only mark as completed if it's the current step
+                    IsCompleted = this.IsCompleted, // Only mark as completed if it's the current step
+                    CurrentStepIndex=nextStep
                 };
                 dal.Insert(dto);
                 TimeStamp = dto.LastChanged;
-                if ((parent.CurrentStepIndex - 1) == StepIndex)
-                    await portal.UpdateChildAsync(StatutoryRegistrations, parent);
+                
+                await portal.UpdateChildAsync(Steps, parent,nextStep-1);
+                
+                    
+            }
+        }
+
+        [InsertChild]
+        private async Task Insert(TenantOnboardingOrchestrator parent,
+          [Inject] IComplianceInfoStepDal dal,
+          [Inject] IChildDataPortal<Steps> portal)
+        {
+            using (BypassPropertyChecks)
+            {
+                var dto = new ComplianceInfoStepDto
+                {
+                    TenantId = parent.TenantId,
+                    StepId = this.Id,
+                    StepIndex = this.StepIndex,
+                    IsCompleted = this.IsCompleted, // Only mark as completed if it's the current step
+                    CurrentStepIndex = this.CurrentStepIndex
+                };
+                dal.Insert(dto);
+                TimeStamp = dto.LastChanged;
+
+                await portal.UpdateChildAsync(Steps, parent,CurrentStepIndex);
+
             }
         }
 
@@ -119,7 +166,7 @@ namespace CustomerOnboarding.BusinessLibrary
             string tenantId, int id,
             int currentStepIndex,
           [Inject] IComplianceInfoStepDal dal,
-          //[Inject] IStatutoryRegistrationsDal dalStatutoryRegistrations,
+          [Inject] IDataPortalFactory factory,
             [Inject] IChildDataPortalFactory portal)
         {
             using (BypassPropertyChecks)
@@ -127,31 +174,60 @@ namespace CustomerOnboarding.BusinessLibrary
                 var data = dal.Fetch(tenantId, id);
                 Id = data.StepId;
                 Name = data.Name;
-                Type = (StepType)Enum.Parse(typeof(StepType), data.Type.ToString());
+                Type = (StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());
                 StepIndex = data.StepIndex;
-                if (currentStepIndex == StepIndex)
-                    RuleSet = data.RuleSet;
-                else
-                    RuleSet = "";
-                /*
                 IsCompleted = data.IsCompleted;
-                if (dalStatutoryRegistrations.Exists(tenantId))
-                    StatutoryRegistrations = await portal.GetPortal<StatutoryRegistrations>().FetchChildAsync(tenantId, RuleSet);
+                CurrentStepIndex = data.CurrentStepIndex;
+                TimeStamp = data.LastChanged;
+                var _factory = await factory.GetPortal<ComplianceInfoStepStepsFactory>().FetchAsync(tenantId,CurrentStepIndex);
+                Steps = _factory.Steps;
 
-                else
-                    StatutoryRegistrations = await portal.GetPortal<StatutoryRegistrations>().CreateChildAsync(RuleSet);
-                */
             }
 
 
-            if (currentStepIndex == StepIndex)
-                await BusinessRules.CheckRulesAsync();
+            
+              await BusinessRules.CheckRulesAsync();
         }
 
 
         [UpdateChild]
-        private void Update(TenantOnboardingOrchestrator parent,
-            [Inject] IChildDataPortal<StatutoryRegistrations> portal)
-        { }
+        private async Task UpdateAsync(TenantOnboardingOrchestrator parent, int nextStep,
+          [Inject] IComplianceInfoStepDal dal,
+          [Inject] IChildDataPortal<Steps> portal)
+        {
+            var dto = new ComplianceInfoStepDto
+            {
+                TenantId = parent.TenantId,
+                StepId = this.Id,
+                StepIndex = this.StepIndex,
+                IsCompleted = this.IsCompleted, // Only mark as completed if it's the current step
+                CurrentStepIndex = nextStep,
+                LastChanged=this.TimeStamp
+            };
+            dal.Update(dto);
+            TimeStamp = dto.LastChanged;
+            await portal.UpdateChildAsync(Steps, parent,nextStep-1);
+        }
+
+        [UpdateChild]
+        private async Task UpdateAsync(TenantOnboardingOrchestrator parent,
+          [Inject] IComplianceInfoStepDal dal,
+          [Inject] IChildDataPortal<Steps> portal)
+        {
+            var dto = new ComplianceInfoStepDto
+            {
+                TenantId = parent.TenantId,
+                StepId = this.Id,
+                StepIndex = this.StepIndex,
+                IsCompleted = this.IsCompleted, // Only mark as completed if it's the current step
+                CurrentStepIndex = this.CurrentStepIndex,
+                LastChanged = this.TimeStamp
+            };
+            dal.Update(dto);
+            TimeStamp = dto.LastChanged;
+            await portal.UpdateChildAsync(Steps, parent,CurrentStepIndex);
+        }
+
+
     }
 }

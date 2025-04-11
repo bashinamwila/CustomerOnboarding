@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 namespace CustomerOnboarding.BusinessLibrary.BaseTypes
 {
     [Serializable]
-    public abstract class OnboardingStepsGetterBase<T> :
+    public abstract class OnboardingStepsFactoryBase<T> :
         ReadOnlyBase<T>
-        where T : OnboardingStepsGetterBase<T>
+        where T : OnboardingStepsFactoryBase<T>
 
     {
         public static readonly PropertyInfo<Steps>StepsProperty=

@@ -56,7 +56,7 @@ namespace CustomerOnboarding.BusinessLibrary
         {
             base.AddBusinessRules();
             // Add validation rules
-            BusinessRules.RuleSet = "Compliance Info";
+            BusinessRules.RuleSet = "Statutory Registrations";
             BusinessRules.AddRule(new BusinessLibrary.Rules.Required(TPINProperty) { MessageText = "TPIN is required" });
             BusinessRules.AddRule(new BusinessLibrary.Rules.Required(NAPSAAccountNumberProperty) { MessageText = "NAPSA Account # is required" });
             BusinessRules.AddRule(new BusinessLibrary.Rules.Required(NHIMAAccountNumberProperty) { MessageText = "NHIMA Account # is required" });

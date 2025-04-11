@@ -103,7 +103,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 var step = Steps[CurrentStepIndex];
 
                 // Handle Automatic Steps
-                if (!step.IsCompleted && step.Type == StepType.Automatic)
+                if (!step.IsCompleted && step.Type == StepTypes.Automatic)
                 {
                     await step.ExecuteAsync(); // Execute the automatic step logic
                     CurrentStepIndex++;        // Move to the next index
@@ -118,7 +118,7 @@ namespace CustomerOnboarding.BusinessLibrary
                     TimeStamp = cmd.TimeStamp;
                 }
                 // Handle Manual Steps
-                else if (step.Type == StepType.Manual)
+                else if (step.Type == StepTypes.Manual)
                 {
                     // If the manual step is already complete, move to the next one
                     if (step.IsCompleted)

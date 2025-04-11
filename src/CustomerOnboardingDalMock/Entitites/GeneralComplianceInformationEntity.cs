@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CustomerOnboarding.DalMock.Entitites
 {
-    public class ComplianceInfoStepEntity
+    public class GeneralComplianceInformationEntity
     {
         public int Id { get; set; }
         public string TenantId { get; set; } = string.Empty;
@@ -15,7 +15,6 @@ namespace CustomerOnboarding.DalMock.Entitites
 
         public bool IsCompleted { get; set; }
 
-        public int CurrentStepIndex { get; set; }
         public byte[] LastChanged { get; set; } = default!;
     }
 }

@@ -11,6 +11,13 @@ namespace CustomerOnboarding.DalMock
 {
     public class TenantOnboardingOrchestratorDal : ITenantOnboardingOrchestratorDal
     {
+        public bool Exits(string tenantId)
+        {
+            var result=MockDb.TenantOnboardingWorkflows
+                         .Any(r => r.TenantId == tenantId);
+            return result;
+        }
+
         public OnboardingOrchestratorDto Fetch(string tenantId)
         {
             var result = (from r in MockDb.TenantOnboardingWorkflows
@@ -40,7 +47,16 @@ namespace CustomerOnboarding.DalMock
 
         public void Update(OnboardingOrchestratorDto data)
         {
-            UpdateCurrentStepIndex(data.TenantId, data.CurrentStepIndex, data.LastChanged);
+            var result = (from r in MockDb.TenantOnboardingWorkflows
+                          where r.TenantId == data.TenantId
+                          select r).FirstOrDefault();
+            if (result is null)
+                throw new DataNotFoundException("TenantOnboardingOrchestrator");
+          if (!result.LastChanged.Matches(data.LastChanged))
+              throw new ConcurrencyException("TenantOnboardingOrchestrator");
+            data.LastChanged = MockDb.GetTimeStamp();
+            result.LastChanged = data.LastChanged;
+            result.CurrentStepIndex = data.CurrentStepIndex;
         }
 
         public void UpdateCurrentStepIndex(string tenantId, int currentStepIndex, byte[] timeStamp)

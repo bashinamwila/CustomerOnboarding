@@ -69,7 +69,7 @@ public class UserOnboardingOrchestratorTests : IClassFixture<CslaTestFixture>
         Assert.Equal(0, step.StepIndex);
         Assert.False(step.IsCompleted);
         Assert.Equal("Create Account", step.Name);
-        Assert.Equal(StepType.Manual, step.Type);
+        Assert.Equal(StepTypes.Manual, step.Type);
         Assert.Equal("Create Account", step.RuleSet);
     }
 

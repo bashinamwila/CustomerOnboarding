@@ -33,7 +33,7 @@ namespace CustomerOnboarding.BusinessLibrary
             get => GetProperty(NameProperty);
             set => SetProperty(NameProperty, value);
         }
-
+        /*
         public static readonly PropertyInfo<byte[]?> LogoProperty =
           RegisterProperty<byte[]?>(nameof(Logo));
         public byte[]? Logo
@@ -41,7 +41,7 @@ namespace CustomerOnboarding.BusinessLibrary
             get => GetProperty(LogoProperty);
             set => SetProperty(LogoProperty, value);
         }
-
+        */
         public static readonly PropertyInfo<string> AddressLine1Property =
            RegisterProperty<string>(nameof(AddressLine1));
         [Display(Name = "Address Line 1")]

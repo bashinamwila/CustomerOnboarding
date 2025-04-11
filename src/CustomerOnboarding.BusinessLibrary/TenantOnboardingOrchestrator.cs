@@ -88,11 +88,11 @@ namespace CustomerOnboarding.BusinessLibrary
             while (CurrentStepIndex < Steps.Count)
             {
                 var step = Steps[CurrentStepIndex];
-                if (!step.IsCompleted && step.Type == StepType.Automatic)
+                if (!step.IsCompleted && step.Type == StepTypes.Automatic)
                 {
 
                 }
-                else if (step.Type == StepType.Manual)
+                else if (step.Type == StepTypes.Manual)
                 {
                     if (step.IsCompleted && currentStepIndexBeforeUpdate==step.StepIndex)
                     {
@@ -111,6 +111,35 @@ namespace CustomerOnboarding.BusinessLibrary
                     else
                     {
                         break;
+                    }
+                }
+                else if (step.Type == StepTypes.MultiStep)
+                {
+                    if (!step.IsCompleted && currentStepIndexBeforeUpdate == step.StepIndex)
+                    {
+                        var multiStep = step as IOnboardingOrchestrator;
+                        if(multiStep is not null)
+                        {
+                            int nextStep=0;
+                            if (multiStep.CurrentStepIndex + 1 < multiStep.Steps.Count)
+                                nextStep = multiStep.CurrentStepIndex + 1;
+                            var portal = ApplicationContext.GetRequiredService<IDataPortal<TenantOnboardingMultiStepUpdater>>();
+                            var updater = await portal.ExecuteAsync(this, nextStep, multiStep);
+
+                        }
+                        else
+                        {
+                            break;
+                        }
+
+                    }
+                    else
+                    {
+                        var portal = ApplicationContext.GetRequiredService<IDataPortalFactory>();
+                        CurrentStepIndex++;
+
+                        var updater = await portal.GetPortal<TenantOnboardingOrchestratorUpdater>().CreateAsync(this);
+                        updater = await portal.GetPortal<TenantOnboardingOrchestratorUpdater>().ExecuteAsync(updater);
                     }
                 }
                 else

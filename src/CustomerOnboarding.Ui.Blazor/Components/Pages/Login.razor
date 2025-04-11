@@ -1,13 +1,16 @@
 ﻿@page "/login"
 @layout MinimalLayout
 @using System.ComponentModel.DataAnnotations
+@using CustomerOnboarding.BusinessLibrary.Multitenancy
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Authentication.Cookies
 @using System.Security.Claims
 @inject Csla.Blazor.State.StateManager StateManager
 @inject IHttpContextAccessor httpContextAccessor
 @inject NavigationManager NavigationManager
-@inject IDataPortal<UserValidation> portal
+@inject IDataPortalFactory portal
+@inject ApplicationContext appCtx
+
 
 <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8">
@@ -123,12 +126,12 @@
     private async Task HandleLogin()
     {
         await StateManager.InitializeAsync();
-        var userValidation = await portal.FetchAsync(loginModel.Email, loginModel.Password);
+        var userValidation = await portal.GetPortal<UserValidation>().FetchAsync(loginModel.Email, loginModel.Password);
         ClaimsPrincipal principal=default!;
         if (userValidation.IsValid)
         {
             var identity = new ClaimsIdentity("Custom");
-            var claims=new List<Claim>();
+            var claims = new List<Claim>();
             claims.Add(new Claim(ClaimTypes.Name, userValidation.Email));
             claims.Add(new Claim(ClaimTypes.GivenName, userValidation.FirstName));
             claims.Add(new Claim(ClaimTypes.Surname, userValidation.LastName));
@@ -143,7 +146,15 @@
                   CookieAuthenticationDefaults.AuthenticationScheme,
                   principal,
                   authProperties);
-                NavigationManager.NavigateTo("/onboarding");
+                
+                var statusFinder = await portal.GetPortal<TenantOnboardingStatusFinder>().FetchAsync(userValidation.TenantId);
+                NavigationManager.NavigateTo(statusFinder.Result switch
+                {
+                    TenantOnboardingStatus.NotStarted => "/onboarding",
+                    TenantOnboardingStatus.InProgress => $"/onboarding/{userValidation.TenantId}",
+                    TenantOnboardingStatus.Completed => "/dashboard",
+                    _ => throw new ArgumentOutOfRangeException($"Unexpected status: {statusFinder.Result}")
+                });
             }
         }
         else
@@ -151,7 +162,7 @@
             errorMessage = "Invalid credentials";
             //StateHasChanged();
         }
-        
+
 
     }
 

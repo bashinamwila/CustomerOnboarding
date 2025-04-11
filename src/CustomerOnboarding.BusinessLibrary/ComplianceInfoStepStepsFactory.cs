@@ -10,36 +10,36 @@ using System.Threading.Tasks;
 namespace CustomerOnboarding.BusinessLibrary
 {
     [Serializable]
-    public class TenantOnboardingStepsFactory :
-        OnboardingStepsFactoryBase<TenantOnboardingStepsFactory>
+    public class ComplianceInfoStepStepsFactory :
+        OnboardingStepsFactoryBase<ComplianceInfoStepStepsFactory>
     {
         [Fetch]
         private async Task FetchAsync(
-            string tenantId,int currentStepIndex,
-            [Inject] ITenantOnboardingStepsDal dal,
-            [Inject]IChildDataPortalFactory portal,
-            [Inject]IDataPortal<StepFactory>factory)
+            string tenantId, int currentStepIndex,
+            [Inject] IComplianceInfoStepStepsDal dal,
+            [Inject] IChildDataPortalFactory portal,
+            [Inject] IDataPortal<StepFactory> factory)
         {
             Steps = await portal.GetPortal<Steps>().FetchChildAsync();
             var stepMetadataList = dal.Fetch(tenantId);
             foreach (var stepMeta in stepMetadataList)
             {
-                var getter = await factory.FetchAsync(stepMeta.TenantId, stepMeta.Id, currentStepIndex);
+                var _factory = await factory.FetchAsync(stepMeta.TenantId, stepMeta.Id, currentStepIndex);
 
-                Steps.Add(getter.Result);
+                Steps.Add(_factory.Result);
             }
         }
 
         [Fetch]
-        private async Task FetchAsync(int[] ids,int currentStepIndex,
+        private async Task FetchAsync(int[] ids, int currentStepIndex,
             [Inject] ITenantOnboardingStepsDal dal,
             [Inject] IChildDataPortalFactory portal,
             [Inject] IDataPortal<StepFactory> factory)
         {
             Steps = await portal.GetPortal<Steps>().FetchChildAsync();
-            foreach(int id in ids)
+            foreach (int id in ids)
             {
-                var creator=await factory.FetchAsync(id,currentStepIndex);
+                var creator = await factory.FetchAsync(id, currentStepIndex);
                 Steps.Add(creator.Result);
             }
         }

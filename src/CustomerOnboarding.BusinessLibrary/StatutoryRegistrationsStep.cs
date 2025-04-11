@@ -13,13 +13,12 @@ using System.Threading.Tasks;
 
 namespace CustomerOnboarding.BusinessLibrary
 {
-    [Serializable]
-    public class BankingDetailsStep :
-        StepBase<BankingDetailsStep>
-    {
+    public class StatutoryRegistrationsStep :
+        StepBase<StatutoryRegistrationsStep>
 
+    {
         public static readonly PropertyInfo<string> RuleSetProperty =
-            RegisterProperty<string>(nameof(RuleSet));
+           RegisterProperty<string>(nameof(RuleSet));
 
         /// <summary>
         /// Name of the rule set used to validate this step's children.
@@ -29,6 +28,17 @@ namespace CustomerOnboarding.BusinessLibrary
             get => GetProperty(RuleSetProperty);
             private set => LoadProperty(RuleSetProperty, value);
         }
+
+        public static readonly PropertyInfo<StatutoryRegistrations> StatutoryRegistrationsProperty =
+          RegisterProperty<StatutoryRegistrations>(nameof(StatutoryRegistrations));
+
+
+        public StatutoryRegistrations StatutoryRegistrations
+        {
+            get => GetProperty(StatutoryRegistrationsProperty);
+            private set => LoadProperty(StatutoryRegistrationsProperty, value);
+        }
+
         public static readonly PropertyInfo<byte[]> TimeStampProperty =
             RegisterProperty<byte[]>(nameof(TimeStamp));
 
@@ -40,40 +50,28 @@ namespace CustomerOnboarding.BusinessLibrary
             set => SetProperty(TimeStampProperty, value);
         }
 
-        public static readonly PropertyInfo<BankingDetails> BankingDetailsProperty =
-           RegisterProperty<BankingDetails>(nameof(BankingDetails));
-
-        /// <summary>
-        /// Organisation details provided by the customer.
-        /// </summary>
-        public BankingDetails BankingDetails
-        {
-            get => GetProperty(BankingDetailsProperty);
-            private set => LoadProperty(BankingDetailsProperty, value);
-        }
-
         protected override void AddBusinessRules()
         {
             base.AddBusinessRules();
 
             // Step is complete only if both child objects are valid
-            BusinessRules.AddRule(new CheckIfStepIsComplete(BankingDetailsProperty, IsCompletedProperty));
+            BusinessRules.AddRule(new CheckIfStepIsComplete(StatutoryRegistrationsProperty, IsCompletedProperty));
 
         }
 
         protected override void OnChildChanged(ChildChangedEventArgs e)
         {
-            if (e.ChildObject is BankingDetails)
-                BusinessRules.CheckRules(BankingDetailsProperty);
+            if (e.ChildObject is StatutoryRegistrations)
+                BusinessRules.CheckRules(StatutoryRegistrationsProperty);
             base.OnChildChanged(e);
         }
 
+
+
         [CreateChild]
-        private async Task CreateAsync(
-            int id,
-            int currentStepIndex,
-          [Inject] IStepTypeDal dal,
-            [Inject] IChildDataPortalFactory portal)
+        private async Task CreateAsync(int id,int currentStepIndex,
+             [Inject] IStepTypeDal dal,
+            [Inject] IChildDataPortal<StatutoryRegistrations> portal)
         {
             using (BypassPropertyChecks)
             {
@@ -87,20 +85,18 @@ namespace CustomerOnboarding.BusinessLibrary
                 else
                     RuleSet = "";
                 IsCompleted = false;
-                BankingDetails = await portal.GetPortal<BankingDetails>().CreateChildAsync(RuleSet);
+                StatutoryRegistrations = await portal.CreateChildAsync(RuleSet);
             }
-            if (currentStepIndex == StepIndex)
-                await BusinessRules.CheckRulesAsync();
         }
 
         [InsertChild]
-        private async Task InsertAsync(TenantOnboardingOrchestrator parent,
-            [Inject] IBankingDetailsStepDal dal,
-            [Inject] IChildDataPortal<BankingDetails> portal)
+        private async Task InsertAsync(TenantOnboardingOrchestrator parent,int currentStepIndex,
+            [Inject] IStatutoryRegistrationsStepDal dal,
+            [Inject] IChildDataPortal<StatutoryRegistrations> portal)
         {
             using (BypassPropertyChecks)
             {
-                var dto = new BankingDetailsStepDto
+                var dto = new StatutoryRegistrationsStepDto
                 {
                     TenantId = parent.TenantId,
                     StepId = this.Id,
@@ -109,17 +105,21 @@ namespace CustomerOnboarding.BusinessLibrary
                 };
                 dal.Insert(dto);
                 TimeStamp = dto.LastChanged;
-                if ((parent.CurrentStepIndex - 1) == StepIndex)
-                    await portal.UpdateChildAsync(BankingDetails, parent);
+                
+
+                  if((parent.CurrentStepIndex-1)==((ComplianceInfoStep)Parent.Parent).StepIndex
+                    && ((ComplianceInfoStep)Parent.Parent).CurrentStepIndex==StepIndex)
+                        await portal.UpdateChildAsync(StatutoryRegistrations, parent);
             }
         }
+
 
         [FetchChild]
         private async Task FetchAsync(
             string tenantId, int id,
             int currentStepIndex,
-          [Inject] IBankingDetailsStepDal dal,
-          [Inject] IBankingDetailsDal dalBankingDetails,
+          [Inject] IStatutoryRegistrationsStepDal dal,
+          [Inject] IStatutoryRegistrationsDal dalStatutoryRegistrations,
             [Inject] IChildDataPortalFactory portal)
         {
             using (BypassPropertyChecks)
@@ -136,11 +136,11 @@ namespace CustomerOnboarding.BusinessLibrary
                     RuleSet = "";
 
                 IsCompleted = data.IsCompleted;
-                if (dalBankingDetails.Exists(tenantId))
-                    BankingDetails = await portal.GetPortal<BankingDetails>().FetchChildAsync(tenantId, RuleSet);
+                if (dalStatutoryRegistrations.Exists(tenantId))
+                    StatutoryRegistrations = await portal.GetPortal<StatutoryRegistrations>().FetchChildAsync(tenantId, RuleSet);
 
                 else
-                    BankingDetails = await portal.GetPortal<BankingDetails>().CreateChildAsync(RuleSet);
+                    StatutoryRegistrations = await portal.GetPortal<StatutoryRegistrations>().CreateChildAsync(RuleSet);
             }
 
             if (currentStepIndex == StepIndex)
@@ -148,30 +148,28 @@ namespace CustomerOnboarding.BusinessLibrary
         }
 
         [UpdateChild]
-        private async Task UpdateAsync(TenantOnboardingOrchestrator parent,
-             [Inject] IBankingDetailsStepDal dal,
-            [Inject] IChildDataPortal<BankingDetails> portal)
-
-
+        private async Task UpdateAsync(TenantOnboardingOrchestrator parent, int currentStepIndex,
+            [Inject] IStatutoryRegistrationsStepDal dal,
+            [Inject] IChildDataPortal<StatutoryRegistrations> portal)
         {
             using (BypassPropertyChecks)
             {
-                var dto = new BankingDetailsStepDto
+                var dto = new StatutoryRegistrationsStepDto
                 {
                     TenantId = parent.TenantId,
                     StepId = this.Id,
                     StepIndex = this.StepIndex,
-                    IsCompleted = (parent.CurrentStepIndex - 1) == this.StepIndex ? this.IsCompleted : false,
+                    IsCompleted = this.IsCompleted, // Only mark as completed if it's the current step
                     LastChanged=this.TimeStamp
-                    // Only mark as completed if it's the current step
                 };
                 dal.Update(dto);
                 TimeStamp = dto.LastChanged;
-                if ((parent.CurrentStepIndex - 1) == StepIndex)
-                    await portal.UpdateChildAsync(BankingDetails, parent);
+
+
+                if (currentStepIndex == StepIndex)
+                    await portal.UpdateChildAsync(StatutoryRegistrations, parent);
             }
-
-
         }
+
     }
 }

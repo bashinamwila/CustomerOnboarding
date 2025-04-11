@@ -6,16 +6,13 @@ using System.Threading.Tasks;
 
 namespace CustomerOnboarding.DalMock.Entitites
 {
-    public class ComplianceInfoStepEntity
+    public class StatutoryRegistrationsStepEntity
     {
-        public int Id { get; set; }
         public string TenantId { get; set; } = string.Empty;
-
+        public int Id { get; set; }
         public int StepIndex { get; set; }
 
         public bool IsCompleted { get; set; }
-
-        public int CurrentStepIndex { get; set; }
         public byte[] LastChanged { get; set; } = default!;
     }
 }

@@ -82,7 +82,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 var data = dal.Fetch(id);
                 Id = data.Id;
                 Name = data.Name;
-                Type = (StepType)Enum.Parse(typeof(StepType), data.Type.ToString());
+                Type = (StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());
                 StepIndex = 0;
                 if (currentStepIndex == StepIndex)
                 {
@@ -137,7 +137,7 @@ namespace CustomerOnboarding.BusinessLibrary
                    RuleSet = data.RuleSet;
                 else
                     RuleSet = "";
-                Type = (StepType)Enum.Parse(typeof(StepType), data.Type.ToString());
+                Type = (StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());
                 IsCompleted=data.IsCompleted;
                 TimeStamp = data.LastChanged;
 

@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace CustomerOnboarding.BusinessLibrary
 {
-    public enum StepType
+    public enum StepTypes
     {
         Manual=1,
-        Automatic=2
+        Automatic=2,
+        MultiStep=3
     }
 }

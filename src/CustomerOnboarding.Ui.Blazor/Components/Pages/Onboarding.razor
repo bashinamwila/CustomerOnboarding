@@ -1,4 +1,5 @@
 ﻿@page "/onboarding"
+@page "/onboarding/{tenantId}"
 @layout AdminLayout
 @rendermode InteractiveServer
 @using CustomerOnboarding.Ui.Blazor.Components.Onboarding
@@ -29,7 +30,7 @@ else
             <BankingDetailsStep ViewModel="ViewModel" OnClickSaveAndContinue=@SaveAndContinueStep2 />
         </div>
           <div class=@($"flex-1 p-4 md:p-6 overflow-y-auto {(ViewModel.Model.CurrentStepIndex==2?null:"hidden")}")>
-              <ComplianceInfoStep />
+              <ComplianceInfoStep ViewModel="ViewModel" />
           </div>
 
     }
@@ -37,6 +38,9 @@ else
 
 @code {
     private bool IsBusy = false;
+    [Parameter]
+    public string tenantId { get; set; } = string.Empty;
+
 
     private List<Sidebar.SidebarStep> OnboardingSteps = new()
     {
@@ -64,8 +68,10 @@ else
     protected override async Task OnParametersSetAsync()
     {
         IsBusy = true;
-
-        await ViewModel.RefreshAsync(() => portal.GetPortal<TenantOnboardingOrchestrator>().CreateAsync());
+        if(string.IsNullOrEmpty(tenantId))
+            await ViewModel.RefreshAsync(() => portal.GetPortal<TenantOnboardingOrchestrator>().CreateAsync());
+        else
+            await ViewModel.RefreshAsync(() => portal.GetPortal<TenantOnboardingOrchestrator>().FetchAsync(tenantId));
         if(ViewModel.Model is not null)
         {
             foreach (var step in ViewModel.Model.Steps)

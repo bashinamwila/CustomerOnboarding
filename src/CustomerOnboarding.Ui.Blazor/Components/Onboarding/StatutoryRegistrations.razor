@@ -1,0 +1,21 @@
+﻿@inject Csla.Blazor.State.StateManager StateManager
+
+
+@if (IsVisible)
+{
+    <h3>StatutoryRegistrations</h3>
+}
+
+
+
+@code {
+
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await StateManager.InitializeAsync();
+
+    }
+}
