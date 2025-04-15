@@ -19,20 +19,30 @@ namespace CustomerOnboarding.DalMock
                 Id = r.Id
             };
 
-            var orgSteps = MockDb.OrganisationProfileSteps
+            var step1 = MockDb.OrganisationProfileSteps
                 .Where(r => r.TenantId == tenantId)
                 .Select(OnboardinStep);
 
-            var bankingSteps = MockDb.BankingDetailsSteps
+            var step2 = MockDb.BankingDetailsSteps
                 .Where(r => r.TenantId == tenantId)
                 .Select(OnboardinStep);
 
-            var statutorySteps = MockDb.ComplianceInfoSteps
+            var step3 = MockDb.ComplianceInfoSteps
+                .Where(r => r.TenantId == tenantId)
+                .Select(OnboardinStep);
+
+            var step4 = MockDb.CompensationComponentsSteps
                 .Where(r => r.TenantId == tenantId)
                 .Select(OnboardinStep);
 
 
-            return orgSteps.Concat(bankingSteps).Concat(statutorySteps).ToList();
+
+
+            return      step1.
+                        Concat(step2).
+                        Concat(step3).
+                        Concat(step4).
+                        ToList();
         }
     }
 }

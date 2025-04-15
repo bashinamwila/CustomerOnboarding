@@ -22,9 +22,12 @@ namespace CustomerOnboarding.BusinessLibrary.Rules
         protected override void Execute(IRuleContext context)
         {
             var target = context.Target as IOnboardingOrchestrator;
-            if(target is not null)
+            if (target is not null)
             {
-                var isComplete = target.Steps.All(r => r.IsCompleted);
+                var isComplete = target.Steps
+                    .Where(step => step is not IItemAdditionStep)
+                    .All(step => step.IsCompleted);
+
                 context.AddOutValue(AffectedProperties[1], isComplete);
             }
         }

@@ -27,5 +27,21 @@ namespace CustomerOnboarding.BusinessLibrary.BaseTypes
             protected set => LoadProperty(TemplateNameProperty, value);
         }
 
+        public static readonly PropertyInfo<string> EmailAddressProperty =
+           RegisterProperty<string>(nameof(EmailAddress));
+        public string EmailAddress
+        {
+            get => GetProperty(EmailAddressProperty);
+            set => SetProperty(EmailAddressProperty, value);
+        }
+
+        public static readonly PropertyInfo<string> SubjectProperty =
+           RegisterProperty<string>(nameof(Subject));
+        public string Subject
+        {
+            get => GetProperty(SubjectProperty);
+            set => SetProperty(SubjectProperty, value);
+        }
+
     }
 }

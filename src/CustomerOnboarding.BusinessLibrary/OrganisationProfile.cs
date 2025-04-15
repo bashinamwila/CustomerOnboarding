@@ -106,7 +106,7 @@ namespace CustomerOnboarding.BusinessLibrary
             BusinessRules.AddRule(new ValidateEmailAddress(EmailProperty));
         }
 
-
+/*
         [CreateChild]
         private async Task CreateAsync(string ruleSet,
             [Inject]TenantInfo tenant)
@@ -120,6 +120,21 @@ namespace CustomerOnboarding.BusinessLibrary
             }
             await BusinessRules.CheckRulesAsync();
         }
+*/
+        [CreateChild]
+        private async Task CreateAsync(string ruleSet)
+            
+        {
+            using (BypassPropertyChecks)
+            {
+
+                Id = "123werqop070905mnbfghjkl";
+                Name = "Test";
+                BusinessRules.RuleSet = ruleSet;
+            }
+            await BusinessRules.CheckRulesAsync();
+        }
+
 
         [InsertChild]
         private void Insert(TenantOnboardingOrchestrator parent,

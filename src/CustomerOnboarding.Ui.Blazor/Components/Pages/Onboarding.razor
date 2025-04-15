@@ -47,13 +47,13 @@ else
         new() { Index = 0, Title = "Company Profile" },
         new() { Index = 1, Title = "Banking Details" },
         new() { Index = 2, Title = "Compliance Info" },
-        new() { Index = 3, Title = "Payroll Configuration" },
-        new() { Index = 4, Title = "Payroll Structure" },
-        new() { Index = 5, Title = "Compensation Components" },
-        new() { Index = 6, Title = "Deductions Setup" },
-        new() { Index = 7, Title = "Employer Contributions" },
-        new() { Index = 8, Title = "Accruals" },
-        new() { Index = 9, Title = "Loans" },
+        new() { Index = 3, Title = "Compensation Components" },
+        new() { Index = 4, Title = "Deductions" },
+        new() { Index = 5, Title = "Employer Contributions" },
+        new() { Index = 6, Title = "Accruals" },
+        new() { Index = 7, Title = "Loans" },
+        new() { Index = 8, Title = "Payroll Configuration" },
+        new() { Index = 9, Title = "Payroll Structure" },
         new() { Index = 10, Title = "Add Employees" },
         new() { Index = 11, Title = "Integrations" },
         new() { Index = 12, Title = "Select Payment Plan" },
@@ -109,6 +109,7 @@ else
     {
         IsBusy = true;
         await ViewModel.Model.MoveNextAsync();
+        ViewModel.Model=await ViewModel.Model.SaveAsync();
         ViewModel.Model = null!;
         await ViewModel.RefreshAsync(() => portal.GetPortal<TenantOnboardingOrchestrator>().FetchAsync(tenant.Id));
         if (ViewModel.Model is not null)

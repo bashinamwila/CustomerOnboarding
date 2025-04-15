@@ -33,7 +33,7 @@ namespace CustomerOnboarding.BusinessLibrary
             set { SetProperty(BranchIdProperty, value); }
         }
 
-
+        /*
         public static readonly PropertyInfo<string> BranchCodeProperty =
             RegisterProperty<string>(nameof(BranchCode));
         public string BranchCode
@@ -41,7 +41,7 @@ namespace CustomerOnboarding.BusinessLibrary
             get { return GetProperty(BranchCodeProperty); }
             private set { LoadProperty(BranchCodeProperty, value); }
         }
-
+        */
         public static readonly PropertyInfo<string> BankAccountNumberProperty =
            RegisterProperty<string>(nameof(BankAccountNumber));
         [Display(Name = "Account #")]
@@ -72,9 +72,9 @@ namespace CustomerOnboarding.BusinessLibrary
             BusinessRules.AddRule(new BusinessLibrary.Rules.Required(BankIdProperty) { MessageText = "Bank is required" });
             BusinessRules.AddRule(new BusinessLibrary.Rules.Required(BranchIdProperty) { MessageText = "Branch is required" });
             BusinessRules.AddRule(new BusinessLibrary.Rules.Required(BankAccountNumberProperty) { MessageText = "Account # is required" });
-            BusinessRules.AddRule(new BusinessLibrary.Rules.GetBranchCode(BankIdProperty, BranchIdProperty, BranchCodeProperty) { Priority = 1 });
-            BusinessRules.AddRule(new BusinessLibrary.Rules.GetBranchCode(BranchIdProperty, BankIdProperty, BranchCodeProperty) { Priority = 1 });
-            BusinessRules.AddRule(new Csla.Rules.CommonRules.Dependency(BankIdProperty, BranchCodeProperty, BranchIdProperty));
+           // BusinessRules.AddRule(new BusinessLibrary.Rules.GetBranchCode(BankIdProperty, BranchIdProperty, BranchCodeProperty) { Priority = 1 });
+           // BusinessRules.AddRule(new BusinessLibrary.Rules.GetBranchCode(BranchIdProperty, BankIdProperty, BranchCodeProperty) { Priority = 1 });
+           // BusinessRules.AddRule(new Csla.Rules.CommonRules.Dependency(BankIdProperty, BranchCodeProperty, BranchIdProperty));
         }
 
         [CreateChild]

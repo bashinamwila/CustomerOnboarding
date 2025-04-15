@@ -66,11 +66,82 @@ namespace CustomerOnboarding.BusinessLibrary
         public int CurrentStepIndex
         {
             get => GetProperty(CurrentStepIndexProperty);
-            internal set => SetProperty(CurrentStepIndexProperty, value);
+            private set => SetProperty(CurrentStepIndexProperty, value);
         }
+
+        public void Skip() => throw new NotImplementedException();
 
         public async Task MoveNextAsync()
         {
+            var currentStepIndexBeforeUpdate = CurrentStepIndex;
+            while (CurrentStepIndex < Steps.Count)
+            {
+                var step = Steps[CurrentStepIndex];
+                if(step is IInformationOnlyStep informationOnlyStep)
+                    informationOnlyStep.MarkAsCompleted();
+
+                if (!step.IsCompleted && step.Type == StepTypes.Automatic)
+                {
+
+                }
+                else if (step.Type == StepTypes.Manual)
+                {
+                    if (step.IsCompleted && currentStepIndexBeforeUpdate == step.StepIndex)
+                    {
+                        // var portal = ApplicationContext.GetRequiredService<IDataPortalFactory>();
+
+                        // var stepUpdater = await portal.GetPortal<TenantOnboardingOrchestratorStepUpdater>().CreateAsync(this, step);
+                        // stepUpdater = await portal.GetPortal<TenantOnboardingOrchestratorStepUpdater>().ExecuteAsync(stepUpdater);
+
+
+                        if ((CurrentStepIndex + 1) <= Steps.Count - 1)
+                            CurrentStepIndex++;
+                        else
+                            break;
+
+                        // var updater = await portal.GetPortal<TenantOnboardingOrchestratorUpdater>().CreateAsync(this); 
+                        // updater = await portal.GetPortal<TenantOnboardingOrchestratorUpdater>().ExecuteAsync(updater);
+                        // TimeStamp = updater.TenantOnboardingOrchestrator.TimeStamp;
+
+                    }
+                    
+                    else
+                    {
+                        break;
+                    }
+                }
+                else if (step.Type == StepTypes.MultiStep)
+                {
+                    if (!step.IsCompleted && currentStepIndexBeforeUpdate == step.StepIndex)
+                    {
+                       
+                        var multiStep = (IOnboardingOrchestrator)step;
+
+
+                        await multiStep.MoveNextAsync();
+                    }
+                    else if (step.IsCompleted && currentStepIndexBeforeUpdate == step.StepIndex)
+                    {
+
+                        if ((CurrentStepIndex + 1) <= Steps.Count - 1)
+                            CurrentStepIndex++;
+                        else
+                            break;
+                    }
+                    else
+                    {
+                        // var portal = ApplicationContext.GetRequiredService<IDataPortalFactory>();
+                        break;
+
+                        //var updater = await portal.GetPortal<TenantOnboardingOrchestratorUpdater>().CreateAsync(this);
+                        //updater = await portal.GetPortal<TenantOnboardingOrchestratorUpdater>().ExecuteAsync(updater);
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
 
         }
 
@@ -85,7 +156,8 @@ namespace CustomerOnboarding.BusinessLibrary
 
         protected override void OnChildChanged(ChildChangedEventArgs e)
         {
-            if (e.ChildObject is IStep || e.ChildObject is Steps)
+            if (e.ChildObject is IStep || e.ChildObject is Steps
+                || e.ChildObject is StatutoryRegistrations)
                 BusinessRules.CheckRules(StepsProperty);
             base.OnChildChanged(e);
         }
@@ -114,29 +186,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 await BusinessRules.CheckRulesAsync();
         }
 
-        [InsertChild]
-        private async Task Insert(TenantOnboardingOrchestrator parent,int nextStep,
-          [Inject] IComplianceInfoStepDal dal,
-          [Inject] IChildDataPortal<Steps> portal)
-        {
-            using (BypassPropertyChecks)
-            {
-                var dto = new ComplianceInfoStepDto
-                {
-                    TenantId = parent.TenantId,
-                    StepId = this.Id,
-                    StepIndex = this.StepIndex,
-                    IsCompleted = this.IsCompleted, // Only mark as completed if it's the current step
-                    CurrentStepIndex=nextStep
-                };
-                dal.Insert(dto);
-                TimeStamp = dto.LastChanged;
-                
-                await portal.UpdateChildAsync(Steps, parent,nextStep-1);
-                
-                    
-            }
-        }
+        
 
         [InsertChild]
         private async Task Insert(TenantOnboardingOrchestrator parent,
@@ -156,7 +206,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 dal.Insert(dto);
                 TimeStamp = dto.LastChanged;
 
-                await portal.UpdateChildAsync(Steps, parent,CurrentStepIndex);
+                await portal.UpdateChildAsync(Steps, parent);
 
             }
         }
@@ -190,24 +240,7 @@ namespace CustomerOnboarding.BusinessLibrary
         }
 
 
-        [UpdateChild]
-        private async Task UpdateAsync(TenantOnboardingOrchestrator parent, int nextStep,
-          [Inject] IComplianceInfoStepDal dal,
-          [Inject] IChildDataPortal<Steps> portal)
-        {
-            var dto = new ComplianceInfoStepDto
-            {
-                TenantId = parent.TenantId,
-                StepId = this.Id,
-                StepIndex = this.StepIndex,
-                IsCompleted = this.IsCompleted, // Only mark as completed if it's the current step
-                CurrentStepIndex = nextStep,
-                LastChanged=this.TimeStamp
-            };
-            dal.Update(dto);
-            TimeStamp = dto.LastChanged;
-            await portal.UpdateChildAsync(Steps, parent,nextStep-1);
-        }
+       
 
         [UpdateChild]
         private async Task UpdateAsync(TenantOnboardingOrchestrator parent,
@@ -225,7 +258,7 @@ namespace CustomerOnboarding.BusinessLibrary
             };
             dal.Update(dto);
             TimeStamp = dto.LastChanged;
-            await portal.UpdateChildAsync(Steps, parent,CurrentStepIndex);
+            await portal.UpdateChildAsync(Steps, parent);
         }
 
 

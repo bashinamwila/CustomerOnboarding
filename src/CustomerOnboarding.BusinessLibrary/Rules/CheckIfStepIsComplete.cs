@@ -25,11 +25,11 @@ namespace CustomerOnboarding.BusinessLibrary.Rules
         protected override void Execute(IRuleContext context)
         {
             var target = (IStep)context.Target;
-            var logger=context.ApplicationContext.GetRequiredService<ILogger<CheckIfStepIsComplete>>();
+           // var logger=context.ApplicationContext.GetRequiredService<ILogger<CheckIfStepIsComplete>>();
             // Step must be valid at the root level
-            logger.LogInformation($"Checking if step {target.Name} is complete");
+           // logger.LogInformation($"Checking if step {target.Name} is complete");
             var isComplete = target.IsValid;
-            logger.LogInformation($"Step {target.Name} is valid: {isComplete}");
+           // logger.LogInformation($"Step {target.Name} is valid: {isComplete}");
 
             // Find all properties on the Step that are IBusinessBase (e.g., forms, sections, sub-steps)
             var childObjects = target
@@ -60,7 +60,7 @@ namespace CustomerOnboarding.BusinessLibrary.Rules
 
                     if (IsDefaultValue(value, prop.PropertyType))
                     {
-                        logger.LogInformation($"Property {prop.Name} of {childProp.Name} is not set");
+                       // logger.LogInformation($"Property {prop.Name} of {childProp.Name} is not set");
                         isComplete = false;
                         break;
                     }
@@ -83,6 +83,10 @@ namespace CustomerOnboarding.BusinessLibrary.Rules
             // Special case: string
             if (type == typeof(string))
                 return string.IsNullOrWhiteSpace((string)value);
+
+            // Exclude bool from default check
+            if (type == typeof(bool) || Nullable.GetUnderlyingType(type) == typeof(bool))
+                return false;
 
             // Nullable types
             var underlyingType = Nullable.GetUnderlyingType(type);

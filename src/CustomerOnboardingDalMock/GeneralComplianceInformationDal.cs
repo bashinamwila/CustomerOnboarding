@@ -13,7 +13,7 @@ namespace CustomerOnboarding.DalMock
     {
         public GeneralComplianceInformationDto Fetch(string tenantId, int id)
         {
-            var result = (from r in MockDb.GeneralComplianceInformation
+            var result = (from r in MockDb.GeneralComplianceInformationSteps
                           join s in MockDb.Steps on r.Id equals s.Id
                           where r.TenantId == tenantId
                           && r.Id == id
@@ -43,12 +43,21 @@ namespace CustomerOnboarding.DalMock
                 IsCompleted = dto.IsCompleted,
                 LastChanged = dto.LastChanged
             };
-            MockDb.GeneralComplianceInformation.Add(newItem);
+            MockDb.GeneralComplianceInformationSteps.Add(newItem);
         }
 
         public void Update(GeneralComplianceInformationDto dto)
         {
-            throw new NotImplementedException();
+            var result = (from r in MockDb.GeneralComplianceInformationSteps
+                          where r.TenantId == dto.TenantId
+                          select r).FirstOrDefault();
+            if (result is null)
+                throw new DataNotFoundException("GeneralComplianceInformationStep");
+            if (!result.LastChanged.Matches(dto.LastChanged))
+                throw new ConcurrencyException("GeneralComplianceInformationStep");
+            dto.LastChanged = MockDb.GetTimeStamp();
+            result.IsCompleted = dto.IsCompleted;
+            result.LastChanged = dto.LastChanged;
         }
     }
 }

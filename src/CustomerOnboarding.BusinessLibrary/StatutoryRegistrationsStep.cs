@@ -90,7 +90,7 @@ namespace CustomerOnboarding.BusinessLibrary
         }
 
         [InsertChild]
-        private async Task InsertAsync(TenantOnboardingOrchestrator parent,int currentStepIndex,
+        private async Task InsertAsync(TenantOnboardingOrchestrator parent,
             [Inject] IStatutoryRegistrationsStepDal dal,
             [Inject] IChildDataPortal<StatutoryRegistrations> portal)
         {
@@ -108,7 +108,8 @@ namespace CustomerOnboarding.BusinessLibrary
                 
 
                   if((parent.CurrentStepIndex-1)==((ComplianceInfoStep)Parent.Parent).StepIndex
-                    && ((ComplianceInfoStep)Parent.Parent).CurrentStepIndex==StepIndex)
+                    && ((ComplianceInfoStep)Parent.Parent).CurrentStepIndex==StepIndex
+                    && IsCompleted)
                         await portal.UpdateChildAsync(StatutoryRegistrations, parent);
             }
         }
@@ -148,7 +149,7 @@ namespace CustomerOnboarding.BusinessLibrary
         }
 
         [UpdateChild]
-        private async Task UpdateAsync(TenantOnboardingOrchestrator parent, int currentStepIndex,
+        private async Task UpdateAsync(TenantOnboardingOrchestrator parent,
             [Inject] IStatutoryRegistrationsStepDal dal,
             [Inject] IChildDataPortal<StatutoryRegistrations> portal)
         {
@@ -166,7 +167,9 @@ namespace CustomerOnboarding.BusinessLibrary
                 TimeStamp = dto.LastChanged;
 
 
-                if (currentStepIndex == StepIndex)
+                if ((parent.CurrentStepIndex-1) == ((ComplianceInfoStep)Parent.Parent).StepIndex
+                   && ((ComplianceInfoStep)Parent.Parent).CurrentStepIndex == StepIndex &&
+                   IsCompleted)
                     await portal.UpdateChildAsync(StatutoryRegistrations, parent);
             }
         }

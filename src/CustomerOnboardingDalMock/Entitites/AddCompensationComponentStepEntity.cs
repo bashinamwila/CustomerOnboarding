@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CustomerOnboarding.DalMock.Entitites
+{
+    public class AddCompensationComponentStepEntity
+    {
+        public string TenantId { get; set; } = string.Empty;
+        public int Id { get; set; }
+    
+        public int StepIndex { get; set; }
+
+        public bool IsCompleted { get; set; }
+        public string CurrentWageIdBeingEdited { get; set; } = string.Empty;
+        public byte[] LastChanged { get; set; } = default!;
+    }
+}

@@ -26,13 +26,23 @@ namespace CustomerOnboarding.DalMock
         public static List<BankingDetailsEntity> BankingDetails { get; private set; } = default!;
         public static List<BankEntity> Banks { get; private set; } = default!;
 
+        public static List<GeneralCompensationComponentsInformationEntity> GeneralCompensationComponentsInformationSteps { get; private set; } = default!;
+
         public static List<BranchEntity> Branches { get; private set; } = default!;
         public static List<ComplianceInfoStepEntity> ComplianceInfoSteps { get; private set; } = default!;
 
         public static List<StatutoryRegistrationsStepEntity> StatutoryRegistrationsSteps { get; private set; } = default!;
 
         public static List<StatutoryRegistrationsEntity> StatutoryRegistrations { get; private set; } = default!;
-        public static List<GeneralComplianceInformationEntity> GeneralComplianceInformation { get; set; } = default!;
+        public static List<GeneralComplianceInformationEntity> GeneralComplianceInformationSteps { get; private set; } = default!;
+
+        public static List<CompensationComponentsStepEntity> CompensationComponentsSteps { get; private set; } = default!;
+
+        public static List<AddCompensationComponentStepEntity> AddCompensationComponentSteps { get; private set; } = default!;
+        public static List<WageEntity> Wages { get; private set; } = default!;
+
+        public static List<AddCompensationComponentConfirmationStepEntity>  AddCompensationComponentConfirmationSteps   { get; private set; } = default!;
+
         static MockDb()
         {
             Steps = new List<StepEntity>
@@ -43,8 +53,14 @@ namespace CustomerOnboarding.DalMock
                 new StepEntity{Id=4,Name="Organisation Profile",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.OrganisationProfileStep,CustomerOnboarding.BusinessLibrary",RuleSet="Organisation Profile", LastChanged = GetTimeStamp()},
                 new StepEntity{Id=5,Name="Banking Details",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.BankingDetailsStep,CustomerOnboarding.BusinessLibrary",RuleSet="Banking Details", LastChanged = GetTimeStamp()},
                 new StepEntity{Id=6,Name="Compliance Info",Type=3,FullTypeName="CustomerOnboarding.BusinessLibrary.ComplianceInfoStep,CustomerOnboarding.BusinessLibrary",RuleSet="Compliance Info", LastChanged = GetTimeStamp()},
-                new StepEntity{Id=7,Name="General Compliance Information",Type=2,FullTypeName="CustomerOnboarding.BusinessLibrary.GeneralComplianceInformationStep,CustomerOnboarding.BusinessLibrary",RuleSet="Compliance Info", LastChanged = GetTimeStamp()},
-                 new StepEntity{Id=8,Name="Statutory Registrations",Type=2,FullTypeName="CustomerOnboarding.BusinessLibrary.StatutoryRegistrationsStep,CustomerOnboarding.BusinessLibrary",RuleSet="Statutory Registrations", LastChanged = GetTimeStamp()}
+                new StepEntity{Id=7,Name="General Compliance Information",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.GeneralComplianceInformationStep,CustomerOnboarding.BusinessLibrary",RuleSet="Compliance Info", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=8,Name="Statutory Registrations",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.StatutoryRegistrationsStep,CustomerOnboarding.BusinessLibrary",RuleSet="Statutory Registrations", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=9,Name="Compensation Components",Type=3,FullTypeName="CustomerOnboarding.BusinessLibrary.CompensationComponentsStep,CustomerOnboarding.BusinessLibrary",RuleSet="Compensation Components", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=10,Name="General Compensation Components Information",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.GeneralCompensationComponentsInformationStep,CustomerOnboarding.BusinessLibrary",RuleSet="General Compensation Components Information", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=11,Name="Add Compensation Component",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.AddCompensationComponentStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add Compensation Component", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=12,Name="Add Compensation Component Confirmation",Type=4,FullTypeName="CustomerOnboarding.BusinessLibrary.AddCompensationComponentConfirmationStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add Compensation Component Confirmation", LastChanged = GetTimeStamp()}
+
+
 
             };
             UserOnboardingWorkflows = new List<UserOnboardingEntity>();
@@ -52,16 +68,44 @@ namespace CustomerOnboarding.DalMock
             CreateAccounts = new List<CreateAccountStepEntity>();
             SendEmailNotifications = new List<SendEmailNotificationStepEntity>();
             EmailConfirmations = new List<ConfirmEmailStepEntity>();
-            Organisations =new();
+            Organisations = new List<OrganisationEntity>
+            {
+                new OrganisationEntity
+                {
+                    Id="123werqop070905mnbfghjkl",
+                    Name="Test",
+                    LastChanged=GetTimeStamp()
+                }
+            };
+
+
             OrganisationProfileSteps = new();
             OrganisationProfiles = new();
-            Users = new();
+            Users = new List<UserEntity>
+            {
+                new UserEntity
+                {
+                    FirstName="John",
+                    LastName="Doe",
+                    Email="john.doe@example.com",
+                    PhoneNo="0977100000",
+                    Password="john.doe@1970",
+                    IsConfirmed=true,
+                    TenantId="123werqop070905mnbfghjkl",
+                    LastChanged=GetTimeStamp()
+                }
+            };
             BankingDetailsSteps = new();
             BankingDetails = new();
             ComplianceInfoSteps = new();
             StatutoryRegistrationsSteps = new();
             StatutoryRegistrations = new();
-            GeneralComplianceInformation = new();
+            GeneralComplianceInformationSteps = new();
+            CompensationComponentsSteps = new();
+            GeneralCompensationComponentsInformationSteps = new();
+            AddCompensationComponentSteps = new();
+            Wages = new();
+            AddCompensationComponentConfirmationSteps = new();
             Countries = new List<CountryEntity>
             {
                 new CountryEntity

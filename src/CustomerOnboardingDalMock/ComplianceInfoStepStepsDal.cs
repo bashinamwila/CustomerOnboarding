@@ -18,7 +18,7 @@ namespace CustomerOnboarding.DalMock
                 Id = r.Id
             };
 
-            var complianceInfo = MockDb.GeneralComplianceInformation
+            var complianceInfo = MockDb.GeneralComplianceInformationSteps
                 .Where(r => r.TenantId == tenantId)
                 .Select(OnboardinStep);
 

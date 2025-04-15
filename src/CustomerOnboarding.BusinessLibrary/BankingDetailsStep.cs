@@ -161,7 +161,7 @@ namespace CustomerOnboarding.BusinessLibrary
                     TenantId = parent.TenantId,
                     StepId = this.Id,
                     StepIndex = this.StepIndex,
-                    IsCompleted = (parent.CurrentStepIndex - 1) == this.StepIndex ? this.IsCompleted : false,
+                    IsCompleted = this.IsCompleted,
                     LastChanged=this.TimeStamp
                     // Only mark as completed if it's the current step
                 };

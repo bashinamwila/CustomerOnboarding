@@ -11,5 +11,8 @@ namespace CustomerOnboarding.BusinessLibrary.BaseTypes
     {
         public string Template { get; }
         public string TemplateName { get; }
+
+        public string EmailAddress { get; set; }
+        public string Subject { get; set; }
     }
 }

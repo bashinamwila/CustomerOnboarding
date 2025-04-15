@@ -1,4 +1,5 @@
 ﻿using Csla;
+using CustomerOnboarding.BusinessLibrary.Services.BaseTypes;
 using CustomerOnboarding.Dal;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -74,7 +75,7 @@ namespace CustomerOnboarding.BusinessLibrary.BaseTypes
         public bool IsCompleted
         {
             get => GetProperty(IsCompletedProperty);
-            protected set => LoadProperty(IsCompletedProperty, value);
+            protected set => SetProperty(IsCompletedProperty, value);
         }
 
         #endregion
@@ -85,11 +86,9 @@ namespace CustomerOnboarding.BusinessLibrary.BaseTypes
         /// Executes the logic of the step. Must be overridden by automatic steps.
         /// Manual steps typically do not override this.
         /// </summary>
-        public virtual Task ExecuteAsync()
-        {
-            throw new NotImplementedException("Only automatic steps should override ExecuteAsync().");
-        }
-
+       
+       
+      
         #endregion
 
         #region Rules

@@ -95,6 +95,8 @@ namespace CustomerOnboarding.BusinessLibrary
         /// during the progression, ensuring data integrity.
         /// </remarks>
         /// <returns>A task representing the asynchronous operation.</returns>
+        /// 
+        public void Skip() => throw new NotImplementedException();
         public async Task MoveNextAsync()
         {
             // Ensure we haven't gone past the last step
@@ -105,7 +107,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 // Handle Automatic Steps
                 if (!step.IsCompleted && step.Type == StepTypes.Automatic)
                 {
-                    await step.ExecuteAsync(); // Execute the automatic step logic
+                   // await step.ExecuteAsync(); // Execute the automatic step logic
                     CurrentStepIndex++;        // Move to the next index
 
                     // Persist the CurrentStepIndex change using a dedicated command

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CustomerOnboarding.BusinessLibrary.Rules
 {
-    public class ValidBankBranch : BusinessRuleAsync
+    public class ValidBankBranch : BusinessRule
     {
         public ValidBankBranch(Csla.Core.IPropertyInfo primaryProperty,
             Csla.Core.IPropertyInfo affectedProperty)
@@ -16,11 +16,11 @@ namespace CustomerOnboarding.BusinessLibrary.Rules
             InputProperties.AddRange(new[] { primaryProperty, affectedProperty });
             AffectedProperties.Add(affectedProperty);
         }
-        protected override async Task ExecuteAsync(IRuleContext context)
+        protected override void Execute(IRuleContext context)
         {
             var id = context.GetInputValue<string>(AffectedProperties[1]);
             var branchId = context.GetInputValue<int>(PrimaryProperty);
-            var bankList = await context.DataPortalFactory.GetPortal<BankList>().FetchAsync();
+            var bankList = context.DataPortalFactory.GetPortal<BankList>().Fetch();
             var bank = (from r in bankList
                         where r.Id == id
                         select r).FirstOrDefault();

@@ -10,6 +10,8 @@ namespace CustomerOnboarding.BusinessLibrary
     {
         Manual=1,
         Automatic=2,
-        MultiStep=3
+        MultiStep=3,
+        ConfirmationAction=4
+        
     }
 }

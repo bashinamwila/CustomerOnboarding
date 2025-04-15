@@ -35,6 +35,12 @@ namespace CustomerOnboarding.DalMock
             services.AddTransient<IStatutoryRegistrationsStepDal, StatutoryRegistrationsStepDal>();
             services.AddTransient<IGeneralComplianceInformationDal, GeneralComplianceInformationDal>();
             services.AddTransient<IComplianceInfoStepStepsDal, ComplianceInfoStepStepsDal>();
+            services.AddTransient<ICompensationComponentsStepStepsDal, CompensationComponentsStepStepsDal>();
+            services.AddTransient<ICompensationComponentsStepDal, CompensationComponentsStepDal>();
+            services.AddTransient<IGeneralCompensationComponentsInformationDal, GeneralCompensationComponentsInformationDal>();
+            services.AddTransient<IWageDal, WageDal>();
+            services.AddTransient<IAddCompensationComponentStepDal, AddCompensationComponentStepDal>();
+            services.AddTransient<IAddCompensationComponentConfirmationStepDal, AddCompensationComponentConfirmationStepDal>();
         }
     }
 }

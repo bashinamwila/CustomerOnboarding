@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace CustomerOnboarding.BusinessLibrary
 {
     public class GeneralComplianceInformationStep :
-        StepBase<GeneralComplianceInformationStep>
+        StepBase<GeneralComplianceInformationStep>,IInformationOnlyStep
     {
         public static readonly PropertyInfo<byte[]> TimeStampProperty =
             RegisterProperty<byte[]>(nameof(TimeStamp));
@@ -49,7 +49,7 @@ namespace CustomerOnboarding.BusinessLibrary
         }
 
         [InsertChild]
-        private void Insert(TenantOnboardingOrchestrator parent,int currentStepIndex,
+        private void Insert(TenantOnboardingOrchestrator parent,
             [Inject] IGeneralComplianceInformationDal dal)
         {
             using (BypassPropertyChecks)
@@ -90,10 +90,23 @@ namespace CustomerOnboarding.BusinessLibrary
         }
 
         [UpdateChild]
-        private void Update(TenantOnboardingOrchestrator parent,int currentStepIndex,
+        private void Update(TenantOnboardingOrchestrator parent,
             [Inject] IGeneralComplianceInformationDal dal)
         {
-           
+            using (BypassPropertyChecks)
+            {
+                var dto = new GeneralComplianceInformationDto
+                {
+                    TenantId = parent.TenantId,
+                    StepId = this.Id,
+                    StepIndex = this.StepIndex,
+                    IsCompleted = this.IsCompleted,
+                    LastChanged=this.TimeStamp
+                };
+                dal.Update(dto);
+                TimeStamp = dto.LastChanged;
+
+            }
         }
     }
 }

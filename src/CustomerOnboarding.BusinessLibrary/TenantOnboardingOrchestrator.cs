@@ -82,72 +82,96 @@ namespace CustomerOnboarding.BusinessLibrary
             set => SetProperty(TimeStampProperty, value);
         }
 
+        public void Skip()
+        {
+            var step = Steps[CurrentStepIndex];
+            if (step is IIskippable skippable)
+            {
+                if (skippable.Skipped)
+                {
+
+                    if ((CurrentStepIndex + 1) <= Steps.Count - 1)
+                        CurrentStepIndex++;
+                }
+            }   
+        }
+
         public async Task MoveNextAsync()
         {
             var currentStepIndexBeforeUpdate = CurrentStepIndex;
-            while (CurrentStepIndex < Steps.Count)
-            {
-                var step = Steps[CurrentStepIndex];
+            
+            
+            
+                while (CurrentStepIndex < Steps.Count)
+                {
+                    var step = Steps[CurrentStepIndex];
+                    if (step is IInformationOnlyStep informationOnlyStep)
+                        informationOnlyStep.MarkAsCompleted();
+
+               
+
                 if (!step.IsCompleted && step.Type == StepTypes.Automatic)
-                {
-
-                }
-                else if (step.Type == StepTypes.Manual)
-                {
-                    if (step.IsCompleted && currentStepIndexBeforeUpdate==step.StepIndex)
                     {
-                        var portal = ApplicationContext.GetRequiredService<IDataPortalFactory>();
-
-                       // var stepUpdater = await portal.GetPortal<TenantOnboardingOrchestratorStepUpdater>().CreateAsync(this, step);
-                       // stepUpdater = await portal.GetPortal<TenantOnboardingOrchestratorStepUpdater>().ExecuteAsync(stepUpdater);
-
-
-                        CurrentStepIndex++;
-                       
-                        var updater = await portal.GetPortal<TenantOnboardingOrchestratorUpdater>().CreateAsync(this); 
-                        updater = await portal.GetPortal<TenantOnboardingOrchestratorUpdater>().ExecuteAsync(updater);
-                       // TimeStamp = updater.TenantOnboardingOrchestrator.TimeStamp;
+                     
                     }
-                    else
+                    else if (step.Type == StepTypes.Manual)
                     {
-                        break;
-                    }
-                }
-                else if (step.Type == StepTypes.MultiStep)
-                {
-                    if (!step.IsCompleted && currentStepIndexBeforeUpdate == step.StepIndex)
-                    {
-                        var multiStep = step as IOnboardingOrchestrator;
-                        if(multiStep is not null)
+                        if (step.IsCompleted && currentStepIndexBeforeUpdate == step.StepIndex)
                         {
-                            int nextStep=0;
-                            if (multiStep.CurrentStepIndex + 1 < multiStep.Steps.Count)
-                                nextStep = multiStep.CurrentStepIndex + 1;
-                            var portal = ApplicationContext.GetRequiredService<IDataPortal<TenantOnboardingMultiStepUpdater>>();
-                            var updater = await portal.ExecuteAsync(this, nextStep, multiStep);
+                        
 
+                                if ((CurrentStepIndex + 1) <= Steps.Count - 1)
+                                    CurrentStepIndex++;
+                                else
+                                    break;
+
+                          
                         }
                         else
                         {
-                            break;
+                                break;
+                       
                         }
-
                     }
-                    else
+                    else if (step.Type == StepTypes.MultiStep)
                     {
-                        var portal = ApplicationContext.GetRequiredService<IDataPortalFactory>();
-                        CurrentStepIndex++;
+                        if (!step.IsCompleted && currentStepIndexBeforeUpdate == step.StepIndex)
+                        {
 
-                        var updater = await portal.GetPortal<TenantOnboardingOrchestratorUpdater>().CreateAsync(this);
-                        updater = await portal.GetPortal<TenantOnboardingOrchestratorUpdater>().ExecuteAsync(updater);
+                           
+                                var multiStep = (IOnboardingOrchestrator)step;
+                                 await multiStep.MoveNextAsync();
+                                break;
+                            
+
+                                                   
+
+                        }
+                        else if (step.IsCompleted && currentStepIndexBeforeUpdate == step.StepIndex)
+                         {
+
+                                if ((CurrentStepIndex + 1) <= Steps.Count - 1)
+                                    CurrentStepIndex++;
+                                else
+                                    break;
+                        }
+                        else
+                        {
+                                break;
+                        }
+                           
+                        
                     }
-                }
-                else
+                   
+                    else
                 {
+
                     break;
                 }
+                }
             }
-        }
+           
+        
 
         protected override void AddBusinessRules()
         {
@@ -185,10 +209,29 @@ namespace CustomerOnboarding.BusinessLibrary
                 IsComplete = false;
                 TenantId = tenant.Id;
                 CurrentStepIndex = 0;
-                var creator = await factory.FetchAsync(new int[] { 4, 5, 6 }, CurrentStepIndex);
+                var creator = await factory.FetchAsync(new int[] { 4, 5, 6, 9 }, CurrentStepIndex);
                 Steps = creator.Steps;
                
                 
+            }
+            await BusinessRules.CheckRulesAsync();
+        }
+
+        [Create]
+        private async Task CreateAsync(string tenantId,
+           [Inject] IChildDataPortalFactory portal,
+           [Inject] IDataPortal<TenantOnboardingStepsFactory> factory,
+           [Inject] ILogger<TenantOnboardingOrchestrator> logger)
+        {
+            using (BypassPropertyChecks)
+            {
+                IsComplete = false;
+                TenantId = tenantId;
+                CurrentStepIndex = 0;
+                var creator = await factory.FetchAsync(new int[] { 4, 5, 6,9 }, CurrentStepIndex);
+                Steps = creator.Steps;
+
+
             }
             await BusinessRules.CheckRulesAsync();
         }

@@ -13,5 +13,7 @@ namespace CustomerOnboarding.BusinessLibrary.BaseTypes
         public Steps Steps { get; }
         public int CurrentStepIndex { get; }
         public Task MoveNextAsync();
+
+        public void Skip();
     }
 }

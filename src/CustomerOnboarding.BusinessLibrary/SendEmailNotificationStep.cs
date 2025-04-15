@@ -38,18 +38,11 @@ namespace CustomerOnboarding.BusinessLibrary
         /// <summary>
         /// Executes the step logic — simulates sending an email and marks step as complete.
         /// </summary>
-        public override async Task ExecuteAsync()
+        public  async Task ExecuteAsync(string tenantId,IEmailTemplate template,IEmailSender emailSender,
+            IDataPortalFactory portal)
         {
-            var steps = (Steps)Parent;
-            var portal = ApplicationContext.GetRequiredService<IDataPortalFactory>();
-            var emailSender = ApplicationContext.GetRequiredService<IEmailSender>();
-            var userEmail = ((CreateAccountStep)steps[0]).User.Email;
-            var userFirstName = ((CreateAccountStep)steps[0]).User.FirstName;
-            var template = portal.GetPortal<TemplateFactory>().Fetch(1).Result;
-            ((EmailConfirmationTemplate)template).UserFirstName=userFirstName;
-            var parent = (UserOnboardingOrchestrator)Parent.Parent;
-            ((EmailConfirmationTemplate)template).ConfirmationLink = $"https://localhost:7074/email-confirmed/{parent.TenantId}";
-            await emailSender.SendEmailAsync(userEmail, "Welcome to our platform", template.Template);
+           
+            await emailSender.SendEmailAsync(template.EmailAddress,template.Subject, template.Template);
                 
             // Console.WriteLine($"📧 Email sent to {userEmail}");
 
@@ -58,7 +51,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
             IsCompleted = true;
 
-            var updater = await portal.GetPortal<SendEmailNotificationStepUpdater>().CreateAsync(parent.TenantId, this);
+            var updater = await portal.GetPortal<SendEmailNotificationStepUpdater>().CreateAsync(tenantId, this);
             updater = await portal.GetPortal<SendEmailNotificationStepUpdater>().ExecuteAsync(updater);
             TimeStamp = updater.Step.TimeStamp;
         }
