@@ -9,6 +9,6 @@ namespace CustomerOnboarding.BusinessLibrary.BaseTypes
 {
     public interface IIskippable :IStep
     {
-        public bool Skipped { get; set; }
+        public bool IsSkipped { get; set; }
     }
 }

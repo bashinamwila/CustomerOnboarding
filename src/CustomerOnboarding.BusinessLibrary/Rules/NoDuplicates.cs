@@ -35,6 +35,7 @@ namespace CustomerOnboarding.BusinessLibrary.Rules
                 if (cmd.Exists)
                     context.AddErrorResult($"Deduction with {id} exists");
             }
+            
             if (target is EmployerExpense employerExpense)
             {
                 var cmd = portal.GetPortal<EmployerExpenseExistsCommand>().Create(id);

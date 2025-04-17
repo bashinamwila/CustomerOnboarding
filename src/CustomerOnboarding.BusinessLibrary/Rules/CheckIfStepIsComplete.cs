@@ -1,22 +1,19 @@
 ﻿using Csla;
-using Csla.Core.FieldManager;
 using Csla.Rules;
 using CustomerOnboarding.BusinessLibrary.BaseTypes;
-using Microsoft.Extensions.Logging;
+using CustomerOnboarding.BusinessLibrary.Attributes;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace CustomerOnboarding.BusinessLibrary.Rules
 {
-    public class CheckIfStepIsComplete :BusinessRule
+    public class CheckIfStepIsComplete : BusinessRule
     {
         public CheckIfStepIsComplete(Csla.Core.IPropertyInfo primaryProperty,
-            Csla.Core.IPropertyInfo affectedProperty) :
-            base(primaryProperty)
+            Csla.Core.IPropertyInfo affectedProperty)
+            : base(primaryProperty)
         {
             InputProperties.AddRange(new[] { primaryProperty, affectedProperty });
             AffectedProperties.Add(affectedProperty);
@@ -25,15 +22,9 @@ namespace CustomerOnboarding.BusinessLibrary.Rules
         protected override void Execute(IRuleContext context)
         {
             var target = (IStep)context.Target;
-           // var logger=context.ApplicationContext.GetRequiredService<ILogger<CheckIfStepIsComplete>>();
-            // Step must be valid at the root level
-           // logger.LogInformation($"Checking if step {target.Name} is complete");
             var isComplete = target.IsValid;
-           // logger.LogInformation($"Step {target.Name} is valid: {isComplete}");
 
-            // Find all properties on the Step that are IBusinessBase (e.g., forms, sections, sub-steps)
-            var childObjects = target
-                .GetType()
+            var childObjects = target.GetType()
                 .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
                 .Where(p => typeof(IBusinessBase).IsAssignableFrom(p.PropertyType));
 
@@ -46,49 +37,70 @@ namespace CustomerOnboarding.BusinessLibrary.Rules
                     isComplete = false;
                     break;
                 }
-               
 
-                // Now inspect each property of the child IBusinessBase object
-                var childProperties = child!
-                    .GetType()
-                    .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
-                    .Where(p => p.CanWrite && p.GetIndexParameters().Length == 0 && p.Name!="TimeStamp");
-
-                foreach (var prop in childProperties)
+                if (HasDefaultValueInBusinessBase((IBusinessBase)child))
                 {
-                    var value = prop.GetValue(child);
-
-                    if (IsDefaultValue(value, prop.PropertyType))
-                    {
-                       // logger.LogInformation($"Property {prop.Name} of {childProp.Name} is not set");
-                        isComplete = false;
-                        break;
-                    }
-                }
-
-                if (!isComplete)
+                    isComplete = false;
                     break;
+                }
             }
 
             context.AddOutValue(AffectedProperties[1], isComplete);
         }
 
+        /// <summary>
+        /// Recursively checks if any property is default, unless it's explicitly allowed to be.
+        /// </summary>
+        private bool HasDefaultValueInBusinessBase(IBusinessBase businessObject)
+        {
+            var properties = businessObject.GetType()
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
+                .Where(p => p.CanWrite && p.GetIndexParameters().Length == 0);
 
+            foreach (var prop in properties)
+            {
+                // Skip known exclusions
+                if (prop.Name == "TimeStamp" || prop.Name.StartsWith("Old", StringComparison.OrdinalIgnoreCase))
+                    continue;
 
+                // Skip properties explicitly marked as allowed to be default
+                if (prop.GetCustomAttribute<DefaultValueAllowedAttribute>() != null)
+                    continue;
+
+                var value = prop.GetValue(businessObject);
+
+                if (typeof(IBusinessBase).IsAssignableFrom(prop.PropertyType))
+                {
+                    if (value is IBusinessBase nestedChild)
+                    {
+                        if (HasDefaultValueInBusinessBase(nestedChild))
+                            return true;
+                    }
+                }
+                else
+                {
+                    if (IsDefaultValue(value, prop.PropertyType))
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if the given value is considered default (except bool).
+        /// </summary>
         private bool IsDefaultValue(object? value, Type type)
         {
             if (value == null)
                 return true;
 
-            // Special case: string
             if (type == typeof(string))
                 return string.IsNullOrWhiteSpace((string)value);
 
-            // Exclude bool from default check
             if (type == typeof(bool) || Nullable.GetUnderlyingType(type) == typeof(bool))
                 return false;
 
-            // Nullable types
             var underlyingType = Nullable.GetUnderlyingType(type);
             if (underlyingType != null)
             {
@@ -96,16 +108,13 @@ namespace CustomerOnboarding.BusinessLibrary.Rules
                 return Equals(value, defaultValue);
             }
 
-            // Regular value types (int, decimal, DateTime, etc.)
             if (type.IsValueType)
             {
                 var defaultValue = Activator.CreateInstance(type);
                 return Equals(value, defaultValue);
             }
 
-            return false; // For reference types (not string), assume non-null is valid
+            return false; // reference types are valid if non-null
         }
-
-
     }
 }

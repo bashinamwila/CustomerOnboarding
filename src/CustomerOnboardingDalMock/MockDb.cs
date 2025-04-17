@@ -43,6 +43,26 @@ namespace CustomerOnboarding.DalMock
 
         public static List<AddCompensationComponentConfirmationStepEntity>  AddCompensationComponentConfirmationSteps   { get; private set; } = default!;
 
+        public static List<GeneralDeductionsInformationEntity> GeneralDeductionsInformationSteps { get; private set; } = default!;
+        public static List<DeductionsStepEntity> DeductionsSteps { get; private set; } = default!;
+
+        public static List<AddDeductionStepEntity> AddDeductionSteps { get; private set; } = default!;
+
+
+        public static List<AddDeductionConfirmationStepEntity> AddDeductionConfirmationSteps { get; private set; } = default!;
+        public static List<DeductionEntity>Deductions { get; private set; }=default!;
+        public static List<FixedDeductionEntity> FixedDeductions { get; private set; } = default!;
+        public static List<PercentGrossDeductionEntity> PercentGrossDeductions { get; private set; } = default!;
+        public static List<PercentWageDeductionEntity> PercentWageDeductions { get; private set; } = default!;
+        public static List<UserEnteredDeductionEntity> UserEnteredDeductions { get; private set; } = default!;
+        public static List<NoDeductionLimitEntity> NoDeductionLimits { get; private set; } = default!;
+        public static List<RangeDeductionLimitEntity> RangeDeductionLimits { get; private set; } = default!;
+        public static List<DeductionTypeEntity> DeductionTypes { get; private set; } = default!;
+        public static List<DeductionLimitTypeEntity> DeductionLimitTypes { get; private set; } = default!;
+
+
+        
+
         static MockDb()
         {
             Steps = new List<StepEntity>
@@ -58,7 +78,11 @@ namespace CustomerOnboarding.DalMock
                 new StepEntity{Id=9,Name="Compensation Components",Type=3,FullTypeName="CustomerOnboarding.BusinessLibrary.CompensationComponentsStep,CustomerOnboarding.BusinessLibrary",RuleSet="Compensation Components", LastChanged = GetTimeStamp()},
                 new StepEntity{Id=10,Name="General Compensation Components Information",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.GeneralCompensationComponentsInformationStep,CustomerOnboarding.BusinessLibrary",RuleSet="General Compensation Components Information", LastChanged = GetTimeStamp()},
                 new StepEntity{Id=11,Name="Add Compensation Component",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.AddCompensationComponentStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add Compensation Component", LastChanged = GetTimeStamp()},
-                new StepEntity{Id=12,Name="Add Compensation Component Confirmation",Type=4,FullTypeName="CustomerOnboarding.BusinessLibrary.AddCompensationComponentConfirmationStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add Compensation Component Confirmation", LastChanged = GetTimeStamp()}
+                new StepEntity{Id=12,Name="Add Compensation Component Confirmation",Type=4,FullTypeName="CustomerOnboarding.BusinessLibrary.AddCompensationComponentConfirmationStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add Compensation Component Confirmation", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=13,Name="Deductions",Type=3,FullTypeName="CustomerOnboarding.BusinessLibrary.DeductionsStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add Deduction", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=14,Name="General Deduction Information",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.GeneralDeductionsInformationStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add Deduction", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=15,Name="Add Deduction",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.AddDeductionStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add Deduction", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=16,Name="Add Deduction Confirmation",Type=4,FullTypeName="CustomerOnboarding.BusinessLibrary.AddDeductionConfirmationStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add Deduction", LastChanged = GetTimeStamp()},
 
 
 
@@ -106,6 +130,31 @@ namespace CustomerOnboarding.DalMock
             AddCompensationComponentSteps = new();
             Wages = new();
             AddCompensationComponentConfirmationSteps = new();
+            GeneralDeductionsInformationSteps = new();
+            DeductionsSteps = new();
+            AddDeductionSteps = new();
+            AddDeductionConfirmationSteps = new();
+            Deductions = new();
+            FixedDeductions = new();
+            PercentGrossDeductions = new();
+            PercentWageDeductions = new();
+            UserEnteredDeductions = new();
+            NoDeductionLimits = new();
+            RangeDeductionLimits = new();
+            DeductionLimitTypes = new List<DeductionLimitTypeEntity>
+            {
+                new DeductionLimitTypeEntity { Id = 1, Name = "NoLimit", FriendlyName = "No Limit", FullTypeName = "CustomerOnboarding.BusinessLibrary.NoLimitDeduction,CustomerOnboarding.BusinessLibrary" },
+                new DeductionLimitTypeEntity { Id = 2, Name = "Range", FriendlyName = "Range", FullTypeName = "CustomerOnboarding.BusinessLibrary.RangeLimitDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.RangeLimitDeductionComponent,Benefito.Ui.Blazor.Server" },
+                new DeductionLimitTypeEntity { Id = 3, Name = "PercentGross", FriendlyName = "Percent Gross", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentGrossLimitDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.PercentGrossLimitDeductionComponent,Benefito.Ui.Blazor.Server" }
+            };
+            DeductionTypes = new List<DeductionTypeEntity>
+            {
+                new DeductionTypeEntity { Id = 1, Name = "FixedDeduction", FriendlyName = "Fixed", FullTypeName = "CustomerOnboarding.BusinessLibrary.FixedDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.FixedDeductionComponent,Benefito.Ui.Blazor.Server" },
+                new DeductionTypeEntity { Id = 2, Name = "PercentWageDeduction", FriendlyName = "Perccent Wage", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentWageDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.PercentWageDeductionComponent,Benefito.Ui.Blazor.Server" },
+                new DeductionTypeEntity { Id = 3, Name = "PercentGrossDeduction", FriendlyName = "Percent Gross", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentGrossDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.PercentGrossDeductionComponent,Benefito.Ui.Blazor.Server" },
+                new DeductionTypeEntity { Id = 4, Name = "UserEnteredDeduction", FriendlyName = "User Entered", FullTypeName = "CustomerOnboarding.BusinessLibrary.UserEnteredDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = string.Empty }
+            };
+
             Countries = new List<CountryEntity>
             {
                 new CountryEntity

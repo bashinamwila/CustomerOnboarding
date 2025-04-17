@@ -193,7 +193,167 @@ namespace CustomerOnboarding.Tests
 
             tenantOnboardingOrchestrator = await portal.FetchAsync(tenantId);
 
+            //Step 5 Deductions Step
+
+            var step5 = (DeductionsStep)tenantOnboardingOrchestrator.Steps[4];
+
+            Assert.Equal(4, tenantOnboardingOrchestrator.CurrentStepIndex);
+            Assert.Equal(0, step5.CurrentStepIndex);
+
+            await tenantOnboardingOrchestrator.MoveNextAsync();
+            tenantOnboardingOrchestrator = await tenantOnboardingOrchestrator.SaveAsync();
+            tenantOnboardingOrchestrator = await portal.FetchAsync(tenantId);
+
+            //Step 5 sub step 2
+            step5 = (DeductionsStep)tenantOnboardingOrchestrator.Steps[4];
+
+            var step5SubStep2 = (AddDeductionStep)step5.Steps[1];
+
+            Assert.Equal(4, tenantOnboardingOrchestrator.CurrentStepIndex);
+            Assert.Equal(1, step5.CurrentStepIndex);
+
+            step5SubStep2.Deduction.Id = "2000";
+            step5SubStep2.Deduction.Name = "Union Contribution";
+            step5SubStep2.Deduction.SetType(1);
+            step5SubStep2.Deduction.SetLimit(1);
+            ((FixedDeduction)step5SubStep2.Deduction.DeductionType).Amount=54m;
+
+            Assert.True(step5SubStep2.IsCompleted);
+
+
+            await tenantOnboardingOrchestrator.MoveNextAsync();
+
+            tenantOnboardingOrchestrator = await tenantOnboardingOrchestrator.SaveAsync();
+            tenantOnboardingOrchestrator = await portal.FetchAsync(tenantId);
+
+            //Step 5 sub step 3
+
+            step5 = (DeductionsStep)tenantOnboardingOrchestrator.Steps[4];
+
+            var step5SubStep3 = (AddDeductionConfirmationStep)step5.Steps[2];
+
+            step5SubStep3.ActionTaken = ConfirmationActions.AddAnotherItem;
+
+            await tenantOnboardingOrchestrator.MoveNextAsync();
+
+            tenantOnboardingOrchestrator = await tenantOnboardingOrchestrator.SaveAsync();
+
+            tenantOnboardingOrchestrator = await portal.FetchAsync(tenantId);
+
+            step5 = (DeductionsStep)tenantOnboardingOrchestrator.Steps[4];
+            step5SubStep3 = (AddDeductionConfirmationStep)step5.Steps[2];
+
+            Assert.Equal(1, step5.CurrentStepIndex);
+
+            Assert.False(step5SubStep3.IsCompleted);
+
+            step5SubStep2 = (AddDeductionStep)step5.Steps[1];
+
+            Assert.False(step5SubStep2.IsCompleted);
+
+            step5SubStep2.Deduction.Id = "2001";
+            step5SubStep2.Deduction.Name = "Pension Contribution-Employee";
+            step5SubStep2.Deduction.SetType(2);
+            step5SubStep2.Deduction.SetLimit(2);
+            ((PercentWageDeduction)step5SubStep2.Deduction.DeductionType).Percent = 0.5m;
+            ((PercentWageDeduction)step5SubStep2.Deduction.DeductionType).WageId = "1000";
+
+            ((RangeLimitDeduction)step5SubStep2.Deduction.DeductionLimitType).Minimum =100m;
+            ((RangeLimitDeduction)step5SubStep2.Deduction.DeductionLimitType).Maximum = 1500;
+
+
+
+            Assert.True(step5SubStep2.IsCompleted);
+
+
+            await tenantOnboardingOrchestrator.MoveNextAsync();
+
+            tenantOnboardingOrchestrator = await tenantOnboardingOrchestrator.SaveAsync();
+            tenantOnboardingOrchestrator = await portal.FetchAsync(tenantId);
+
+            //Step 5 sub step 3
+
+            step5 = (DeductionsStep)tenantOnboardingOrchestrator.Steps[4];
+
+             step5SubStep3 = (AddDeductionConfirmationStep)step5.Steps[2];
+
+            step5SubStep3.ActionTaken = ConfirmationActions.AddAnotherItem;
+
+            await tenantOnboardingOrchestrator.MoveNextAsync();
+
+            tenantOnboardingOrchestrator = await tenantOnboardingOrchestrator.SaveAsync();
+
+            tenantOnboardingOrchestrator = await portal.FetchAsync(tenantId);
+
+            step5 = (DeductionsStep)tenantOnboardingOrchestrator.Steps[4];
+            step5SubStep2 = (AddDeductionStep)step5.Steps[1];
+
+            step5SubStep2.Deduction.Id = "2003";
+            step5SubStep2.Deduction.Name = "Test";
+            step5SubStep2.Deduction.SetType(3);
+            step5SubStep2.Deduction.SetLimit(1);
+            ((PercentGrossDeduction)step5SubStep2.Deduction.DeductionType).Percent = 0.5m;
+           
+
+
+
+            Assert.True(step5SubStep2.IsCompleted);
+
+            await tenantOnboardingOrchestrator.MoveNextAsync();
+
+            tenantOnboardingOrchestrator = await tenantOnboardingOrchestrator.SaveAsync();
+            tenantOnboardingOrchestrator = await portal.FetchAsync(tenantId);
+
+            //Step 5 sub step 3
+
+            step5 = (DeductionsStep)tenantOnboardingOrchestrator.Steps[4];
+
+             step5SubStep3 = (AddDeductionConfirmationStep)step5.Steps[2];
+
+            step5SubStep3.ActionTaken = ConfirmationActions.AddAnotherItem;
+
+            await tenantOnboardingOrchestrator.MoveNextAsync();
+
+            tenantOnboardingOrchestrator = await tenantOnboardingOrchestrator.SaveAsync();
+
+            tenantOnboardingOrchestrator = await portal.FetchAsync(tenantId);
+
+
+            step5 = (DeductionsStep)tenantOnboardingOrchestrator.Steps[4];
+            step5SubStep2 = (AddDeductionStep)step5.Steps[1];
+
+            step5SubStep2.Deduction.Id = "2004";
+            step5SubStep2.Deduction.Name = "Test 2";
+            step5SubStep2.Deduction.SetType(4);
+            step5SubStep2.Deduction.SetLimit(1);
+            
+
+
+
+
+            Assert.True(step5SubStep2.IsCompleted);
+
+            await tenantOnboardingOrchestrator.MoveNextAsync();
+
+            tenantOnboardingOrchestrator = await tenantOnboardingOrchestrator.SaveAsync();
+            tenantOnboardingOrchestrator = await portal.FetchAsync(tenantId);
+
+            //Step 5 sub step 3
+
+            step5 = (DeductionsStep)tenantOnboardingOrchestrator.Steps[4];
+
+            step5SubStep3 = (AddDeductionConfirmationStep)step5.Steps[2];
+
+            step5SubStep3.ActionTaken = ConfirmationActions.IHaveAddedAllTheCurrentItems;
+
+            await tenantOnboardingOrchestrator.MoveNextAsync();
+
+            tenantOnboardingOrchestrator = await tenantOnboardingOrchestrator.SaveAsync();
+
+            tenantOnboardingOrchestrator = await portal.FetchAsync(tenantId);
+
             Assert.True(tenantOnboardingOrchestrator.IsComplete);
+
         }
     }
 }

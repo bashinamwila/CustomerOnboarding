@@ -75,13 +75,13 @@ namespace CustomerOnboarding.BusinessLibrary
 
 
         public static readonly PropertyInfo<bool> SkippedProperty =
-          RegisterProperty<bool>(nameof(Skipped));
+          RegisterProperty<bool>(nameof(IsSkipped));
 
         /// <summary>
         /// Indicates whether all steps in the workflow have been completed.
         /// This is managed by the CheckIfWorkflowIsComplete business rule.
         /// </summary>
-        public bool Skipped
+        public bool IsSkipped
         {
             get => GetProperty(SkippedProperty);
             set => SetProperty(SkippedProperty, value); // Rule sets this
@@ -213,7 +213,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
             // Step is complete only if both child objects are valid
            // BusinessRules.AddRule(new MarkItemAdditionStepsComplete(StepsProperty) { Priority = 0 });
-            BusinessRules.AddRule(new CheckIfMultiStepIsComplete(StepsProperty, IsCompletedProperty) { Priority=2});
+            BusinessRules.AddRule(new CheckIfMultiStepIsComplete(StepsProperty, IsCompletedProperty));
 
         }
 
@@ -248,7 +248,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 StepIndex = 3;
                 IsCompleted = false;
                 CurrentStepIndex = 0;
-                Skipped = false;
+                IsSkipped = false;
                 var _factory = await factory.GetPortal<CompensationComponentsStepStepsFactory>().FetchAsync(new[] { 10,11,12 }, CurrentStepIndex);
                 Steps = _factory.Steps;
             }
@@ -270,7 +270,7 @@ namespace CustomerOnboarding.BusinessLibrary
                     StepIndex = this.StepIndex,
                     IsCompleted = this.IsCompleted, // Only mark as completed if it's the current step
                     CurrentStepIndex = this.CurrentStepIndex,
-                    Skip=this.Skipped
+                    Skip=this.IsSkipped
                 };
                 dal.Insert(dto);
                 TimeStamp = dto.LastChanged;
@@ -295,7 +295,7 @@ namespace CustomerOnboarding.BusinessLibrary
                     StepIndex = this.StepIndex,
                     IsCompleted = this.IsCompleted, // Only mark as completed if it's the current step
                     CurrentStepIndex = this.CurrentStepIndex,
-                    Skip = this.Skipped,
+                    Skip = this.IsSkipped,
                     LastChanged=this.TimeStamp
                 };
                 dal.Update(dto);
@@ -324,7 +324,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 StepIndex = data.StepIndex;
                 IsCompleted = data.IsCompleted;
                 CurrentStepIndex = data.CurrentStepIndex;
-                Skipped = data.Skip;
+                IsSkipped = data.Skip;
                 TimeStamp = data.LastChanged;
                 var _factory = await factory.GetPortal<CompensationComponentsStepStepsFactory>().FetchAsync(tenantId, CurrentStepIndex);
                 Steps = _factory.Steps;

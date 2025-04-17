@@ -24,7 +24,6 @@ namespace CustomerOnboarding.DalMock
                               Type=s.Type,
                               StepId=r.Id,
                               StepIndex=r.StepIndex,
-                              CurrentWageIdBeingEdited=r.CurrentWageIdBeingEdited,
                               RuleSet=s.RuleSet,
                               IsCompleted=r.IsCompleted,
                               LastChanged=r.LastChanged

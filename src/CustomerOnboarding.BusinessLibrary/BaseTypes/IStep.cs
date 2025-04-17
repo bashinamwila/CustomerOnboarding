@@ -14,7 +14,7 @@ namespace CustomerOnboarding.BusinessLibrary.BaseTypes
         public StepTypes Type { get; }
         public int StepIndex { get; }
 
-
+        
        // public Task ExecuteAsync();
         public bool IsCompleted { get; }
     }

@@ -14,7 +14,6 @@ namespace CustomerOnboarding.DalMock.Entitites
         public int StepIndex { get; set; }
 
         public bool IsCompleted { get; set; }
-        public string CurrentWageIdBeingEdited { get; set; } = string.Empty;
-        public byte[] LastChanged { get; set; } = default!;
+       public byte[] LastChanged { get; set; } = default!;
     }
 }

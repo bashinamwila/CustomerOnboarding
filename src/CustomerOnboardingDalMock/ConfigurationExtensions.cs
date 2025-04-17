@@ -41,6 +41,22 @@ namespace CustomerOnboarding.DalMock
             services.AddTransient<IWageDal, WageDal>();
             services.AddTransient<IAddCompensationComponentStepDal, AddCompensationComponentStepDal>();
             services.AddTransient<IAddCompensationComponentConfirmationStepDal, AddCompensationComponentConfirmationStepDal>();
+            services.AddTransient<IDeductionsStepDal,DeductionsStepDal>();
+            services.AddTransient<IGeneralDeductionsInformationDal,GeneralDeductionsInformationDal>();
+            services.AddTransient<IAddDeductionConfirmationStepDal, AddDeductionConfirmationStepDal>();
+            services.AddTransient<IAddDeductionsStepDal, AddDeductionsStepDal>();
+            services.AddTransient<IDeductionDal,DeductionDal>();
+            services.AddTransient<IFixedDeductionDal, FixedDeductionDal>();
+            services.AddTransient<IPercentGrossDeductionDal, PercentGrossDeductionDal>();
+            services.AddTransient<IPercentWageDeductionDal, PercentWageDeductionDal>();
+            services.AddTransient<IUserEnteredDeductionDal, UserEnteredDeductionDal>();
+            services.AddTransient<INoDeductionLimitDal,NoDeductionLimitDal>();
+            services.AddTransient<IRangeDeductionLimitDal,RangeDeductionLimitDal>(); 
+            services.AddTransient<IDeductionsStepStepsDal,DeductionsStepStepsDal>();
+            services.AddTransient<IDeductionLimitTypeDal, DeductionLimitTypeDal>();
+            services.AddTransient<IDeductionTypeDal, DeductionTypeDal>();
+
+
         }
     }
 }

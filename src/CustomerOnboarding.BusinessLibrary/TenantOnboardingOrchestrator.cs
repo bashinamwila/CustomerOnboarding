@@ -87,7 +87,7 @@ namespace CustomerOnboarding.BusinessLibrary
             var step = Steps[CurrentStepIndex];
             if (step is IIskippable skippable)
             {
-                if (skippable.Skipped)
+                if (skippable.IsSkipped)
                 {
 
                     if ((CurrentStepIndex + 1) <= Steps.Count - 1)
@@ -209,7 +209,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 IsComplete = false;
                 TenantId = tenant.Id;
                 CurrentStepIndex = 0;
-                var creator = await factory.FetchAsync(new int[] { 4, 5, 6, 9 }, CurrentStepIndex);
+                var creator = await factory.FetchAsync(new int[] { 4, 5, 6, 9,13 }, CurrentStepIndex);
                 Steps = creator.Steps;
                
                 
@@ -228,7 +228,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 IsComplete = false;
                 TenantId = tenantId;
                 CurrentStepIndex = 0;
-                var creator = await factory.FetchAsync(new int[] { 4, 5, 6,9 }, CurrentStepIndex);
+                var creator = await factory.FetchAsync(new int[] { 4, 5, 6,9,13 }, CurrentStepIndex);
                 Steps = creator.Steps;
 
 
