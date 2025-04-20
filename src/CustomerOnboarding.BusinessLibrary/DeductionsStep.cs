@@ -15,7 +15,7 @@ namespace CustomerOnboarding.BusinessLibrary
 {
     [Serializable]
     public class DeductionsStep :
-        StepBase<DeductionsStep>, IIskippable, IOnboardingOrchestrator
+        StepBase<DeductionsStep>, ISkippable, IOnboardingOrchestrator
     {
         public static readonly PropertyInfo<byte[]> TimeStampProperty =
            RegisterProperty<byte[]>(nameof(TimeStamp));
@@ -87,6 +87,19 @@ namespace CustomerOnboarding.BusinessLibrary
             set => SetProperty(IsSkippedProperty, value); // Rule sets this
         }
 
+
+        private void GoTo(int numberOfStepsForwardOrBackward)
+        {
+            if (numberOfStepsForwardOrBackward > 0)
+                if ((CurrentStepIndex + numberOfStepsForwardOrBackward) <= Steps.Count - 1)
+                    CurrentStepIndex = CurrentStepIndex + numberOfStepsForwardOrBackward;
+
+            if (numberOfStepsForwardOrBackward < 0)
+                if ((CurrentStepIndex - numberOfStepsForwardOrBackward) >= 0)
+                    CurrentStepIndex = CurrentStepIndex + numberOfStepsForwardOrBackward;
+
+        }
+
         public async Task MoveNextAsync()
         {
             var currentStepIndexBeforeUpdate = CurrentStepIndex;
@@ -107,7 +120,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
 
                         if ((CurrentStepIndex + 1) <= Steps.Count - 1)
-                            CurrentStepIndex++;
+                            GoTo(1);
                         else
                             break;
 
@@ -134,7 +147,7 @@ namespace CustomerOnboarding.BusinessLibrary
                     {
 
                         if ((CurrentStepIndex + 1) <= Steps.Count - 1)
-                            CurrentStepIndex++;
+                            GoTo(1);
                         else
                             break;
                     }
@@ -156,7 +169,7 @@ namespace CustomerOnboarding.BusinessLibrary
                             {
 
                                 if ((CurrentStepIndex + 1) <= Steps.Count - 1)
-                                    CurrentStepIndex++;
+                                    GoTo(1);
                                 else
                                     break;
                             }
@@ -181,7 +194,7 @@ namespace CustomerOnboarding.BusinessLibrary
                                 //await confirmation.AddAnotherItemAsync();
                                 if ((CurrentStepIndex - 1) >= 0)
                                 {
-                                    CurrentStepIndex--;
+                                    GoTo(-1);
                                     confirmationAction.ActionTaken = ConfirmationActions.NoActionTakenYet;
                                 }
 

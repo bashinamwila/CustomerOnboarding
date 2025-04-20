@@ -15,7 +15,7 @@ namespace CustomerOnboarding.BusinessLibrary
 {
     [Serializable]
     public class CompensationComponentsStep :
-        StepBase<CompensationComponentsStep>,IIskippable,IOnboardingOrchestrator
+        StepBase<CompensationComponentsStep>,ISkippable,IOnboardingOrchestrator
     {
         public static readonly PropertyInfo<byte[]> TimeStampProperty =
            RegisterProperty<byte[]>(nameof(TimeStamp));

@@ -60,8 +60,50 @@ namespace CustomerOnboarding.DalMock
         public static List<DeductionTypeEntity> DeductionTypes { get; private set; } = default!;
         public static List<DeductionLimitTypeEntity> DeductionLimitTypes { get; private set; } = default!;
 
+        public static List<GeneralEmployerExpensesInformationEntity> GeneralEmployerExpensesInformationSteps { get; private set; } = default!;
+        public static List<EmployerExpensesStepEntity> EmployerExpensesSteps { get; private set; } = default!;
 
-        
+        public static List<AddEmployerExpenseStepEntity> AddEmployerExpenseSteps { get; private set; } = default!;
+
+
+        public static List<AddEmployerExpenseConfirmationStepEntity> AddEmployerExpenseConfirmationSteps { get; private set; } = default!;
+        public static List<EmployerExpenseEntity> EmployerExpenses { get; private set; } = default!;
+        public static List<FixedEmployerExpenseEntity> FixedEmployerExpenses { get; private set; } = default!;
+        public static List<PercentGrossEmployerExpenseEntity> PercentGrossEmployerExpenses { get; private set; } = default!;
+        public static List<PercentWageEmployerExpenseEntity> PercentWageEmployerExpenses { get; private set; } = default!;
+        public static List<UserEnteredEmployerExpenseEntity> UserEnteredEmployerExpenses { get; private set; } = default!;
+        public static List<NoEmployerExpenseLimitEntity> NoEmployerExpenseLimits { get; private set; } = default!;
+        public static List<RangeEmployerExpenseLimitEntity> RangeEmployerExpenseLimits { get; private set; } = default!;
+        public static List<EmployerExpenseTypeEntity> EmployerExpenseTypes { get; private set; } = default!;
+        public static List<EmployerExpenseLimitTypeEntity> EmployerExpenseLimitTypes { get; private set; } = default!;
+
+        public static List<AddEmployeeEmploymentDetailsStepEntity> AddEmployeeEmploymentDetailsSteps { get; private set; } = default!;
+        public static List<AddEmployeePersonalDetailsStepEntity> AddEmployeePersonalDetailsSteps { get; private set; } = default!;
+
+        public static List<EmployeeDataInputMethodTypeEntity> EmployeeDataInputMethodTypes { get; private set; } = default!;
+
+        public static List<EmployeeEmploymentDetailsEntity> EmployeeEmploymentDetails { get; private set; } = default!;
+        public static List<EmployeePersonalDetailsEntity> EmployeePersonalDetails { get; private set; } = default!;
+        public static List<EmployeesStepEntity> EmployeesSteps { get; private set; } = default!;
+        public static List<EmployeeTypeTypeEntity> EmployeeTypeTypes { get; private set; } = default!;
+        public static List<GeneralEmployeesInformationEntity> GeneralEmployeesInformationSteps { get; private set; } = default!;
+
+        public static List<ManualEmployeeDataInputMethodStepEntity> ManualEmployeeDataInputMethodSteps { get; private set; } = default!;
+
+        public static List<ActiveEmployeeStatusEntity> ActiveEmployees { get; private set; } = default!;
+        public static List<StatusTypeEntity> StatusTypes { get; private set; } = default!;
+
+        public static List<NewEmployeeStatusEntity> NewEmployees { get; private set; } = default!;
+
+        public static List<InActiveEmployeeStatusEntity> InActiveEmployees { get; private set; } = default!;
+        public static List<TerminatedEmployeeStatusEntity> TerminatedEmployees { get; private set; } = default!;
+
+        public static List<ContractEmployeeEntity> ContractEmployees { get; private set; } = default!;
+
+        public static List<PermanentEmployeeEntity> PermanentEmployees { get; private set; } = default!;
+        public static List<TemporalEmployeeEntity> TemporalEmployees { get; private set; } = default!;
+
+        public static List<GeneralEmployeeDetailsInformationStepEntity> GeneralEmployeeDetailsInformationSteps { get; private set; } = default!;
 
         static MockDb()
         {
@@ -83,7 +125,16 @@ namespace CustomerOnboarding.DalMock
                 new StepEntity{Id=14,Name="General Deduction Information",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.GeneralDeductionsInformationStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add Deduction", LastChanged = GetTimeStamp()},
                 new StepEntity{Id=15,Name="Add Deduction",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.AddDeductionStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add Deduction", LastChanged = GetTimeStamp()},
                 new StepEntity{Id=16,Name="Add Deduction Confirmation",Type=4,FullTypeName="CustomerOnboarding.BusinessLibrary.AddDeductionConfirmationStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add Deduction", LastChanged = GetTimeStamp()},
-
+                new StepEntity{Id=17,Name="Employer Expenses",Type=3,FullTypeName="CustomerOnboarding.BusinessLibrary.EmployerExpensesStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add EmployerExpense", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=18,Name="General Employer Expense Information",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.GeneralEmployerExpensesInformationStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add EmployerExpense", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=19,Name="Add Employer Expense",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.AddEmployerExpenseStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add EmployerExpense", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=20,Name="Add Employer Expense Confirmation",Type=4,FullTypeName="CustomerOnboarding.BusinessLibrary.AddEmployerExpenseConfirmationStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add EmployerExpense", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=21,Name="Employees",Type=3,FullTypeName="CustomerOnboarding.BusinessLibrary.EmployeesStep,CustomerOnboarding.BusinessLibrary",RuleSet="", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=22,Name="General Employee Information",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.GeneralEmployeesInformationStep,CustomerOnboarding.BusinessLibrary",RuleSet="", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=23,Name="Manual Employee Data Input",Type=3,FullTypeName="CustomerOnboarding.BusinessLibrary.ManualEmployeeDataInputMethodStep,CustomerOnboarding.BusinessLibrary",RuleSet="", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=24,Name="General Employee Employee Details Information",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.GeneralEmployeeDetailsInformationStep,CustomerOnboarding.BusinessLibrary",RuleSet="", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=25,Name="Add Employee Employment Details",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.AddEmployeeEmploymentDetailsStep,CustomerOnboarding.BusinessLibrary",RuleSet="Employment Details", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=26,Name="Add Employee Personal Details",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.AddEmployeePersonalDetailsStep,CustomerOnboarding.BusinessLibrary",RuleSet="Personal Details", LastChanged = GetTimeStamp()},
 
 
             };
@@ -154,6 +205,140 @@ namespace CustomerOnboarding.DalMock
                 new DeductionTypeEntity { Id = 3, Name = "PercentGrossDeduction", FriendlyName = "Percent Gross", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentGrossDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.PercentGrossDeductionComponent,Benefito.Ui.Blazor.Server" },
                 new DeductionTypeEntity { Id = 4, Name = "UserEnteredDeduction", FriendlyName = "User Entered", FullTypeName = "CustomerOnboarding.BusinessLibrary.UserEnteredDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = string.Empty }
             };
+
+            GeneralEmployerExpensesInformationSteps = new();
+            EmployerExpensesSteps = new();
+            AddEmployerExpenseSteps = new();
+            AddEmployerExpenseConfirmationSteps = new();
+            EmployerExpenses = new();
+            FixedEmployerExpenses = new();
+            PercentGrossEmployerExpenses = new();
+            PercentWageEmployerExpenses = new();
+            UserEnteredEmployerExpenses = new();
+            NoEmployerExpenseLimits = new();
+            RangeEmployerExpenseLimits = new();
+            EmployerExpenseLimitTypes = new List<EmployerExpenseLimitTypeEntity>
+{
+    new EmployerExpenseLimitTypeEntity { Id = 1, Name = "NoLimit", FriendlyName = "No Limit", FullTypeName = "CustomerOnboarding.BusinessLibrary.NoLimitEmployerExpense,CustomerOnboarding.BusinessLibrary" },
+    new EmployerExpenseLimitTypeEntity { Id = 2, Name = "Range", FriendlyName = "Range", FullTypeName = "CustomerOnboarding.BusinessLibrary.RangeLimitEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.RangeLimitEmployerExpenseComponent,Benefito.Ui.Blazor.Server" },
+    new EmployerExpenseLimitTypeEntity { Id = 3, Name = "PercentGross", FriendlyName = "Percent Gross", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentGrossLimitEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.PercentGrossLimitEmployerExpenseComponent,Benefito.Ui.Blazor.Server" }
+};
+            EmployerExpenseTypes = new List<EmployerExpenseTypeEntity>
+{
+    new EmployerExpenseTypeEntity { Id = 1, Name = "FixedEmployerExpense", FriendlyName = "Fixed", FullTypeName = "CustomerOnboarding.BusinessLibrary.FixedEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.FixedEmployerExpenseComponent,Benefito.Ui.Blazor.Server" },
+    new EmployerExpenseTypeEntity { Id = 2, Name = "PercentWageEmployerExpense", FriendlyName = "Perccent Wage", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentWageEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.PercentWageEmployerExpenseComponent,Benefito.Ui.Blazor.Server" },
+    new EmployerExpenseTypeEntity { Id = 3, Name = "PercentGrossEmployerExpense", FriendlyName = "Percent Gross", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentGrossEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.PercentGrossEmployerExpenseComponent,Benefito.Ui.Blazor.Server" },
+    new EmployerExpenseTypeEntity { Id = 4, Name = "UserEnteredEmployerExpense", FriendlyName = "User Entered", FullTypeName = "CustomerOnboarding.BusinessLibrary.UserEnteredEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = string.Empty }
+};
+
+            AddEmployeeEmploymentDetailsSteps = new();
+            AddEmployeePersonalDetailsSteps = new();
+
+            EmployeeDataInputMethodTypes = new List<EmployeeDataInputMethodTypeEntity>
+            {
+                new EmployeeDataInputMethodTypeEntity
+                {
+                    Id=1,
+                    FriendlyName="Excel/Csv File upload",
+                    FullTypeName="CustomerOnboarding.BusinessLibrary.ExcelOrCsvUploadEmployeeDataInputMethodStep,CustomerOnboarding.BusinessLibrary",
+                    Name="ExcelOrCsvUploadEmployeeDataInputMethodStep",
+                    LastChanged=GetTimeStamp()
+                },
+
+                new EmployeeDataInputMethodTypeEntity
+                {
+                    Id=23,
+                    FriendlyName="Manual Employee Data Input",
+                    FullTypeName="CustomerOnboarding.BusinessLibrary.ManualEmployeeDataInputMethodStep,CustomerOnboarding.BusinessLibrary",
+                    Name="ManualEmployeeDataInputMethodStep",
+                    LastChanged=GetTimeStamp()
+                }
+            };
+
+            EmployeeEmploymentDetails = new();
+            EmployeePersonalDetails = new();
+            EmployeesSteps = new();
+            EmployeeTypeTypes = new List<EmployeeTypeTypeEntity>
+            {
+                 new EmployeeTypeTypeEntity
+                {
+                    Id=1,
+                    Name="Permanent & Pensionable Employee",
+                    FullTypeName="CustomerOnboarding.BusinessLibrary.PermanentEmployee,CustomerOnboarding.BusinessLibrary"
+
+
+                },
+                new EmployeeTypeTypeEntity
+                {
+                    Id=2,
+                    Name="Contract Employee",
+                    FullTypeName="CustomerOnboarding.BusinessLibrary.ContractEmployee,CustomerOnboarding.BusinessLibrary",
+                    ComponentTypeName="CustomerOnboarding.Ui.Blazor.Server.Shared.ContractEmployeeComponent,CustomerOnboarding.Ui.Blazor.Server"
+
+                },
+                new EmployeeTypeTypeEntity
+                {
+                    Id=3,
+                    Name="Temporal Employee",
+                    FullTypeName="CustomerOnboarding.BusinessLibrary.TemporalEmployee,CustomerOnboarding.BusinessLibrary",
+                    ComponentTypeName="CustomerOnboarding.Ui.Blazor.Server.Shared.TemporalEmployeeComponent,CustomerOnboarding.Ui.Blazor.Server"
+
+                }
+            };
+
+            GeneralEmployeesInformationSteps = new();
+            ManualEmployeeDataInputMethodSteps = new();
+            ActiveEmployees = new();
+            StatusTypes = new List<StatusTypeEntity>
+            {
+                new StatusTypeEntity
+                {
+                    Id=1,
+                    Name="NewEmployeeStatus",
+                    FriendlyName="New",
+                    FullTypeName="CustomerOnboarding.BusinessLibrary.NewEmployeeStatus,CustomerOnboarding.BusinessLibrary",
+                    ComponentTypeName="",
+                    LastChanged=GetTimeStamp()
+                },
+                new StatusTypeEntity
+                {
+                    Id=2,
+                    Name="ActiveEmployeeStatus",
+                    FriendlyName="Active",
+                    FullTypeName="CustomerOnboarding.BusinessLibrary.ActiveEmployeeStatus,CustomerOnboarding.BusinessLibrary",
+                    ComponentTypeName="",
+                    LastChanged=GetTimeStamp()
+                },
+                new StatusTypeEntity
+                {
+                    Id=3,
+                    Name="InActiveEmployeeStatus",
+                    FriendlyName="In Active",
+                    FullTypeName="CustomerOnboarding.BusinessLibrary.InActiveEmployeeStatus,CustomerOnboarding.BusinessLibrary",
+                    ComponentTypeName="",
+                    LastChanged=GetTimeStamp()
+                },
+                new StatusTypeEntity
+                {
+                    Id=4,
+                    Name="TerminatedEmployeeStatus",
+                    FriendlyName="Terminated",
+                    FullTypeName="CustomerOnboarding.BusinessLibrary.TerminatedEmployeeStatus,CustomerOnboarding.BusinessLibrary",
+                    ComponentTypeName="",
+                    LastChanged=GetTimeStamp()
+                }
+
+
+            };
+
+            NewEmployees = new();
+            ActiveEmployees = new();
+            InActiveEmployees = new();
+            TerminatedEmployees = new();
+            ContractEmployees = new();
+            PermanentEmployees = new();
+            TemporalEmployees = new();
+            GeneralEmployeeDetailsInformationSteps = new();
 
             Countries = new List<CountryEntity>
             {

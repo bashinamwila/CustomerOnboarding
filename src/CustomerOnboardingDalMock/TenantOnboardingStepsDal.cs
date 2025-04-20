@@ -39,12 +39,23 @@ namespace CustomerOnboarding.DalMock
                 .Where(r=>r.TenantId == tenantId)
                 .Select(OnboardinStep);
 
+            var step6 = MockDb.EmployerExpensesSteps
+                     .Where(r => r.TenantId == tenantId)
+                     .Select(OnboardinStep);
 
-            return      step1.
+            var step7 = MockDb.EmployeesSteps
+                    .Where(r => r.TenantId == tenantId)
+                    .Select(OnboardinStep);
+
+
+
+            return step1.
                         Concat(step2).
                         Concat(step3).
                         Concat(step4).
                         Concat(step5).
+                        Concat(step6).
+                        Concat(step7).
                         ToList();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using CustomerOnboarding.Dal;
+using CustomerOnboarding.Dal.Dtos;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -55,7 +56,40 @@ namespace CustomerOnboarding.DalMock
             services.AddTransient<IDeductionsStepStepsDal,DeductionsStepStepsDal>();
             services.AddTransient<IDeductionLimitTypeDal, DeductionLimitTypeDal>();
             services.AddTransient<IDeductionTypeDal, DeductionTypeDal>();
-
+            services.AddTransient<IEmployerExpensesStepDal, EmployerExpensesStepDal>();
+            services.AddTransient<IGeneralEmployerExpensesInformationDal, GeneralEmployerExpensesInformationDal>();
+            services.AddTransient<IAddEmployerExpenseConfirmationStepDal, AddEmployerExpenseConfirmationStepDal>();
+            services.AddTransient<IAddEmployerExpensesStepDal, AddEmployerExpensesStepDal>();
+            services.AddTransient<IEmployerExpenseDal, EmployerExpenseDal>();
+            services.AddTransient<IFixedEmployerExpenseDal, FixedEmployerExpenseDal>();
+            services.AddTransient<IPercentGrossEmployerExpenseDal, PercentGrossEmployerExpenseDal>();
+            services.AddTransient<IPercentWageEmployerExpenseDal, PercentWageEmployerExpenseDal>();
+            services.AddTransient<IUserEnteredEmployerExpenseDal, UserEnteredEmployerExpenseDal>();
+            services.AddTransient<INoEmployerExpenseLimitDal, NoEmployerExpenseLimitDal>();
+            services.AddTransient<IRangeEmployerExpenseLimitDal, RangeEmployerExpenseLimitDal>();
+            services.AddTransient<IEmployerExpensesStepStepsDal, EmployerExpensesStepStepsDal>();
+            services.AddTransient<IEmployerExpenseLimitTypeDal, EmployerExpenseLimitTypeDal>();
+            services.AddTransient<IEmployerExpenseTypeDal, EmployerExpenseTypeDal>();
+            services.AddTransient<IAddEmployeeEmploymentDetailsStepDal, AddEmployeeEmploymentDetailsStepDal>();
+            services.AddTransient<IAddEmployeePersonalDetailsStepDal, AddEmployeePersonalDetailsStepDal>();
+            services.AddTransient<IEmployeeDataInputMethodTypeDal, EmployeeDataInputMethodTypeDal>();
+            services.AddTransient<IEmployeeEmploymentDetailsDal, EmployeeEmploymentDetailsDal>();
+            services.AddTransient<IEmployeePersonalDetailsDal, EmployeePersonalDetailsDal>();
+            services.AddTransient<IEmployeesStepDal, EmployeesStepDal>();
+            services.AddTransient<IEmployeesStepStepsDal, EmployeesStepStepsDal>();
+            services.AddTransient<IEmployeeTypeTypeDal, EmployeeTypeTypeDal>();
+            services.AddTransient<IManualEmployeeDataInputMethodStepDal, ManualEmployeeDataInputMethodStepDal>();
+            services.AddTransient<IManualEmployeeDataInputMethodStepStepsDal, ManualEmployeeDataInputMethodStepStepsDal>();
+            services.AddTransient<IStatusTypeDal, StatusTypeDal>();
+            services.AddTransient<IActiveEmployeeStatusDal, ActiveEmployeeStatusDal>();
+            services.AddTransient<INewEmployeeStatusDal, NewEmployeeStatusDal>();
+            services.AddTransient<IInActiveEmployeeStatusDal, InActiveEmployeeStatusDal>();
+            services.AddTransient<IContractEmployeeDal, ContractEmployeeDal>();
+            services.AddTransient<IPermanentEmployeeDal, PermanentEmployeeDal>();
+            services.AddTransient<ITemporalEmployeeDal, TemporalEmployeeDal>();
+            services.AddTransient<IGeneralEmployeesInformationDal, GeneralEmployeesInformationDal>();
+            services.AddTransient<IGeneralEmployeeDetailsInformationStepDal, GeneralEmployeeDetailsInformationStepDal>();
+            services.AddTransient<IEmployeeStatusDal, EmployeeStatusDal>();
 
         }
     }

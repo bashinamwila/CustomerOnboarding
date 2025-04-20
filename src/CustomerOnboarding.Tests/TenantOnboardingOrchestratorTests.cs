@@ -1,9 +1,11 @@
 ﻿using Csla;
 using Csla.Core;
 using CustomerOnboarding.BusinessLibrary;
+using CustomerOnboarding.BusinessLibrary.BaseTypes;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +24,7 @@ namespace CustomerOnboarding.Tests
         private string tenantId = "123werqop070905mnbfghjkl";
 
         [Fact]
-        public async Task Onboard_Tenant_Upto_Step4()
+        public async Task Onboard_Tenant()
         {
             var portal = _serviceProvider.GetRequiredService<IDataPortal<TenantOnboardingOrchestrator>>();
             var tenantOnboardingOrchestrator = await portal.CreateAsync(tenantId);
@@ -352,7 +354,160 @@ namespace CustomerOnboarding.Tests
 
             tenantOnboardingOrchestrator = await portal.FetchAsync(tenantId);
 
+            Assert.Equal(5, tenantOnboardingOrchestrator.CurrentStepIndex);
+
+            var step6 = (ISkippable)tenantOnboardingOrchestrator.Steps[5];
+
+            step6.IsSkipped = true;
+
+            tenantOnboardingOrchestrator.Skip();
+
+            tenantOnboardingOrchestrator = await tenantOnboardingOrchestrator.SaveAsync();
+
+            tenantOnboardingOrchestrator = await portal.FetchAsync(tenantId);
+
+            step6 = (ISkippable)tenantOnboardingOrchestrator.Steps[5];
+
+            Assert.True(step6.IsSkipped);
+
+
+            Assert.Equal(6, tenantOnboardingOrchestrator.CurrentStepIndex);
+
+            //Step 7
+
+            var step7 = (EmployeesStep)tenantOnboardingOrchestrator.Steps[6];
+
+            Assert.Equal(0, step7.CurrentStepIndex);
+
+            //Step7 sub step 1
+
+            var step7SubStep1 = (GeneralEmployeesInformationStep)step7.Steps[0];
+
+            step7SubStep1.InputMethod = 23;
+
+            Assert.Equal(2, step7.Steps.Count);
+
+            await tenantOnboardingOrchestrator.MoveNextAsync();
+
+            tenantOnboardingOrchestrator = await tenantOnboardingOrchestrator.SaveAsync();
+
+            tenantOnboardingOrchestrator = await portal.FetchAsync(tenantId);
+
+            step7 = (EmployeesStep)tenantOnboardingOrchestrator.Steps[6];
+
+            Assert.Equal(1, step7.CurrentStepIndex);
+            Assert.Equal(6, tenantOnboardingOrchestrator.CurrentStepIndex);
+
+            await tenantOnboardingOrchestrator.MoveNextAsync();
+            tenantOnboardingOrchestrator = await tenantOnboardingOrchestrator.SaveAsync();
+
+            tenantOnboardingOrchestrator = await portal.FetchAsync(tenantId);
+
+            step7 = (EmployeesStep)tenantOnboardingOrchestrator.Steps[6];
+
+            var step7SubStep2 = (ManualEmployeeDataInputMethodStep)step7.Steps[1];
+
+            Assert.Equal(1, step7.CurrentStepIndex);
+
+            Assert.Equal(1, step7SubStep2.CurrentStepIndex);
+
+            Assert.False(step7SubStep2.IsComplete);
+
+            var step7SubStep2SubStep1 = (AddEmployeeEmploymentDetailsStep)step7SubStep2.Steps[1];
+
+            Assert.False(step7SubStep2SubStep1.IsCompleted);
+
+            step7SubStep2SubStep1.EmployeeEmploymentDetails.EmployeeId = "1495";
+            step7SubStep2SubStep1.EmployeeEmploymentDetails.FirstName = "Dennis";
+            step7SubStep2SubStep1.EmployeeEmploymentDetails.LastName = "Mwape";
+            step7SubStep2SubStep1.EmployeeEmploymentDetails.HireDate.DayPart = 1;
+            step7SubStep2SubStep1.EmployeeEmploymentDetails.HireDate.MonthPart = 4;
+            step7SubStep2SubStep1.EmployeeEmploymentDetails.HireDate.YearPart = 2025;
+            step7SubStep2SubStep1.EmployeeEmploymentDetails.JobTitle = 1;
+            step7SubStep2SubStep1.EmployeeEmploymentDetails.DeptId = 1;
+            step7SubStep2SubStep1.EmployeeEmploymentDetails.SetStatus(1);
+            step7SubStep2SubStep1.EmployeeEmploymentDetails.EmploymentType = 2;
+            ((ContractEmployee)step7SubStep2SubStep1.EmployeeEmploymentDetails.EmployeeType).ContractDuration = 24;
+            ((ContractEmployee)step7SubStep2SubStep1.EmployeeEmploymentDetails.EmployeeType).Interval = 2;
+            ((ContractEmployee)step7SubStep2SubStep1.EmployeeEmploymentDetails.EmployeeType).ContractStartDate.DayPart = 1;
+            ((ContractEmployee)step7SubStep2SubStep1.EmployeeEmploymentDetails.EmployeeType).ContractStartDate.MonthPart = 4;
+            ((ContractEmployee)step7SubStep2SubStep1.EmployeeEmploymentDetails.EmployeeType).ContractStartDate.YearPart = 2025;
+
+            step7SubStep2SubStep1.EmployeeEmploymentDetails.Group = 1;
+            step7SubStep2SubStep1.EmployeeEmploymentDetails.PayType = 1;
+            step7SubStep2SubStep1.EmployeeEmploymentDetails.ReportsTo = 2;
+
+
+            Assert.True(step7SubStep2SubStep1.IsCompleted);
+            Assert.Equal("Dennis Mwape", step7SubStep2SubStep1.EmployeeEmploymentDetails.FullName);
+            Assert.Equal(new DateTime(2027, 3, 31), ((ContractEmployee)step7SubStep2SubStep1.EmployeeEmploymentDetails.EmployeeType).ContractExpiryDate);
+
+            await tenantOnboardingOrchestrator.MoveNextAsync();
+            tenantOnboardingOrchestrator = await tenantOnboardingOrchestrator.SaveAsync();
+
+            tenantOnboardingOrchestrator = await portal.FetchAsync(tenantId);
+
+
+            step7 = (EmployeesStep)tenantOnboardingOrchestrator.Steps[6];
+
+             step7SubStep2 = (ManualEmployeeDataInputMethodStep)step7.Steps[1];
+
+            Assert.Equal(6, tenantOnboardingOrchestrator.CurrentStepIndex);
+            Assert.Equal(1, step7.CurrentStepIndex);
+            Assert.Equal(2, step7SubStep2.CurrentStepIndex);
+
+            var step7SubStep2SubStep3 = (AddEmployeePersonalDetailsStep)step7SubStep2.Steps[2];
+
+            Assert.False(step7SubStep2SubStep3.IsCompleted);
+
+            step7SubStep2SubStep3.EmployeePersonalDetails.AddressLine1 = "Plot No. 4000,Makeni Road";
+            step7SubStep2SubStep3.EmployeePersonalDetails.AddressLine2 = "Makeni Konga,Lusaka";
+            step7SubStep2SubStep3.EmployeePersonalDetails.TPIN = "1234567890";
+            step7SubStep2SubStep3.EmployeePersonalDetails.SSN = "9876543210";
+            step7SubStep2SubStep3.EmployeePersonalDetails.NHIMAAccountNumber = "1212";
+            step7SubStep2SubStep3.EmployeePersonalDetails.DateOfBirth.DayPart = 31;
+            step7SubStep2SubStep3.EmployeePersonalDetails.DateOfBirth.MonthPart = 8;
+            step7SubStep2SubStep3.EmployeePersonalDetails.DateOfBirth.YearPart = 1970;
+            step7SubStep2SubStep3.EmployeePersonalDetails.EmailAddress = "dennis.mwape@africaninternetgroup.com";
+            step7SubStep2SubStep3.EmployeePersonalDetails.PhoneNo = "0978652590";
+            step7SubStep2SubStep3.EmployeePersonalDetails.NextOfKin = "Chama Kaunda";
+            step7SubStep2SubStep3.EmployeePersonalDetails.RelationWithNextOfKin = "Wife";
+            step7SubStep2SubStep3.EmployeePersonalDetails.NextOfKinPhoneNo = "0965377112";
+            step7SubStep2SubStep3.EmployeePersonalDetails.Gender = 1;
+            step7SubStep2SubStep3.EmployeePersonalDetails.MaritalStatus = 2;
+            step7SubStep2SubStep3.EmployeePersonalDetails.IdType = 1;
+            step7SubStep2SubStep3.EmployeePersonalDetails.Id = "276765/61/1";
+            step7SubStep2SubStep3.EmployeePersonalDetails.Nationality = 17;
+
+            Assert.True(step7SubStep2SubStep3.IsCompleted);
+
+            await tenantOnboardingOrchestrator.MoveNextAsync();
+            tenantOnboardingOrchestrator = await tenantOnboardingOrchestrator.SaveAsync();
+            tenantOnboardingOrchestrator = await portal.FetchAsync(tenantId);
+
+            step7 = (EmployeesStep)tenantOnboardingOrchestrator.Steps[6];
+
+            Assert.True(step7.IsCompleted);
+
             Assert.True(tenantOnboardingOrchestrator.IsComplete);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // Assert.True(tenantOnboardingOrchestrator.IsComplete);
 
         }
     }

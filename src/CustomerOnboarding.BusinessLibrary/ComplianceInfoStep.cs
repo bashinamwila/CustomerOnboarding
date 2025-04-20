@@ -71,6 +71,19 @@ namespace CustomerOnboarding.BusinessLibrary
 
         public void Skip() => throw new NotImplementedException();
 
+
+        private void GoTo(int numberOfStepsForwardOrBackward)
+        {
+            if (numberOfStepsForwardOrBackward > 0)
+                if ((CurrentStepIndex + numberOfStepsForwardOrBackward) <= Steps.Count - 1)
+                    CurrentStepIndex = CurrentStepIndex + numberOfStepsForwardOrBackward;
+
+            if (numberOfStepsForwardOrBackward < 0)
+                if ((CurrentStepIndex - numberOfStepsForwardOrBackward) >= 0)
+                    CurrentStepIndex = CurrentStepIndex + numberOfStepsForwardOrBackward;
+
+        }
+
         public async Task MoveNextAsync()
         {
             var currentStepIndexBeforeUpdate = CurrentStepIndex;
@@ -95,7 +108,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
 
                         if ((CurrentStepIndex + 1) <= Steps.Count - 1)
-                            CurrentStepIndex++;
+                            GoTo(1);
                         else
                             break;
 
@@ -124,7 +137,7 @@ namespace CustomerOnboarding.BusinessLibrary
                     {
 
                         if ((CurrentStepIndex + 1) <= Steps.Count - 1)
-                            CurrentStepIndex++;
+                            GoTo(1);
                         else
                             break;
                     }

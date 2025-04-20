@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CustomerOnboarding.Dal.Dtos
+{
+    public class TypeOfEmployerExpenseDto
+    {
+        public int Id { get; set; }
+
+        public string TenantId { get; set; } = string.Empty;
+        public string EmployerExpenseId { get; set; } = string.Empty;
+        public decimal? Value { get; set; }
+        public string WageId { get; set; } = string.Empty;
+        public byte[] LastChanged { get; set; } = default!;
+    }
+}

@@ -36,7 +36,7 @@ namespace CustomerOnboarding.DalMock
 
 
 
-            return step1.Concat(step2).Concat(step3).ToList(); ;
+            return step1.Concat(step2).Concat(step3).ToList(); 
         }
     }
 }

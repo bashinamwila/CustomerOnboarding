@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace CustomerOnboarding.BusinessLibrary.BaseTypes
 {
-    public interface IIskippable :IStep
+    public interface IEmployeeType : IBusinessBase
     {
-        public bool IsSkipped { get; set; }
+        public int Id { get; }
     }
 }

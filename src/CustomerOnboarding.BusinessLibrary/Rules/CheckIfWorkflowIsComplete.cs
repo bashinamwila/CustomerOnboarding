@@ -26,7 +26,8 @@ namespace CustomerOnboarding.BusinessLibrary.Rules
 
             if (workflow is not IStep)
             {
-                var isComplete = steps.All(s => s.IsCompleted);
+                var isComplete = steps.Where(r=> r is  ISkippable skippable && !skippable.IsSkipped || r is not ISkippable)
+                    .All(s => s.IsCompleted);
                 context.AddOutValue(AffectedProperties[1], isComplete);
             }
             

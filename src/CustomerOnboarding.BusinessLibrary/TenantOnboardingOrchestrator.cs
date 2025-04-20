@@ -85,15 +85,29 @@ namespace CustomerOnboarding.BusinessLibrary
         public void Skip()
         {
             var step = Steps[CurrentStepIndex];
-            if (step is IIskippable skippable)
+            if (step is ISkippable skippable)
             {
                 if (skippable.IsSkipped)
                 {
+                                 
 
+                        
                     if ((CurrentStepIndex + 1) <= Steps.Count - 1)
                         CurrentStepIndex++;
                 }
             }   
+        }
+
+        private void GoTo(int numberOfStepsForwardOrBackward)
+        {
+            if (numberOfStepsForwardOrBackward > 0)
+                if ((CurrentStepIndex + numberOfStepsForwardOrBackward) <= Steps.Count - 1)
+                    CurrentStepIndex = CurrentStepIndex + numberOfStepsForwardOrBackward;
+
+            if (numberOfStepsForwardOrBackward < 0)
+                if ((CurrentStepIndex - numberOfStepsForwardOrBackward) >= 0)
+                    CurrentStepIndex = CurrentStepIndex + numberOfStepsForwardOrBackward;
+                   
         }
 
         public async Task MoveNextAsync()
@@ -118,12 +132,12 @@ namespace CustomerOnboarding.BusinessLibrary
                     {
                         if (step.IsCompleted && currentStepIndexBeforeUpdate == step.StepIndex)
                         {
-                        
 
-                                if ((CurrentStepIndex + 1) <= Steps.Count - 1)
-                                    CurrentStepIndex++;
-                                else
-                                    break;
+
+                            if ((CurrentStepIndex + 1) <= Steps.Count - 1)
+                                GoTo(1);
+                            else
+                                break;
 
                           
                         }
@@ -150,10 +164,10 @@ namespace CustomerOnboarding.BusinessLibrary
                         else if (step.IsCompleted && currentStepIndexBeforeUpdate == step.StepIndex)
                          {
 
-                                if ((CurrentStepIndex + 1) <= Steps.Count - 1)
-                                    CurrentStepIndex++;
-                                else
-                                    break;
+                            if ((CurrentStepIndex + 1) <= Steps.Count - 1)
+                                GoTo(1);
+                            else
+                                break;
                         }
                         else
                         {
@@ -209,7 +223,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 IsComplete = false;
                 TenantId = tenant.Id;
                 CurrentStepIndex = 0;
-                var creator = await factory.FetchAsync(new int[] { 4, 5, 6, 9,13 }, CurrentStepIndex);
+                var creator = await factory.FetchAsync(new int[] { 4, 5, 6, 9,13,17,21 }, CurrentStepIndex);
                 Steps = creator.Steps;
                
                 
@@ -228,7 +242,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 IsComplete = false;
                 TenantId = tenantId;
                 CurrentStepIndex = 0;
-                var creator = await factory.FetchAsync(new int[] { 4, 5, 6,9,13 }, CurrentStepIndex);
+                var creator = await factory.FetchAsync(new int[] { 4, 5, 6,9,13,17,21 }, CurrentStepIndex);
                 Steps = creator.Steps;
 
 
