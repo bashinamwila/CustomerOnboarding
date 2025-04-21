@@ -25,9 +25,17 @@ namespace CustomerOnboarding.BusinessLibrary
             var stepMetadataList = dal.Fetch(tenantId);
             foreach (var stepMeta in stepMetadataList)
             {
-                var _factory = await factory.FetchAsync(stepMeta.TenantId, stepMeta.Id, currentStepIndex);
-
-                Steps.Add(_factory.Result);
+                if (stepMeta.Counter > 0)
+                {
+                    var _factory = await factory.FetchAsync(stepMeta.TenantId, stepMeta.Id, currentStepIndex,stepMeta.Counter);
+                    Steps.Add(_factory.Result);
+                }
+                else
+                {
+                    var _factory = await factory.FetchAsync(stepMeta.TenantId, stepMeta.Id, currentStepIndex);
+                    Steps.Add(_factory.Result);
+                }
+                    
             }
         }
 

@@ -30,8 +30,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [CreateChild]
         private void Create(
-            int id,
-            int currentStepIndex,
+           int id,int currentStepIndex,
           [Inject] IStepTypeDal dal,
             [Inject] IChildDataPortalFactory portal)
         {
@@ -69,14 +68,13 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [FetchChild]
         private async Task FetchAsync(
-           string tenantId, int id,
-           int currentStepIndex,
+           string tenantId,int id,int currentStepIndex,
          [Inject] IGeneralComplianceInformationDal dal,
              [Inject] IChildDataPortalFactory portal)
         {
             using (BypassPropertyChecks)
             {
-                var data = dal.Fetch(tenantId, id);
+                var data = dal.Fetch(tenantId ,id);
                 Id = data.StepId;
                 Name = data.Name;
                 Type = (StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());

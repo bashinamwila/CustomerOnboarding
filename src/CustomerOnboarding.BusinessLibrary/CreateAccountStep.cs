@@ -100,8 +100,7 @@ namespace CustomerOnboarding.BusinessLibrary
         /// </summary>
         [CreateChild]
         private async Task CreateAsync(
-            string tenantId, int id,
-            int currentStepIndex,
+            string tenantId,int id,int currentStepIndex,
           [Inject] IStepTypeDal dal,
             [Inject] IChildDataPortalFactory portal)
         {

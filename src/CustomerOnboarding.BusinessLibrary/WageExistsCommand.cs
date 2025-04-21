@@ -19,23 +19,11 @@ namespace CustomerOnboarding.BusinessLibrary
             private set => LoadProperty(ExistsProperty, value);
         }
 
-        public static readonly PropertyInfo<string> IdProperty =
-           RegisterProperty<string>(nameof(Id));
-        public string Id
-        {
-            get => ReadProperty(IdProperty);
-            private set => LoadProperty(IdProperty, value);
-        }
-
-        [Create]
-        private void Create(string id)
-        {
-            Id = id;
-        }
+        
         [Execute]
-        private void Execute([Inject] IWageDal dal)
+        private void Execute(string id,[Inject] IWageDal dal)
         {
-            Exists = dal.Exists(Id);
+            Exists = dal.Exists(id);
         }
 
     }

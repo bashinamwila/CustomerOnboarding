@@ -13,7 +13,7 @@ namespace CustomerOnboarding.Dal
         WageDto Fetch(string tenantId,string id);
         void Insert(WageDto data);
         void Update(WageDto data);
-        Task Delete(string id);
+        Task Delete(string tenantId,string id);
         bool Exists(string id);
 
     }

@@ -8,6 +8,14 @@ namespace CustomerOnboarding.DalMock
     public class EmployeePersonalDetailsDal :
         IEmployeePersonalDetailsDal
     {
+        public bool Exists(string employeeId)
+        {
+            var result = MockDb.EmployeePersonalDetails.
+                        Any(r => r.EmployeeId == employeeId);
+            return result;
+
+        }
+
         public EmployeePersonalDetailsDto Fetch(string tenantId, string employeeId)
         {
             var result = MockDb.EmployeePersonalDetails.Where(r => r.TenantId == tenantId &&

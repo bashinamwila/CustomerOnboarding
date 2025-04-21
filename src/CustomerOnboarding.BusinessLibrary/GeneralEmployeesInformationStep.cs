@@ -73,8 +73,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [CreateChild]
         private void Create(
-             int id,
-             int currentStepIndex,
+            int id,int currentStepIndex,
            [Inject] IStepTypeDal dal,
              [Inject] IChildDataPortalFactory portal)
         {
@@ -113,8 +112,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [FetchChild]
         private async Task FetchAsync(
-           string tenantId, int id,
-           int currentStepIndex,
+           string tenantId,int id,int currentStepIndex,
          [Inject] IGeneralEmployeesInformationDal dal)
         {
             using (BypassPropertyChecks)

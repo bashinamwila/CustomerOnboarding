@@ -140,8 +140,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [FetchChild]
         private void Fetch(
-            string tenantId, int id,
-            int currentStepIndex,
+            string tenantId,int id,int currentStepIndex,
             [Inject] IConfirmEmailStepDal dal,
             [Inject] IChildDataPortalFactory portal)
         {

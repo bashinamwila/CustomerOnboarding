@@ -33,8 +33,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [Fetch]
         private async Task FetchAsync(int[] ids, int currentStepIndex,
-            [Inject] ITenantOnboardingStepsDal dal,
-            [Inject] IChildDataPortalFactory portal,
+           [Inject] IChildDataPortalFactory portal,
             [Inject] IDataPortal<StepFactory> factory)
         {
             Steps = await portal.GetPortal<Steps>().FetchChildAsync();

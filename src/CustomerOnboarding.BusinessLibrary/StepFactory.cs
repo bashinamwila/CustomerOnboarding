@@ -31,8 +31,7 @@ namespace CustomerOnboarding.BusinessLibrary
         /// </summary>
         [Fetch]
         private async Task FetchAsync(
-            int id,
-            int currentStepIndex,
+          int id,int currentStepIndex,
             [Inject] IDataPortalFactory portal,
             [Inject] ApplicationContext appCtx)
         {
@@ -57,8 +56,7 @@ namespace CustomerOnboarding.BusinessLibrary
         /// </summary>
         [Fetch]
         private async Task Fetch(
-            string tenantId,
-            int id,int currentStepIndex,
+           string tenantId,int id,int currentStepIndex,
             [Inject] IDataPortalFactory portal,
             [Inject] ApplicationContext appCtx)
         {
@@ -73,7 +71,27 @@ namespace CustomerOnboarding.BusinessLibrary
             var dp = (IChildDataPortal)appCtx.GetRequiredService(dpType);
 
             // Fetch the child object using tenant context
-            Result = (IStep)dp.FetchChild(tenantId, id,currentStepIndex);
+            Result = (IStep)dp.FetchChild(tenantId,id,currentStepIndex);
+        }
+
+        [Fetch]
+        private async Task Fetch(
+          string tenantId, int id, int currentStepIndex,int counter,
+           [Inject] IDataPortalFactory portal,
+           [Inject] ApplicationContext appCtx)
+        {
+            // Fetch type metadata
+            var info = await portal.GetPortal<StepTypeTypeInfo>().FetchAsync(id);
+
+            // Resolve the concrete type
+            var type = Type.GetType(info.FullTypeName);
+
+            // Get the data portal for that type
+            var dpType = typeof(IChildDataPortal<>).MakeGenericType(type!);
+            var dp = (IChildDataPortal)appCtx.GetRequiredService(dpType);
+
+            // Fetch the child object using tenant context
+            Result = (IStep)dp.FetchChild(tenantId, id, currentStepIndex,counter);
         }
     }
 }

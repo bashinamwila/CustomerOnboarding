@@ -72,8 +72,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [CreateChild]
         private async Task CreateAsync(
-            int id,
-            int currentStepIndex,
+           int id,int currentStepIndex,
           [Inject] IStepTypeDal dal,
             [Inject] IChildDataPortalFactory portal)
         {
@@ -122,8 +121,8 @@ namespace CustomerOnboarding.BusinessLibrary
         }
 
         [FetchChild]
-        private async Task FetchAsync(string tenantId, int id,
-            int currentStepIndex,
+        private async Task FetchAsync(
+            string tenantId,int id,int currentStepIndex,
            [Inject] IOrganisationProfileStepDal dal,
             [Inject] IChildDataPortalFactory portal)
         {

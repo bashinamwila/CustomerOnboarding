@@ -10,8 +10,11 @@ namespace CustomerOnboarding.DalMock.Entitites
     {
         public string TenantId { get; set; } = string.Empty;
         public int Id { get; set; }
+
+        public int Counter { get; set; }
         public int StepIndex { get; set; }
 
+        public string EmployeeId { get; set; } = string.Empty;
         public bool IsCompleted { get; set; }
         public byte[] LastChanged { get; set; } = default!;
     }

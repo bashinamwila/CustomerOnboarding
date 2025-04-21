@@ -12,6 +12,6 @@ namespace CustomerOnboarding.Dal
         public void Insert(AddEmployeePersonalDetailsStepDto dto);
         public void Update(AddEmployeePersonalDetailsStepDto dto);
 
-        public AddEmployeePersonalDetailsStepDto Fetch(string tenantId, int id);
+        public AddEmployeePersonalDetailsStepDto Fetch(string tenantId, int id,int counter);
     }
 }

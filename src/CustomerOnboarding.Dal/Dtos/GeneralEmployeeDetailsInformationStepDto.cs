@@ -10,6 +10,7 @@ namespace CustomerOnboarding.Dal.Dtos
     {
         public string TenantId { get; set; } = string.Empty;
         public int StepId { get; set; }
+
         public int StepIndex { get; set; }
         public bool IsCompleted { get; set; }
         public byte[] LastChanged { get; set; } = default!;

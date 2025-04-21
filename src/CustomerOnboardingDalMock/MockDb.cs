@@ -135,6 +135,12 @@ namespace CustomerOnboarding.DalMock
                 new StepEntity{Id=24,Name="General Employee Employee Details Information",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.GeneralEmployeeDetailsInformationStep,CustomerOnboarding.BusinessLibrary",RuleSet="", LastChanged = GetTimeStamp()},
                 new StepEntity{Id=25,Name="Add Employee Employment Details",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.AddEmployeeEmploymentDetailsStep,CustomerOnboarding.BusinessLibrary",RuleSet="Employment Details", LastChanged = GetTimeStamp()},
                 new StepEntity{Id=26,Name="Add Employee Personal Details",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.AddEmployeePersonalDetailsStep,CustomerOnboarding.BusinessLibrary",RuleSet="Personal Details", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=27,Name="Employee Wages",Type=3,FullTypeName="CustomerOnboarding.BusinessLibrary.EmployeeWagesStep,CustomerOnboarding.BusinessLibrary",RuleSet="", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=28,Name="General Employee Wage's Information",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.GeneralEmployeeWagesInformationStep,CustomerOnboarding.BusinessLibrary",RuleSet="", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=29,Name="Select Employee Wage",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.SelectEmployeeWageStep,CustomerOnboarding.BusinessLibrary",RuleSet="", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=30,Name="Add Employee Wage",Type=1,FullTypeName="CustomerOnboarding.BusinessLibrary.AddEmployeeWageStep,CustomerOnboarding.BusinessLibrary",RuleSet="Add Employee Wage", LastChanged = GetTimeStamp()},
+                new StepEntity{Id=31,Name="Add Employee Wage Confirmation",Type=4,FullTypeName="CustomerOnboarding.BusinessLibrary.AddEmployeeWageConfirmationStep,CustomerOnboarding.BusinessLibrary",RuleSet="", LastChanged = GetTimeStamp()},
+
 
 
             };

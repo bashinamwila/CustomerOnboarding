@@ -12,15 +12,25 @@ namespace CustomerOnboarding.DalMock
     {
         public List<StepDto> Fetch(string tenantId)
         {
-            StepDto OnboardinStep(dynamic r) => new StepDto
-            {
-                TenantId = r.TenantId,
-                Id = r.Id
-            };
 
             var step1 = MockDb.GeneralEmployeeDetailsInformationSteps
                 .Where(r => r.TenantId == tenantId)
-                .Select(OnboardinStep);
+                .Select(r=>new StepDto
+                {
+                    TenantId=r.TenantId,
+                    Id=r.Id
+                }).ToList();
+
+
+
+            StepDto OnboardinStep(dynamic r) => new StepDto
+            {
+                TenantId = r.TenantId,
+                Id = r.Id,
+                Counter=r.Counter
+            };
+
+            
 
             var step2 = MockDb.AddEmployeeEmploymentDetailsSteps
                 .Where(r => r.TenantId == tenantId)

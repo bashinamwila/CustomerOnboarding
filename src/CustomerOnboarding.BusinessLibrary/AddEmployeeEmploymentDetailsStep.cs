@@ -51,6 +51,14 @@ namespace CustomerOnboarding.BusinessLibrary
             private set => LoadProperty(EmployeeEmploymentDetailsProperty, value);
         }
 
+        public static readonly PropertyInfo<int> CounterProperty =
+            RegisterProperty<int>(nameof(Counter));
+        public int Counter
+        {
+            get => GetProperty(CounterProperty);
+            private set => LoadProperty(CounterProperty, value);
+        }
+
         protected override void AddBusinessRules()
         {
             base.AddBusinessRules();
@@ -86,7 +94,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 if (currentStepIndex == StepIndex)
                     RuleSet = data.RuleSet;
                 else
-                    RuleSet = "";
+                    RuleSet = "Default";
                 IsCompleted = false;
                 EmployeeEmploymentDetails = await portal.GetPortal<EmployeeEmploymentDetails>().CreateChildAsync(RuleSet);
 
@@ -108,13 +116,15 @@ namespace CustomerOnboarding.BusinessLibrary
                     StepId = this.Id,
                     StepIndex = this.StepIndex,
                     IsCompleted = this.IsCompleted,
-                    // CurrentWageIdBeingEdited = this.CurrentWageIdBeingEdited
+                    EmployeeId=this.EmployeeEmploymentDetails.EmployeeId
+                    
                 };
                 dal.Insert(dto);
                 TimeStamp = dto.LastChanged;
+                Counter = dto.Counter;
 
                 if (((EmployeesStep)Parent.Parent.Parent.Parent).CurrentStepIndex == ((ManualEmployeeDataInputMethodStep)Parent.Parent).StepIndex
-                   && (((ManualEmployeeDataInputMethodStep)Parent.Parent).CurrentStepIndex) == StepIndex &&
+                   && (((ManualEmployeeDataInputMethodStep)Parent.Parent).CurrentStepIndex-1) == StepIndex &&
                    IsCompleted)
                     await portal.UpdateChildAsync(EmployeeEmploymentDetails, parent);
             }
@@ -123,27 +133,26 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [FetchChild]
         private async Task FetchAsync(
-            string tenantId, int id,
-            int currentStepIndex,
+           string tenantId,int id,int currentStepIndex,int counter,
           [Inject] IAddEmployeeEmploymentDetailsStepDal dal,
-           [Inject] IChildDataPortalFactory portal)
+           [Inject] IDataPortalFactory portal)
         {
             using (BypassPropertyChecks)
             {
-                var data = dal.Fetch(tenantId, id);
+                var data = dal.Fetch(tenantId,id,counter);
                 Id = data.StepId;
                 Name = data.Name;
                 Type = (StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());
                 StepIndex = data.StepIndex;
-                // CurrentWageIdBeingEdited = data.CurrentWageIdBeingEdited;
+                Counter = data.Counter;
                 TimeStamp = data.LastChanged;
                 if (currentStepIndex == StepIndex)
                     RuleSet = data.RuleSet;
                 else
-                    RuleSet = "";
+                    RuleSet = "Default";
 
                 IsCompleted = data.IsCompleted;
-                EmployeeEmploymentDetails = await portal.GetPortal<EmployeeEmploymentDetails>().CreateChildAsync(RuleSet);
+                EmployeeEmploymentDetails = portal.GetPortal<EmployeeEmploymentDetailsFactory>().Fetch(tenantId,data.EmployeeId,RuleSet).Result;
 
 
 
@@ -164,10 +173,11 @@ namespace CustomerOnboarding.BusinessLibrary
                 var dto = new AddEmployeeEmploymentDetailsStepDto
                 {
                     TenantId = parent.TenantId,
+                    Counter=this.Counter,
                     StepId = this.Id,
                     StepIndex = this.StepIndex,
                     IsCompleted = this.IsCompleted,
-                    //   CurrentWageIdBeingEdited = this.CurrentWageIdBeingEdited,
+                    EmployeeId=this.EmployeeEmploymentDetails.EmployeeId,
                     LastChanged = this.TimeStamp
                 };
                 dal.Update(dto);

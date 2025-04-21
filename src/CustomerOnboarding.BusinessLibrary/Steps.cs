@@ -48,9 +48,17 @@ namespace CustomerOnboarding.BusinessLibrary
             // Resolve and instantiate each step
             foreach (var stepMeta in stepMetadataList)
             {
-                var factory = await portal.FetchAsync(stepMeta.TenantId, stepMeta.Id,currentStepIndex);
-
-                this.Add(factory.Result);
+                if (stepMeta.Counter > 0)
+                {
+                    var factory = await portal.FetchAsync(stepMeta.TenantId, stepMeta.Id, currentStepIndex,stepMeta.Counter);
+                    this.Add(factory.Result);
+                }
+                else
+                {
+                    var factory = await portal.FetchAsync(stepMeta.TenantId, stepMeta.Id, currentStepIndex);
+                    this.Add(factory.Result);
+                }
+                   
             }
 
             this.RaiseListChangedEvents = raiseEvents;

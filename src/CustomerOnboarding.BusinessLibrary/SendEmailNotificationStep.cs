@@ -64,11 +64,11 @@ namespace CustomerOnboarding.BusinessLibrary
         /// Initializes the step with metadata using the step type ID.
         /// </summary>
         [CreateChild]
-        private void Create(int id,int currentStepIndex, [Inject] IStepTypeDal dal)
+        private void Create(StepSelectionCriteria crit, [Inject] IStepTypeDal dal)
         {
             using (BypassPropertyChecks)
             {
-                var data = dal.Fetch(id);
+                var data = dal.Fetch(crit.StepId);
                 Id = data.Id;
                 Name = data.Name;
                 Type = (StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());
@@ -81,11 +81,11 @@ namespace CustomerOnboarding.BusinessLibrary
         /// Fetches step details for an existing tenant and step ID.
         /// </summary>
         [FetchChild]
-        private void Fetch(string tenantId, int id,int currentStepIndex, [Inject] ISendEmailNotificationStepDal dal)
+        private void Fetch(StepSelectionCriteria crit, [Inject] ISendEmailNotificationStepDal dal)
         {
             using (BypassPropertyChecks)
             {
-                var data = dal.Fetch(tenantId, id);
+                var data = dal.Fetch(crit.TenantId, crit.StepId);
                 Id = data.Id;
                 Name = data.Name;
                 StepIndex = data.StepIndex;

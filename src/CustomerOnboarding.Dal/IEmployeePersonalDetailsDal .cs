@@ -12,5 +12,7 @@ namespace CustomerOnboarding.Dal
         public void Insert(EmployeePersonalDetailsDto dto);
         public void Update(EmployeePersonalDetailsDto dto);
         public EmployeePersonalDetailsDto Fetch(string tenantId, string employeeId);
+
+        public bool Exists(string employeeId);
     }
 }

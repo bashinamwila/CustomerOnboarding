@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CustomerOnboarding.Dal.Dtos;
 using CustomerOnboarding.Dal;
+using System.Diagnostics.Metrics;
 
 namespace CustomerOnboarding.BusinessLibrary
 {
@@ -51,6 +52,14 @@ namespace CustomerOnboarding.BusinessLibrary
             private set => LoadProperty(EmployeePersonalDetailsProperty, value);
         }
 
+        public static readonly PropertyInfo<int> CounterProperty =
+            RegisterProperty<int>(nameof(Counter));
+        public int Counter
+        {
+            get => GetProperty(CounterProperty);
+            private set => LoadProperty(CounterProperty, value);
+        }
+
         protected override void AddBusinessRules()
         {
             base.AddBusinessRules();
@@ -69,8 +78,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [CreateChild]
         private async Task CreateAsync(
-           int id,
-           int currentStepIndex,
+           int id,int currentStepIndex,
          [Inject] IStepTypeDal dal,
            [Inject] IChildDataPortalFactory portal)
         {
@@ -106,10 +114,14 @@ namespace CustomerOnboarding.BusinessLibrary
                     StepId = this.Id,
                     StepIndex = this.StepIndex,
                     IsCompleted = this.IsCompleted,
-                    // CurrentWageIdBeingEdited = this.CurrentWageIdBeingEdited
+                    EmployeeId=((Steps)Parent).Where(r=>r is AddEmployeeEmploymentDetailsStep)
+                                        .Select(r=>(AddEmployeeEmploymentDetailsStep)r).FirstOrDefault()!
+                                        .EmployeeEmploymentDetails.EmployeeId
+                   
                 };
                 dal.Insert(dto);
                 TimeStamp = dto.LastChanged;
+                Counter = dto.Counter;
 
                 if (((EmployeesStep)Parent.Parent.Parent.Parent).CurrentStepIndex == ((ManualEmployeeDataInputMethodStep)Parent.Parent).StepIndex
                     && (((ManualEmployeeDataInputMethodStep)Parent.Parent).CurrentStepIndex) == StepIndex &&
@@ -121,28 +133,27 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [FetchChild]
         private async Task FetchAsync(
-            string tenantId, int id,
-            int currentStepIndex,
+           string tenantId,int id,int currentStepIndex,int counter,
           [Inject] IAddEmployeePersonalDetailsStepDal dal,
-           [Inject] IChildDataPortalFactory portal)
+           [Inject] IDataPortalFactory portal)
         {
             using (BypassPropertyChecks)
             {
-                var data = dal.Fetch(tenantId, id);
+                var data = dal.Fetch(tenantId,id,counter);
                 Id = data.StepId;
+                Counter = data.Counter;
                 Name = data.Name;
                 Type = (StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());
                 StepIndex = data.StepIndex;
                 IsCompleted = data.IsCompleted;
                 TimeStamp = data.LastChanged;
-                if (currentStepIndex == StepIndex
-                    && !IsCompleted)
+                if (currentStepIndex == StepIndex)
                     RuleSet = data.RuleSet;
                 else
                     RuleSet = "";
 
                 
-                EmployeePersonalDetails = await portal.GetPortal<EmployeePersonalDetails>().CreateChildAsync(RuleSet);
+                EmployeePersonalDetails = portal.GetPortal<EmployeePersonalDetailsFactory>().Fetch(tenantId,data.EmployeeId,RuleSet).Result;
 
 
 
@@ -164,9 +175,12 @@ namespace CustomerOnboarding.BusinessLibrary
                 {
                     TenantId = parent.TenantId,
                     StepId = this.Id,
+                    Counter=this.Counter,
                     StepIndex = this.StepIndex,
                     IsCompleted = this.IsCompleted,
-                    //   CurrentWageIdBeingEdited = this.CurrentWageIdBeingEdited,
+                    EmployeeId = ((Steps)Parent).Where(r => r is AddEmployeeEmploymentDetailsStep)
+                                        .Select(r => (AddEmployeeEmploymentDetailsStep)r).FirstOrDefault()!
+                                        .EmployeeEmploymentDetails.EmployeeId,
                     LastChanged = this.TimeStamp
                 };
                 dal.Update(dto);

@@ -60,9 +60,6 @@ namespace CustomerOnboarding.BusinessLibrary
             private set { LoadProperty(FormularProperty, value); }
         }
 
-
-        /*
-
         public static readonly PropertyInfo<VariableList> VariablesProperty =
            RegisterProperty<VariableList>(nameof(Variables));
         public VariableList Variables
@@ -71,7 +68,7 @@ namespace CustomerOnboarding.BusinessLibrary
             private set => LoadProperty(VariablesProperty, value);
         }
 
-        */
+
 
         protected override void AddBusinessRules()
         {
@@ -87,28 +84,26 @@ namespace CustomerOnboarding.BusinessLibrary
             Id = data.Id;
             Name = data.Name;
             Type = data.Type;
-            Formular = data.Formular;
             IsSystemDefined = data.IsSystemDefined;
             BusinessRules.CheckRules();
         }
 
-        /*
         [Fetch]
-        private void Fetch(string id, [Inject] IWageDal dal,
+        private void Fetch(string tenantId, string id, [Inject] IWageDal dal,
             [Inject] IChildDataPortal<VariableList> portal)
         {
-            var data = dal.Fetch(id);
+            var data = dal.Fetch(tenantId, id);
 
             Id = data.Id;
             Name = data.Name;
             Type = data.Type;
             Formular = data.Formular;
             IsSystemDefined = data.IsSystemDefined;
-           // Variables = portal.FetchChild(id);
+            Variables = portal.FetchChild(id);
             // WageType = portal.Fetch(Type, Id).Result;
 
         }
 
-        */
+
     }
 }

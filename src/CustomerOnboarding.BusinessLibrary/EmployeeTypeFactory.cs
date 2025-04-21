@@ -30,14 +30,14 @@ namespace CustomerOnboarding.BusinessLibrary
         }
 
         [Fetch]
-        private void Fetch(string employeeId, int id,
+        private void Fetch(string tenantId,string employeeId, int id,
             [Inject] IDataPortalFactory portalFactory)
         {
             var info = portalFactory.GetPortal<CustomerOnboarding.BusinessLibrary.Types.EmployeeTypeTypeInfo>().Fetch(id);
             var type = Type.GetType(info.FullTypeName);
             var dpType = typeof(IChildDataPortal<>).MakeGenericType(type!);
             var dp = (IChildDataPortal)ApplicationContext.GetRequiredService(dpType);
-            Result = (IEmployeeType)dp.FetchChild(employeeId);
+            Result = (IEmployeeType)dp.FetchChild(tenantId,employeeId);
         }
 
     }

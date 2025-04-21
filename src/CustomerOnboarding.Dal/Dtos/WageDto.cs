@@ -15,7 +15,7 @@ namespace CustomerOnboarding.Dal.Dtos
         // public int WageType { get; set; }
         public bool IsSystemDefined { get; set; }
         public string TenantId { get; set; } = string.Empty;
-        public byte[] LastChanged { get; set; } = default!;
+        public byte[]? LastChanged { get; set; } = default!;
         public string Formular { get; set; } = string.Empty;
     }
 }

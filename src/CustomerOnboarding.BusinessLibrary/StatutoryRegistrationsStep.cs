@@ -117,8 +117,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [FetchChild]
         private async Task FetchAsync(
-            string tenantId, int id,
-            int currentStepIndex,
+           string tenantId,int id,int currentStepIndex,
           [Inject] IStatutoryRegistrationsStepDal dal,
           [Inject] IStatutoryRegistrationsDal dalStatutoryRegistrations,
             [Inject] IChildDataPortalFactory portal)

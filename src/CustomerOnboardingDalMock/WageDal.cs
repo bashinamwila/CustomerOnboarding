@@ -12,7 +12,7 @@ namespace CustomerOnboarding.DalMock
     public class WageDal :
         IWageDal
     {
-        public Task Delete(string id)
+        public Task Delete(string tenantId,string id)
         {
             throw new NotImplementedException();
         }

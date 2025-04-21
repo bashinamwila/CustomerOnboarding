@@ -222,8 +222,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [CreateChild]
         private async Task CreateAsync(
-            int id,
-            int currentStepIndex,
+            int id,int currentStepIndex,
           [Inject] IStepTypeDal dal,
           [Inject] IDataPortalFactory factory)
         {
@@ -236,7 +235,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 StepIndex = 1;
                 IsCompleted = false;
                 CurrentStepIndex = 0;
-                var _factory = await factory.GetPortal<ManualEmployeeDataInputMethodStepStepsFactory>().FetchAsync(new[] { 24,25,26 }, CurrentStepIndex);
+                var _factory = await factory.GetPortal<ManualEmployeeDataInputMethodStepStepsFactory>().FetchAsync(new[] { 24,25,26,27 }, CurrentStepIndex);
                 Steps = _factory.Steps;
             }
 
@@ -295,8 +294,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [FetchChild]
         private async Task FetchAsync(
-            string tenantId, int id,
-            int currentStepIndex,
+            string tenantId,int id,int currentStepIndex,
           [Inject] IManualEmployeeDataInputMethodStepDal dal,
           [Inject] IDataPortalFactory factory,
             [Inject] IChildDataPortalFactory portal)

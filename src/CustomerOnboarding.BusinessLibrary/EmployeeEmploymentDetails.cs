@@ -191,7 +191,12 @@ namespace CustomerOnboarding.BusinessLibrary
             BusinessRules.AddRule(new Csla.Rules.CommonRules.Dependency(StatusIdProperty, OldStatusProperty, StatusProperty));
           //  BusinessRules.AddRule(new SetOldStatus(OldStatusProperty));
             BusinessRules.AddRule(new SetEmployeeStatus(StatusIdProperty, StatusProperty));
-           // BusinessRules.AddRule(new ChangeEmployeeStatus(StatusProperty));
+
+            BusinessRules.RuleSet = "Default";
+            BusinessRules.AddRule(
+         new BusinessLibrary.Rules.FullNameRule(FirstNameProperty, FullNameProperty));
+            BusinessRules.AddRule(
+               new BusinessLibrary.Rules.FullNameRule(LastNameProperty, FullNameProperty));
         }
 
         [CreateChild]
@@ -208,7 +213,8 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [InsertChild]
         private void Insert(TenantOnboardingOrchestrator parent,
-            [Inject] IEmployeeEmploymentDetailsDal dal)
+            [Inject] IEmployeeEmploymentDetailsDal dal,
+            [Inject]ApplicationContext appCtx)
         {
             using (BypassPropertyChecks)
             {
@@ -230,6 +236,10 @@ namespace CustomerOnboarding.BusinessLibrary
                 };
                 dal.Insert(dto);
                 TimeStamp = dto.LastChanged;
+
+                UpdateEmployeeStatus(Status, appCtx, parent);
+                UpdateEmployeeType(EmployeeType, appCtx, parent);
+                
             }
 
         }
@@ -287,11 +297,40 @@ namespace CustomerOnboarding.BusinessLibrary
                 ReportsToEmployeeId = dto.ReportsToEmployeeId;
                 TimeStamp = dto.LastChanged;
 
-                Status = factory.GetPortal<EmployeeStatusFactory>().Fetch(tenantId, employeeId, StatusId).Result;
-                EmployeeType = factory.GetPortal<EmployeeTypeFactory>().Fetch(tenantId, employeeId, EmployeeType).Result;
+                Status = factory.GetPortal<EmployeeStatusFactory>().Fetch(tenantId,StatusId,employeeId,ruleSet).Result;
+                EmployeeType = factory.GetPortal<EmployeeTypeFactory>().Fetch(tenantId, employeeId, EmploymentType).Result;
             }
             BusinessRules.RuleSet = ruleSet;
             BusinessRules.CheckRules();
         }
+
+        private void UpdateEmployeeType(IEmployeeType type, ApplicationContext appCtx,
+            params object[] parameters)
+        {
+            if (type != null)
+            {
+                var dpType = typeof(IChildDataPortal<>).MakeGenericType(type.GetType());
+                var dp = (IChildDataPortal)appCtx.GetRequiredService(dpType);
+                dp.UpdateChild(type, parameters);
+            }
+
+
+
+        }
+
+        private void UpdateEmployeeStatus(IEmployeeStatus status, ApplicationContext appCtx,
+           params object[] parameters)
+        {
+            if (status != null)
+            {
+                var dpType = typeof(IChildDataPortal<>).MakeGenericType(status.GetType());
+                var dp = (IChildDataPortal)appCtx.GetRequiredService(dpType);
+                dp.UpdateChild(status, parameters);
+            }
+
+
+
+        }
+
     }
 }

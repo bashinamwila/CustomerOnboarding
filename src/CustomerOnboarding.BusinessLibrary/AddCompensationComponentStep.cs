@@ -74,8 +74,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [CreateChild]
         private async Task CreateAsync(
-            int id,
-            int currentStepIndex,
+            int id,int currentStepIndex,
           [Inject] IStepTypeDal dal,
             [Inject] IChildDataPortalFactory portal)
         {
@@ -126,8 +125,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [FetchChild]
         private async Task FetchAsync(
-            string tenantId, int id,
-            int currentStepIndex,
+            string tenantId,int id,int currentStepInex,
           [Inject] IAddCompensationComponentStepDal dal,
            [Inject] IChildDataPortalFactory portal)
         {
@@ -140,7 +138,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 StepIndex = data.StepIndex;
                // CurrentWageIdBeingEdited = data.CurrentWageIdBeingEdited;
                 TimeStamp = data.LastChanged;
-                if (currentStepIndex == StepIndex)
+                if (currentStepInex == StepIndex)
                     RuleSet = data.RuleSet;
                 else
                     RuleSet = "";
