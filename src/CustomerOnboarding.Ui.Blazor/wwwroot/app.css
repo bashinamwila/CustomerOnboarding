@@ -39,3 +39,31 @@ mega-menu {
     animation: spin 1s infinite linear;
 }
 
+.dropdown-menu {
+    display: none;
+}
+
+    .dropdown-menu.show {
+        display: block;
+    }
+
+.sidebar-step {
+    transition: all 0.2s ease;
+}
+
+    .sidebar-step:hover {
+        background-color: rgba(59, 130, 246, 0.05);
+    }
+
+.step-active {
+    color: #3b82f6;
+    font-weight: 500;
+}
+
+.tab-content {
+    display: none;
+}
+
+    .tab-content.active {
+        display: block;
+    }

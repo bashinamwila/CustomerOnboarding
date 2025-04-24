@@ -1,6 +1,7 @@
 ﻿using Csla;
 using CustomerOnboarding.BusinessLibrary.Rules;
 using CustomerOnboarding.Dal;
+using CustomerOnboarding.Dal.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -111,6 +112,25 @@ namespace CustomerOnboarding.BusinessLibrary
 
         }
 
+        [UpdateChild]
+        private void Update(UserOnboardingOrchestrator parent,
+            [Inject] IUserDal dal)
+        {
+            using (BypassPropertyChecks)
+            {
+                var dto = new UserDto
+                {
+                    TenantId = parent.TenantId,
+                    Email = this.Email,
+                    IsConfirmed = this.IsConfirmed,
+                    LastChanged = ((CreateAccountStep)parent.Steps[0]).User.TimeStamp
+                };
+                dal.Update(dto);
+               // TimeStamp = dto.LastChanged;
+
+            }
+        }
+
         [FetchChild]
         private void Fetch(string tenantId,string ruleSet, [Inject] IUserDal dal)
         {
@@ -122,7 +142,6 @@ namespace CustomerOnboarding.BusinessLibrary
                 Email = data.Email;
                 PhoneNumber = data.PhoneNumber;
                 Password = data.Password;
-                TimeStamp = data.LastChanged;
                 IsConfirmed = data.IsConfirmed;
                 BusinessRules.RuleSet = ruleSet;
             }

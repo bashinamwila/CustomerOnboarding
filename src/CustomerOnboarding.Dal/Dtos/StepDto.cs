@@ -10,5 +10,7 @@ namespace CustomerOnboarding.Dal.Dtos
     {
         public int Id { get; set; }
         public string TenantId { get; set; } = string.Empty;
+
+        public int Counter { get; set; }
     }
 }

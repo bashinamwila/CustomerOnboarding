@@ -12,22 +12,22 @@ namespace CustomerOnboarding.DalMock
     public class UserOnboardingOrchestratorDal :
         IUserOnboardingOrchestratorDal
     {
-        public UserOnboardingOrchestratorDto Fetch(string tenantId)
+        public OnboardingOrchestratorDto Fetch(string tenantId)
         {
-            var result = (from r in MockDb.Customers
+            var result = (from r in MockDb.UserOnboardingWorkflows
                           where r.TenantId == tenantId
-                          select new UserOnboardingOrchestratorDto
+                          select new OnboardingOrchestratorDto
                           {
                               TenantId = tenantId,
                               CurrentStepIndex = r.CurrentStepIndex,
                               LastChanged = r.LastChanged
                           }).FirstOrDefault();
             if (result is null)
-                throw new DataNotFoundException("CustomerOnboardingOrchestrator");
+                throw new DataNotFoundException("UserOnboardingOrchestrator");
             return result;
         }
 
-        public void Insert(UserOnboardingOrchestratorDto data)
+        public void Insert(OnboardingOrchestratorDto data)
         {
             data.LastChanged = MockDb.GetTimeStamp();
             var newItem = new UserOnboardingEntity
@@ -36,24 +36,24 @@ namespace CustomerOnboarding.DalMock
                 CurrentStepIndex = data.CurrentStepIndex,
                 LastChanged = data.LastChanged
             };
-            MockDb.Customers.Add(newItem);
+            MockDb.UserOnboardingWorkflows.Add(newItem);
 
         }
 
-        public void Update(UserOnboardingOrchestratorDto data)
+        public void Update(OnboardingOrchestratorDto data)
         {
-            throw new NotImplementedException();
+            UpdateCurrentStepIndex(data.TenantId,data.CurrentStepIndex,data.LastChanged);
         }
 
         public void UpdateCurrentStepIndex(string tenantId, int currentStepIndex, byte[] timeStamp)
         {
-            var result = (from r in MockDb.Customers
+            var result = (from r in MockDb.UserOnboardingWorkflows
                           where r.TenantId == tenantId
                           select r).FirstOrDefault();
             if (result is null)
-                throw new DataNotFoundException("CustomerOnboardingOrchestrator");
+                throw new DataNotFoundException("UserOnboardingOrchestrator");
             if (!result.LastChanged.Matches(timeStamp))
-                throw new ConcurrencyException("CustomerOnboardingOrchestrator");
+                throw new ConcurrencyException("UserOnboardingOrchestrator");
             result.LastChanged = MockDb.GetTimeStamp();
             result.CurrentStepIndex = currentStepIndex;
         }

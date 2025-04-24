@@ -1,4 +1,5 @@
 ﻿using Csla;
+using CustomerOnboarding.BusinessLibrary.Services.BaseTypes;
 using CustomerOnboarding.Dal;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -41,13 +42,13 @@ namespace CustomerOnboarding.BusinessLibrary.BaseTypes
             protected set => LoadProperty(NameProperty, value);
         }
 
-        public static readonly PropertyInfo<StepType> TypeProperty =
-            RegisterProperty<StepType>(nameof(Type));
+        public static readonly PropertyInfo<StepTypes> TypeProperty =
+            RegisterProperty<StepTypes>(nameof(Type));
 
         /// <summary>
         /// Indicates whether the step is Manual or Automatic.
         /// </summary>
-        public StepType Type
+        public StepTypes Type
         {
             get => GetProperty(TypeProperty);
             protected set => LoadProperty(TypeProperty, value);
@@ -74,7 +75,7 @@ namespace CustomerOnboarding.BusinessLibrary.BaseTypes
         public bool IsCompleted
         {
             get => GetProperty(IsCompletedProperty);
-            protected set => LoadProperty(IsCompletedProperty, value);
+            protected set => SetProperty(IsCompletedProperty, value);
         }
 
         #endregion
@@ -85,11 +86,9 @@ namespace CustomerOnboarding.BusinessLibrary.BaseTypes
         /// Executes the logic of the step. Must be overridden by automatic steps.
         /// Manual steps typically do not override this.
         /// </summary>
-        public virtual Task ExecuteAsync()
-        {
-            throw new NotImplementedException("Only automatic steps should override ExecuteAsync().");
-        }
-
+       
+       
+      
         #endregion
 
         #region Rules

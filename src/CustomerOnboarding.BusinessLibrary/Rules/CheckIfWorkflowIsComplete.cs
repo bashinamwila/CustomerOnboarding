@@ -1,4 +1,5 @@
 ﻿using Csla.Rules;
+using CustomerOnboarding.BusinessLibrary.BaseTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,20 +8,29 @@ using System.Threading.Tasks;
 
 namespace CustomerOnboarding.BusinessLibrary.Rules
 {
-    public class CheckIfWorkflowIsComplete :
-        BusinessRule
+    public class CheckIfWorkflowIsComplete : BusinessRule
     {
-        public CheckIfWorkflowIsComplete(Csla.Core.IPropertyInfo primaryProperty,Csla.Core.IPropertyInfo affectedProperty) :
-            base(primaryProperty)
+        public CheckIfWorkflowIsComplete(
+            Csla.Core.IPropertyInfo primaryProperty,
+            Csla.Core.IPropertyInfo affectedProperty)
+            : base(primaryProperty)
         {
             InputProperties.AddRange(new[] { primaryProperty, affectedProperty });
             AffectedProperties.Add(affectedProperty);
         }
+
         protected override void Execute(IRuleContext context)
         {
-            var steps = ((UserOnboardingOrchestrator)context.Target).Steps;
-            var isComplete = steps.All(s => s.IsCompleted);
-            context.AddOutValue(AffectedProperties[1],isComplete);
+            var workflow = (IOnboardingOrchestrator)context.Target;
+            var steps = workflow.Steps;
+
+            if (workflow is not IStep)
+            {
+                var isComplete = steps.Where(r=> r is  ISkippable skippable && !skippable.IsSkipped || r is not ISkippable)
+                    .All(s => s.IsCompleted);
+                context.AddOutValue(AffectedProperties[1], isComplete);
+            }
+            
         }
     }
 }
