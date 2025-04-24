@@ -9,9 +9,9 @@ namespace CustomerOnboarding.Dal
 {
     public interface IUserOnboardingOrchestratorDal
     {
-        public void Insert(UserOnboardingOrchestratorDto data);
-        public void Update(UserOnboardingOrchestratorDto data);
-        public UserOnboardingOrchestratorDto Fetch(string tenantId);
+        public void Insert(OnboardingOrchestratorDto data);
+        public void Update(OnboardingOrchestratorDto data);
+        public OnboardingOrchestratorDto Fetch(string tenantId);
         public void UpdateCurrentStepIndex(string tenantId, int currentStepIndex, byte[] timeStamp);
     }
 }

@@ -1,0 +1,121 @@
+﻿@using CustomerOnboarding.BusinessLibrary.Multitenancy
+@using CustomerOnboarding.BusinessLibrary
+
+@inject TenantInfo tenant
+@inject IDataPortal<TenantOnboardingOrchestrator> portal
+@inject Csla.Blazor.State.StateManager StateManager
+
+@if (IsVisible && ViewModel.Model is not null)
+{
+    <section aria-labelledby="compliance-heading">
+        <p class="text-gray-600 mb-6">
+            Let's get your essential details for payroll and legal compliance.
+        </p>
+
+        <div class="space-y-6">
+            <!-- Why we need this -->
+            <div>
+                <h2 class="text-lg font-semibold text-gray-700 mb-2">Why We Need This Information</h2>
+                <p class="text-gray-700 mb-3">
+                    To ensure accurate payroll processing and compliance with Zambian regulations, we need your Taxpayer Identification Number (TPIN), National Pension Scheme Authority (NAPSA) account number, and National Health Insurance Management Authority (NHIMA) account number.
+                </p>
+                <p class="text-gray-700">This information is essential for:</p>
+                <ul class="list-disc list-inside text-gray-700 mt-2 space-y-1">
+                    <li><span class="font-medium">Tax Calculations:</span> Correctly calculating and remitting Pay As You Earn (PAYE) tax to the ZRA.</li>
+                    <li><span class="font-medium">Social Security:</span> Making mandatory pension contributions to your NAPSA account.</li>
+                    <li><span class="font-medium">Health Insurance:</span> Managing contributions for your national health insurance via NHIMA.</li>
+                </ul>
+                <p class="text-gray-700 mt-3 text-sm italic">
+                    Having these details ensures employees are paid correctly and remain compliant with national laws.
+                </p>
+            </div>
+
+            <!-- Don't have the info? -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+                <h2 class="text-lg font-semibold text-blue-800 mb-3">Don't Have This Information?</h2>
+                <p class="text-blue-700 mb-4">
+                    If you're not yet registered or don't have your numbers handy, you can register or retrieve your details through the official portals linked below. Once you have them, please return to this step to add them.
+                </p>
+                <ul class="space-y-3">
+                    <li>
+                        <p class="font-medium text-gray-800">TPIN (Taxpayer Identification Number)</p>
+                        <p class="text-sm text-gray-600 mb-1">Issued by the ZRA. Needed for tax purposes.</p>
+                        <a href="https://zra.org.zm" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline font-medium text-sm inline-flex items-center">
+                            Register or find TPIN on ZRA website
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
+                    </li>
+                    <li>
+                        <p class="font-medium text-gray-800">NAPSA Number (National Pension Scheme)</p>
+                        <p class="text-sm text-gray-600 mb-1">Your social security account number.</p>
+                        <a href="https://portal.napsa.co.zm" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline font-medium text-sm inline-flex items-center">
+                            Register or access NAPSA portal
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
+                    </li>
+                    <li>
+                        <p class="font-medium text-gray-800">NHIMA Number (National Health Insurance)</p>
+                        <p class="text-sm text-gray-600 mb-1">Your national health insurance scheme number.</p>
+                        <a href="https://nhima.co.zm" target="_blank" class="text-blue-600 hover:text-blue-800 hover:underline font-medium text-sm inline-flex items-center">
+                            Register or access NHIMA website
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: Action Button -->
+    <section class="mt-8 pt-6 border-t border-gray-200 text-center sm:text-right">
+        <button @onclick="OnClickAddComplianceInfoAsync" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition duration-150 ease-in-out">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Add Compliance Info
+        </button>
+    </section>
+
+}
+
+
+@code {
+
+    [Parameter]
+    public bool IsVisible { get; set; }
+    [Parameter]
+    public ViewModel<TenantOnboardingOrchestrator> ViewModel { get; set; } = default!;
+    //[Parameter]
+    //public EventCallback<ViewModel<TenantOnboardingOrchestrator>> OnViewModelChanged { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await StateManager.InitializeAsync();
+
+    }
+
+    private async Task OnClickAddComplianceInfoAsync()
+    {
+        var step = ViewModel.Model.Steps[ViewModel.Model.CurrentStepIndex] as CustomerOnboarding.BusinessLibrary.ComplianceInfoStep;
+        if(step is not null)
+        {
+            var subStep = step.Steps[step.CurrentStepIndex] as CustomerOnboarding.BusinessLibrary.GeneralComplianceInformationStep;
+            if(subStep is not null)
+            {
+                subStep.MarkAsCompleted();
+                await ViewModel.Model.MoveNextAsync();
+                ViewModel.Model = null!;
+                await ViewModel.RefreshAsync(() => portal.FetchAsync(tenant.Id));
+                //await OnViewModelChanged.InvokeAsync(ViewModel);
+            }
+        }
+        // Future: Raise event or call state transition to show actual form inputs.
+    }
+
+}

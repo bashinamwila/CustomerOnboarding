@@ -29,9 +29,9 @@ namespace CustomerOnboarding.BusinessLibrary.Types
             protected set => LoadProperty(NameProperty, value);
         }
 
-        public static readonly PropertyInfo<StepType> TypeProperty =
-            RegisterProperty<StepType>(nameof(Type));
-        public StepType Type
+        public static readonly PropertyInfo<StepTypes> TypeProperty =
+            RegisterProperty<StepTypes>(nameof(Type));
+        public StepTypes Type
         {
             get => GetProperty(TypeProperty);
             protected set => LoadProperty(TypeProperty, value);
@@ -92,7 +92,7 @@ namespace CustomerOnboarding.BusinessLibrary.Types
             Id = data.Id;
             Name = data.Name;
             RuleSet = data.RuleSet;
-            Type =(StepType)Enum.Parse(typeof(StepType), data.Type.ToString());
+            Type =(StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());
             FullTypeName = data.FullTypeName;
             Name = data.Name;
             ComponentTypeName = data.ComponentTypeName;

@@ -43,13 +43,13 @@ namespace CustomerOnboarding.BusinessLibrary
             set => SetProperty(TimeStampProperty, value);
         }
 
-        public static readonly PropertyInfo<Organisation> OrganisationProperty =
-           RegisterProperty<Organisation>(nameof(Organisation));
+        public static readonly PropertyInfo<UserOrganisation> OrganisationProperty =
+           RegisterProperty<UserOrganisation>(nameof(Organisation));
 
         /// <summary>
         /// Organisation details provided by the customer.
         /// </summary>
-        public Organisation Organisation
+        public UserOrganisation Organisation
         {
             get => GetProperty(OrganisationProperty);
             private set => LoadProperty(OrganisationProperty, value);
@@ -85,7 +85,7 @@ namespace CustomerOnboarding.BusinessLibrary
             base.OnChildChanged(e);
 
             // Trigger validation whenever children change
-            if (e.ChildObject is Organisation || e.ChildObject is User)
+            if (e.ChildObject is UserOrganisation || e.ChildObject is User)
             {
                 BusinessRules.CheckRules();
             }
@@ -100,8 +100,7 @@ namespace CustomerOnboarding.BusinessLibrary
         /// </summary>
         [CreateChild]
         private async Task CreateAsync(
-            string tenantId, int id,
-            int currentStepIndex,
+            string tenantId,int id,int currentStepIndex,
           [Inject] IStepTypeDal dal,
             [Inject] IChildDataPortalFactory portal)
         {
@@ -110,7 +109,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 var data = dal.Fetch(id);
                 Id = data.Id;
                 Name = data.Name;
-               Type = (StepType)Enum.Parse(typeof(StepType), data.Type.ToString());
+               Type = (StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());
                StepIndex = 0;
                if(currentStepIndex==StepIndex)
                {
@@ -125,7 +124,7 @@ namespace CustomerOnboarding.BusinessLibrary
                     IsCompleted = false;
 
                 // Create child objects
-                Organisation = await portal.GetPortal<Organisation>().CreateChildAsync(tenantId, RuleSet);
+                Organisation = await portal.GetPortal<UserOrganisation>().CreateChildAsync(tenantId, RuleSet);
                 User = await portal.GetPortal<User>().CreateChildAsync(RuleSet);
 
             }
@@ -158,10 +157,10 @@ namespace CustomerOnboarding.BusinessLibrary
                     RuleSet = "";
                 }
 
-                Type = (StepType)Enum.Parse(typeof(StepType), data.Type.ToString());
+                Type = (StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());
                 TimeStamp = data.LastChanged;
 
-                Organisation = await portal.GetPortal<Organisation>().FetchChildAsync(tenantId, RuleSet);
+                Organisation = await portal.GetPortal<UserOrganisation>().FetchChildAsync(tenantId, RuleSet);
                 User = await portal.GetPortal<User>().FetchChildAsync(tenantId,RuleSet);
 
         }
@@ -190,7 +189,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 dal.Insert(dto);
                 TimeStamp = dto.LastChanged;
                
-                await portal.GetPortal<Organisation>().UpdateChildAsync(Organisation, parent);
+                await portal.GetPortal<UserOrganisation>().UpdateChildAsync(Organisation, parent);
                 await portal.GetPortal<User>().UpdateChildAsync(User, parent);
                 
                 

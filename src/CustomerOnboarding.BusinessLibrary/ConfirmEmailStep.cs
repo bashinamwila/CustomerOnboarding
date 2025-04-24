@@ -93,7 +93,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 var data = dal.Fetch(id);
                 Id = data.Id;
                 Name = data.Name;
-                Type = (StepType)Enum.Parse(typeof(StepType), data.Type.ToString());
+                Type = (StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());
                 StepIndex = 2;
                 if (currentStepIndex == StepIndex)
                 {
@@ -140,8 +140,7 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [FetchChild]
         private void Fetch(
-            string tenantId, int id,
-            int currentStepIndex,
+            string tenantId,int id,int currentStepIndex,
             [Inject] IConfirmEmailStepDal dal,
             [Inject] IChildDataPortalFactory portal)
         {
@@ -151,7 +150,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 Id = data.StepId;
                 Name = data.Name;
                 StepIndex= data.StepIndex;
-                Type = (StepType)Enum.Parse(typeof(StepType), data.Type.ToString());
+                Type = (StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());
                 TimeStamp = data.LastChanged;
                 if(currentStepIndex== StepIndex)
                 {

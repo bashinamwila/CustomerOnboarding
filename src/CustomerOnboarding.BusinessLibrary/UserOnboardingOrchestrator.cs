@@ -13,7 +13,7 @@ namespace CustomerOnboarding.BusinessLibrary
     /// Supports progression logic and workflow state management.
     /// </summary>
     [Serializable]
-    public class UserOnboardingOrchestrator : BusinessBase<UserOnboardingOrchestrator>
+    public class UserOnboardingOrchestrator : BusinessBase<UserOnboardingOrchestrator>,IOnboardingOrchestrator
     {
         #region Properties
 
@@ -95,6 +95,8 @@ namespace CustomerOnboarding.BusinessLibrary
         /// during the progression, ensuring data integrity.
         /// </remarks>
         /// <returns>A task representing the asynchronous operation.</returns>
+        /// 
+        public void Skip() => throw new NotImplementedException();
         public async Task MoveNextAsync()
         {
             // Ensure we haven't gone past the last step
@@ -103,9 +105,9 @@ namespace CustomerOnboarding.BusinessLibrary
                 var step = Steps[CurrentStepIndex];
 
                 // Handle Automatic Steps
-                if (!step.IsCompleted && step.Type == StepType.Automatic)
+                if (!step.IsCompleted && step.Type == StepTypes.Automatic)
                 {
-                    await step.ExecuteAsync(); // Execute the automatic step logic
+                   // await step.ExecuteAsync(); // Execute the automatic step logic
                     CurrentStepIndex++;        // Move to the next index
 
                     // Persist the CurrentStepIndex change using a dedicated command
@@ -118,7 +120,7 @@ namespace CustomerOnboarding.BusinessLibrary
                     TimeStamp = cmd.TimeStamp;
                 }
                 // Handle Manual Steps
-                else if (step.Type == StepType.Manual)
+                else if (step.Type == StepTypes.Manual)
                 {
                     // If the manual step is already complete, move to the next one
                     if (step.IsCompleted)
@@ -259,7 +261,7 @@ namespace CustomerOnboarding.BusinessLibrary
             using (BypassPropertyChecks)
             {
                 // Create the DTO for the orchestrator itself
-                var dto = new UserOnboardingOrchestratorDto
+                var dto = new OnboardingOrchestratorDto
                 {
                     TenantId = this.TenantId,
                     CurrentStepIndex = this.CurrentStepIndex
@@ -292,7 +294,7 @@ namespace CustomerOnboarding.BusinessLibrary
             using (BypassPropertyChecks)
             {
                 // Create the DTO, including the current TimeStamp for concurrency checking
-                var dto = new UserOnboardingOrchestratorDto
+                var dto = new OnboardingOrchestratorDto
                 {
                     TenantId = this.TenantId,
                     CurrentStepIndex = this.CurrentStepIndex,

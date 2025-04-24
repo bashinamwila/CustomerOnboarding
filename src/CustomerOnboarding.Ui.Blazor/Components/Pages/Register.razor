@@ -167,6 +167,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await StateManager.InitializeAsync();
         vm.ModelPropertyChanged += async (s, e) =>
         {
             await InvokeAsync(() =>
@@ -177,19 +178,17 @@ else
 
 
 
-        await StateManager.InitializeAsync();
-        countries = await _portal.FetchAsync();
-    }
-
-    protected override async Task OnParametersSetAsync()
-    {
         IsBusy = true;
+        countries = await _portal.FetchAsync();
+       
         await vm.RefreshAsync(() => portal.CreateAsync());
         ((CreateAccountStep)vm.Model.Steps[0]).User.PropertyChanged += async (s, e) => await InvokeAsync(() => StateHasChanged());
         ((CreateAccountStep)vm.Model.Steps[0]).Organisation.PropertyChanged += async (s, e) => await InvokeAsync(() => StateHasChanged());
         ((CreateAccountStep)vm.Model.Steps[0]).PropertyChanged += async (s, e) => await InvokeAsync(() => StateHasChanged());
         IsBusy = false;
     }
+
+   
 
     private async Task CreateAccount()
     {

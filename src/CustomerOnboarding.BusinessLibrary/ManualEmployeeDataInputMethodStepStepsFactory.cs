@@ -1,0 +1,55 @@
+﻿using Csla;
+using CustomerOnboarding.BusinessLibrary.BaseTypes;
+using CustomerOnboarding.Dal;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CustomerOnboarding.BusinessLibrary
+{
+    [Serializable]
+    public class ManualEmployeeDataInputMethodStepStepsFactory :
+        OnboardingStepsFactoryBase<ManualEmployeeDataInputMethodStepStepsFactory>
+    {
+
+        [Fetch]
+        private async Task FetchAsync(
+           string tenantId, int currentStepIndex,
+           [Inject] IManualEmployeeDataInputMethodStepStepsDal dal,
+           [Inject] IChildDataPortalFactory portal,
+           [Inject] IDataPortal<StepFactory> factory)
+        {
+            Steps = await portal.GetPortal<Steps>().FetchChildAsync();
+            var stepMetadataList = dal.Fetch(tenantId);
+            foreach (var stepMeta in stepMetadataList)
+            {
+                if (stepMeta.Counter > 0)
+                {
+                    var _factory = await factory.FetchAsync(stepMeta.TenantId, stepMeta.Id, currentStepIndex,stepMeta.Counter);
+                    Steps.Add(_factory.Result);
+                }
+                else
+                {
+                    var _factory = await factory.FetchAsync(stepMeta.TenantId, stepMeta.Id, currentStepIndex);
+                    Steps.Add(_factory.Result);
+                }
+                    
+            }
+        }
+
+        [Fetch]
+        private async Task FetchAsync(int[] ids, int currentStepIndex,
+            [Inject] IChildDataPortalFactory portal,
+            [Inject] IDataPortal<StepFactory> factory)
+        {
+            Steps = await portal.GetPortal<Steps>().FetchChildAsync();
+            foreach (int id in ids)
+            {
+                var creator = await factory.FetchAsync(id, currentStepIndex);
+                Steps.Add(creator.Result);
+            }
+        }
+    }
+}
