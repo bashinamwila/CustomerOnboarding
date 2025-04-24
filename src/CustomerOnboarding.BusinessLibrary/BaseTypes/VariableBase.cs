@@ -62,15 +62,16 @@ namespace CustomerOnboarding.BusinessLibrary.BaseTypes
         }
 
         [InsertChild]
-        protected virtual void Insert(IEarning parent, [Inject] IVariableDal dal)
+        protected virtual void Insert(TenantOnboardingOrchestrator parent, [Inject] IVariableDal dal)
         {
             using (BypassPropertyChecks)
             {
                 var data = new VariableDto
                 {
                     Id = Id,
-                    ItemId = parent.Id,
-                    Type = parent.GetType().Name.ToUpper(),
+                    TenantId=parent.TenantId,
+                    ItemId = ((IEarning)Parent.Parent).Id,
+                    Type = Parent.Parent.GetType().Name.ToUpper(),
                     Token = Token,
 
 

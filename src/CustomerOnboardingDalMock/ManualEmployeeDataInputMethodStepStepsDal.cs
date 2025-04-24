@@ -41,7 +41,13 @@ namespace CustomerOnboarding.DalMock
                 .Select(OnboardinStep);
 
 
-
+            var step4 = MockDb.GeneralEmployeeWagesInformationSteps
+                .Where(r => r.TenantId == tenantId)
+                .Select(r => new StepDto
+                {
+                    TenantId = r.TenantId,
+                    Id = r.Id
+                }).ToList();
 
 
 
@@ -49,6 +55,7 @@ namespace CustomerOnboarding.DalMock
             return  step1.
                     Concat(step2).
                     Concat(step3).
+                    Concat(step4).
                     ToList();
         }
     }

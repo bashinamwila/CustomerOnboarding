@@ -123,13 +123,13 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [FetchChild]
         private async Task FetchAsync(
-           string tenantId, int id, int currentStepIndex, int counter,
+           string tenantId, int id, int currentStepIndex, string employeeId,
           [Inject] ISelectEmployeeWageStepDal dal,
            [Inject] IDataPortalFactory portal)
         {
             using (BypassPropertyChecks)
             {
-                var data = dal.Fetch(tenantId, id, counter);
+                var data = dal.Fetch(tenantId, id, employeeId);
                 Id = data.StepId;
                 Name = data.Name;
                 Type = (StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());

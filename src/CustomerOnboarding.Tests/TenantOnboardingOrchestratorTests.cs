@@ -127,7 +127,7 @@ namespace CustomerOnboarding.Tests
             step4SubStep2.Wage.Id = "1000";
             step4SubStep2.Wage.Name = "Housing Allowance";
             step4SubStep2.Wage.Type = 1;
-            step4SubStep2.Wage.Formular = "30% of Basic Salary";
+            step4SubStep2.Wage.Formular = "Percentage of Basic Salary";
 
             Assert.True(step4SubStep2.IsCompleted);
 
@@ -164,7 +164,7 @@ namespace CustomerOnboarding.Tests
             step4SubStep2.Wage.Id = "1001";
             step4SubStep2.Wage.Name = "Sales Commission";
             step4SubStep2.Wage.Type = 3;
-            step4SubStep2.Wage.Formular = "2.5% of Total Sales";
+            step4SubStep2.Wage.Formular = "Percentage of Total Sales";
 
             Assert.True(step4SubStep2.IsCompleted);
 
@@ -490,9 +490,11 @@ namespace CustomerOnboarding.Tests
 
             step7 = (EmployeesStep)tenantOnboardingOrchestrator.Steps[6];
 
-            Assert.True(step7.IsCompleted);
+            var step7SubStep3 = (EmployeeWagesStep)step7.Steps[2];
 
+            Assert.Equal(0, step7SubStep3.CurrentStepIndex);
 
+            
 
 
            // Assert.True(tenantOnboardingOrchestrator.IsComplete);

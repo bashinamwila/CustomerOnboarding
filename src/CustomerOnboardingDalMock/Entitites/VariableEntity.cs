@@ -4,20 +4,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CustomerOnboarding.Dal.Dtos
+namespace CustomerOnboarding.DalMock.Entitites
 {
-    [Serializable]
-    public class VariableDto
+    public class VariableEntity
     {
+
         public int Id { get; set; }
+
         public string ItemId { get; set; } = string.Empty;
 
         public string TenantId { get; set; } = string.Empty;
 
-        public string Type { get; set; } = string.Empty;
         public string Token { get; set; } = string.Empty;
-        public decimal? Value { get; set; }
+
+
+        public decimal? Value { get; set; } = default!;
+
+
         public byte[] LastChanged { get; set; } = default!;
+
+
+
 
     }
 }

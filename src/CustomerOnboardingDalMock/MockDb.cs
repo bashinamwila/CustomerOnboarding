@@ -105,6 +105,20 @@ namespace CustomerOnboarding.DalMock
 
         public static List<GeneralEmployeeDetailsInformationStepEntity> GeneralEmployeeDetailsInformationSteps { get; private set; } = default!;
 
+        public static List<AddEmployeeWageConfirmationStepEntity> AddEmployeeWageConfirmationSteps { get; private set; } = default!;
+
+        public static List<AddEmployeeWageStepEntity> AddEmployeeWageSteps { get; private set; } = default!;
+
+        public static List<EmployeeWagesStepEntity> EmployeeWagesSteps { get; private set; } = default!;
+
+        public static List<SelectEmployeeWageStepEntity> SelectEmployeeWageSteps { get; private set; } = default!;
+
+        public static List<VariableTypeEntity> VariableTypes { get; private set; } = default!;
+
+        public static List<VariableEntity> Variables { get; private set; } = default!;
+
+        public static List<GeneralEmployeeWagesInformationStepEntity> GeneralEmployeeWagesInformationSteps { get; private set; } = default!;
+
         static MockDb()
         {
             Steps = new List<StepEntity>
@@ -201,14 +215,14 @@ namespace CustomerOnboarding.DalMock
             DeductionLimitTypes = new List<DeductionLimitTypeEntity>
             {
                 new DeductionLimitTypeEntity { Id = 1, Name = "NoLimit", FriendlyName = "No Limit", FullTypeName = "CustomerOnboarding.BusinessLibrary.NoLimitDeduction,CustomerOnboarding.BusinessLibrary" },
-                new DeductionLimitTypeEntity { Id = 2, Name = "Range", FriendlyName = "Range", FullTypeName = "CustomerOnboarding.BusinessLibrary.RangeLimitDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.RangeLimitDeductionComponent,Benefito.Ui.Blazor.Server" },
-                new DeductionLimitTypeEntity { Id = 3, Name = "PercentGross", FriendlyName = "Percent Gross", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentGrossLimitDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.PercentGrossLimitDeductionComponent,Benefito.Ui.Blazor.Server" }
+                new DeductionLimitTypeEntity { Id = 2, Name = "Range", FriendlyName = "Range", FullTypeName = "CustomerOnboarding.BusinessLibrary.RangeLimitDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "CustomerOnboarding.Ui.Blazor.Server.Shared.RangeLimitDeductionComponent,CustomerOnboarding.Ui.Blazor.Server" },
+                new DeductionLimitTypeEntity { Id = 3, Name = "PercentGross", FriendlyName = "Percent Gross", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentGrossLimitDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "CustomerOnboarding.Ui.Blazor.Server.Shared.PercentGrossLimitDeductionComponent,CustomerOnboarding.Ui.Blazor.Server" }
             };
             DeductionTypes = new List<DeductionTypeEntity>
             {
-                new DeductionTypeEntity { Id = 1, Name = "FixedDeduction", FriendlyName = "Fixed", FullTypeName = "CustomerOnboarding.BusinessLibrary.FixedDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.FixedDeductionComponent,Benefito.Ui.Blazor.Server" },
-                new DeductionTypeEntity { Id = 2, Name = "PercentWageDeduction", FriendlyName = "Perccent Wage", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentWageDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.PercentWageDeductionComponent,Benefito.Ui.Blazor.Server" },
-                new DeductionTypeEntity { Id = 3, Name = "PercentGrossDeduction", FriendlyName = "Percent Gross", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentGrossDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.PercentGrossDeductionComponent,Benefito.Ui.Blazor.Server" },
+                new DeductionTypeEntity { Id = 1, Name = "FixedDeduction", FriendlyName = "Fixed", FullTypeName = "CustomerOnboarding.BusinessLibrary.FixedDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "CustomerOnboarding.Ui.Blazor.Server.Shared.FixedDeductionComponent,CustomerOnboarding.Ui.Blazor.Server" },
+                new DeductionTypeEntity { Id = 2, Name = "PercentWageDeduction", FriendlyName = "Perccent Wage", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentWageDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "CustomerOnboarding.Ui.Blazor.Server.Shared.PercentWageDeductionComponent,CustomerOnboarding.Ui.Blazor.Server" },
+                new DeductionTypeEntity { Id = 3, Name = "PercentGrossDeduction", FriendlyName = "Percent Gross", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentGrossDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "CustomerOnboarding.Ui.Blazor.Server.Shared.PercentGrossDeductionComponent,CustomerOnboarding.Ui.Blazor.Server" },
                 new DeductionTypeEntity { Id = 4, Name = "UserEnteredDeduction", FriendlyName = "User Entered", FullTypeName = "CustomerOnboarding.BusinessLibrary.UserEnteredDeduction,CustomerOnboarding.BusinessLibrary", ComponentTypeName = string.Empty }
             };
 
@@ -226,14 +240,14 @@ namespace CustomerOnboarding.DalMock
             EmployerExpenseLimitTypes = new List<EmployerExpenseLimitTypeEntity>
 {
     new EmployerExpenseLimitTypeEntity { Id = 1, Name = "NoLimit", FriendlyName = "No Limit", FullTypeName = "CustomerOnboarding.BusinessLibrary.NoLimitEmployerExpense,CustomerOnboarding.BusinessLibrary" },
-    new EmployerExpenseLimitTypeEntity { Id = 2, Name = "Range", FriendlyName = "Range", FullTypeName = "CustomerOnboarding.BusinessLibrary.RangeLimitEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.RangeLimitEmployerExpenseComponent,Benefito.Ui.Blazor.Server" },
-    new EmployerExpenseLimitTypeEntity { Id = 3, Name = "PercentGross", FriendlyName = "Percent Gross", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentGrossLimitEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.PercentGrossLimitEmployerExpenseComponent,Benefito.Ui.Blazor.Server" }
+    new EmployerExpenseLimitTypeEntity { Id = 2, Name = "Range", FriendlyName = "Range", FullTypeName = "CustomerOnboarding.BusinessLibrary.RangeLimitEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "CustomerOnboarding.Ui.Blazor.Server.Shared.RangeLimitEmployerExpenseComponent,CustomerOnboarding.Ui.Blazor.Server" },
+    new EmployerExpenseLimitTypeEntity { Id = 3, Name = "PercentGross", FriendlyName = "Percent Gross", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentGrossLimitEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "CustomerOnboarding.Ui.Blazor.Server.Shared.PercentGrossLimitEmployerExpenseComponent,CustomerOnboarding.Ui.Blazor.Server" }
 };
             EmployerExpenseTypes = new List<EmployerExpenseTypeEntity>
 {
-    new EmployerExpenseTypeEntity { Id = 1, Name = "FixedEmployerExpense", FriendlyName = "Fixed", FullTypeName = "CustomerOnboarding.BusinessLibrary.FixedEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.FixedEmployerExpenseComponent,Benefito.Ui.Blazor.Server" },
-    new EmployerExpenseTypeEntity { Id = 2, Name = "PercentWageEmployerExpense", FriendlyName = "Perccent Wage", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentWageEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.PercentWageEmployerExpenseComponent,Benefito.Ui.Blazor.Server" },
-    new EmployerExpenseTypeEntity { Id = 3, Name = "PercentGrossEmployerExpense", FriendlyName = "Percent Gross", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentGrossEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "Benefito.Ui.Blazor.Server.Shared.PercentGrossEmployerExpenseComponent,Benefito.Ui.Blazor.Server" },
+    new EmployerExpenseTypeEntity { Id = 1, Name = "FixedEmployerExpense", FriendlyName = "Fixed", FullTypeName = "CustomerOnboarding.BusinessLibrary.FixedEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "CustomerOnboarding.Ui.Blazor.Server.Shared.FixedEmployerExpenseComponent,CustomerOnboarding.Ui.Blazor.Server" },
+    new EmployerExpenseTypeEntity { Id = 2, Name = "PercentWageEmployerExpense", FriendlyName = "Perccent Wage", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentWageEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "CustomerOnboarding.Ui.Blazor.Server.Shared.PercentWageEmployerExpenseComponent,CustomerOnboarding.Ui.Blazor.Server" },
+    new EmployerExpenseTypeEntity { Id = 3, Name = "PercentGrossEmployerExpense", FriendlyName = "Percent Gross", FullTypeName = "CustomerOnboarding.BusinessLibrary.PercentGrossEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = "CustomerOnboarding.Ui.Blazor.Server.Shared.PercentGrossEmployerExpenseComponent,CustomerOnboarding.Ui.Blazor.Server" },
     new EmployerExpenseTypeEntity { Id = 4, Name = "UserEnteredEmployerExpense", FriendlyName = "User Entered", FullTypeName = "CustomerOnboarding.BusinessLibrary.UserEnteredEmployerExpense,CustomerOnboarding.BusinessLibrary", ComponentTypeName = string.Empty }
 };
 
@@ -345,6 +359,156 @@ namespace CustomerOnboarding.DalMock
             PermanentEmployees = new();
             TemporalEmployees = new();
             GeneralEmployeeDetailsInformationSteps = new();
+            AddEmployeeWageConfirmationSteps = new();
+            AddEmployeeWageSteps = new();
+            EmployeeWagesSteps = new();
+            SelectEmployeeWageSteps = new();
+            VariableTypes = new List<VariableTypeEntity>
+            {
+                 new VariableTypeEntity
+                {
+                    Id = 1,
+                    Pattern = @"^Basic Salary$",
+                    TypeName = "CustomerOnboarding.BusinessLibrary.WageReferenceVariable,CustomerOnboarding.BusinessLibrary"
+                },
+                new VariableTypeEntity
+                {
+                    Id = 2,
+                    Pattern = @"^Base Hourly Rate$",
+                    TypeName = "CustomerOnboarding.BusinessLibrary.WageReferenceVariable,CustomerOnboarding.BusinessLibrary"
+                },
+                new VariableTypeEntity
+                {
+                    Id = 3,
+                    Pattern = @"^Number Of Days Per Month$",
+                    TypeName = "CustomerOnboarding.BusinessLibrary.NumberOfDaysPerPayPeriodVariable,CustomerOnboarding.BusinessLibrary"
+
+                },
+                new VariableTypeEntity
+                {
+                    Id = 4,
+                    Pattern = @"^Number Of Days Per Week$",
+                    TypeName = "CustomerOnboarding.BusinessLibrary.NumberOfDaysPerPayPeriodVariable,CustomerOnboarding.BusinessLibrary"
+
+                },
+                new VariableTypeEntity
+                {
+                    Id = 5,
+                    Pattern = @"^Number Of Hours Per Day$",
+                    TypeName = "CustomerOnboarding.BusinessLibrary.NumberOfHoursPerDayVariable,CustomerOnboarding.BusinessLibrary"
+                },
+                 new VariableTypeEntity
+                 {
+                     Id = 6,
+                     Pattern = @"^Percentage$",
+                     TypeName = "CustomerOnboarding.BusinessLibrary.PercentVariable,CustomerOnboarding.BusinessLibrary"
+                 },
+                  new VariableTypeEntity
+                  {
+                      Id = 7,
+                      Pattern = @"^Percent$",
+                      TypeName = "CustomerOnboarding.BusinessLibrary.PercentVariable,CustomerOnboarding.BusinessLibrary"
+                  },
+                 new VariableTypeEntity
+                 {
+                     Id = 8,
+                     Pattern = @"^Fixed Amount$",
+                     TypeName = "CustomerOnboarding.BusinessLibrary.FixedVariable,CustomerOnboarding.BusinessLibrary"
+                 },
+                 new VariableTypeEntity
+                 {
+                     Id = 9,
+                     Pattern = @"^Fixed Rate$",
+                     TypeName = "CustomerOnboarding.BusinessLibrary.FixedVariable,CustomerOnboarding.BusinessLibrary"
+                 },
+                 new VariableTypeEntity
+                 {
+                     Id = 10,
+                     Pattern = @"^Rate Per Kilometer$",
+                     TypeName = "CustomerOnboarding.BusinessLibrary.RatePerUnitOfMeasureVariable,CustomerOnboarding.BusinessLibrary"
+
+                 },
+                 new VariableTypeEntity
+                 {
+                     Id = 11,
+                     Pattern = @"^Rate Per Litre$",
+                     TypeName = "CustomerOnboarding.BusinessLibrary.RatePerUnitOfMeasureVariable,CustomerOnboarding.BusinessLibrary"
+
+                 },
+                 new VariableTypeEntity
+                 {
+                     Id = 12,
+                     Pattern = @"^Number Of Kilometers$",
+                     TypeName = "CustomerOnboarding.BusinessLibrary.QuantityOfUnitOfMeasureVariable,CustomerOnboarding.BusinessLibrary"
+
+                 },
+                 new VariableTypeEntity
+                 {
+                     Id = 13,
+                     Pattern = @"^Number Of Litres$",
+                     TypeName = "CustomerOnboarding.BusinessLibrary.QuantityOfUnitOfMeasureVariable,CustomerOnboarding.BusinessLibrary"
+
+                 },
+                 new VariableTypeEntity
+                 {
+                     Id = 14,
+                     Pattern = @"^Number Of Years Served$",
+                     TypeName = "CustomerOnboarding.BusinessLibrary.NumberOfPeriodServedVariable,CustomerOnboarding.BusinessLibrary"
+                 },
+                 new VariableTypeEntity
+                 {
+                     Id = 15,
+                     Pattern = @"^Number Of Months Served$",
+                     TypeName = "CustomerOnboarding.BusinessLibrary.NumberOfPeriodServedVariable,CustomerOnboarding.BusinessLibrary"
+                 },
+                  new VariableTypeEntity
+                  {
+                      Id = 16,
+                      Pattern = @"^Number Of Leave Days Accrued$",
+                      TypeName = "CustomerOnboarding.BusinessLibrary.NumberOfLeaveDaysAccruedVariable,CustomerOnboarding.BusinessLibrary"
+
+                  },
+                  new VariableTypeEntity
+                  {
+                      Id = 17,
+                      Pattern = @"^Number Of Leave Days Commuted$",
+                      TypeName = "CustomerOnboarding.BusinessLibrary.NumberOfLeaveDaysCommutedVariable,CustomerOnboarding.BusinessLibrary"
+                  },
+                  new VariableTypeEntity
+                  {
+                      Id = 18,
+                      Pattern = @"^Gross Pay$",
+                      TypeName = "CustomerOnboarding.BusinessLibrary.GrossPayVariable,CustomerOnboarding.BusinessLibrary"
+                  },
+                  new VariableTypeEntity
+                  {
+                      Id = 19,
+                      Pattern = @"^Total Hours Worked$",
+                      TypeName = "CustomerOnboarding.BusinessLibrary.TotalHoursWorkedVariable,CustomerOnboarding.BusinessLibrary",
+
+                  },
+                  new VariableTypeEntity
+                  {
+                      Id = 20,
+                      Pattern = @"^Total Sales$",
+                      TypeName = "CustomerOnboarding.BusinessLibrary.TotalSalesVariable,CustomerOnboarding.BusinessLibrary",
+
+                  },
+                  new VariableTypeEntity
+                  {
+                      Id = 21,
+                      Pattern = @"^Multiplier$",
+                      TypeName = "CustomerOnboarding.BusinessLibrary.MultiplierVariable,CustomerOnboarding.BusinessLibrary",
+
+                  }
+
+
+
+
+            };
+
+            Variables = new();
+            GeneralEmployeeWagesInformationSteps = new();
 
             Countries = new List<CountryEntity>
             {

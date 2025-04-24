@@ -17,9 +17,10 @@ namespace CustomerOnboarding.DalMock
             throw new NotImplementedException();
         }
 
-        public bool Exists(string id)
+        public bool Exists(string tenantId,string id)
         {
-            var result = MockDb.Wages.Any(r => r.Id == id);
+            var result = MockDb.Wages.Any(r => r.Id == id
+            && r.TenantId==tenantId);
             return result;
         }
 
@@ -41,7 +42,20 @@ namespace CustomerOnboarding.DalMock
 
         public WageDto Fetch(string tenantId, string id)
         {
-            throw new NotImplementedException();
+            var result = MockDb.Wages.Where(r => r.TenantId == tenantId &&
+                r.Id == id)
+                .Select(r => new WageDto
+                {
+                    Id = r.Id,
+                    Name = r.Name,
+                    IsSystemDefined = r.IsSystemDefined,
+                    Type = r.Type,
+                    Formular = r.Formular,
+                    LastChanged = r.LastChanged
+                }).FirstOrDefault();
+            if (result is null)
+                throw new DataNotFoundException("Wage");
+            return result;
         }
 
         public void Insert(WageDto data)
@@ -67,7 +81,7 @@ namespace CustomerOnboarding.DalMock
                           select r).FirstOrDefault();
             if (result is null)
                 throw new DataNotFoundException("Wage");
-            if (!result.LastChanged.Matches(data.LastChanged))
+            if (!result.LastChanged.Matches(data.LastChanged!))
                 throw new ConcurrencyException("Wage");
             data.LastChanged = MockDb.GetTimeStamp();
             result.LastChanged = data.LastChanged;

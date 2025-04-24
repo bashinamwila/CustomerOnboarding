@@ -29,7 +29,7 @@ namespace CustomerOnboarding.BusinessLibrary.Rules
 
             var variables = context.GetInputValue<Variables>(PrimaryProperty);
             var formular = context.GetInputValue<string>(FormularProperty);
-            var logger = context.ApplicationContext.GetRequiredService<ILogger<ExtractVariablesFromFormular>>();
+            //var logger = context.ApplicationContext.GetRequiredService<ILogger<ExtractVariablesFromFormular>>();
             if (!string.IsNullOrEmpty(formular))
             {
                 var lexer = new MathGrammarLexer(new Antlr4.Runtime.AntlrInputStream(formular));
@@ -41,7 +41,7 @@ namespace CustomerOnboarding.BusinessLibrary.Rules
                 {
                     foreach (var token in tokens)
                     {
-                        logger.LogInformation($"Evaluating token {token.Text}");
+                      //  logger.LogInformation($"Evaluating token {token.Text}");
                         if (!ignoreList.Contains(token.Text))
                         {
                             var pattern = tokenPatterns.GetPattern(token.Text.Trim());

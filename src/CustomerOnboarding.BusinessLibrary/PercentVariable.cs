@@ -24,14 +24,15 @@ namespace CustomerOnboarding.BusinessLibrary
         }
 
         [InsertChild]
-        protected override void Insert(IEarning parent, [Inject] IVariableDal dal)
+        protected override void Insert(TenantOnboardingOrchestrator parent, [Inject] IVariableDal dal)
         {
             using (BypassPropertyChecks)
             {
                 var data = new VariableDto
                 {
                     Id = Id,
-                    ItemId = parent.Id,
+                    TenantId=parent.TenantId,
+                    ItemId = ((IEarning)Parent.Parent).Id,
                     Token = Token,
                     Type = parent.GetType().Name.ToUpper(),
                     Value = Value,

@@ -14,7 +14,7 @@ namespace CustomerOnboarding.Dal
         void Insert(WageDto data);
         void Update(WageDto data);
         Task Delete(string tenantId,string id);
-        bool Exists(string id);
+        bool Exists(string tenantId,string id);
 
     }
 }

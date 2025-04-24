@@ -90,6 +90,14 @@ namespace CustomerOnboarding.DalMock
             services.AddTransient<IGeneralEmployeesInformationDal, GeneralEmployeesInformationDal>();
             services.AddTransient<IGeneralEmployeeDetailsInformationStepDal, GeneralEmployeeDetailsInformationStepDal>();
             services.AddTransient<IEmployeeStatusDal, EmployeeStatusDal>();
+            services.AddTransient<IAddEmployeeWageConfirmationStepDal, AddEmployeeWageConfirmationStepDal>();
+            services.AddTransient<IAddEmployeeWageStepDal, AddEmployeeWageStepDal>();
+            services.AddTransient<IEmployeeWagesStepDal, EmployeeWagesStepDal>();
+            services.AddTransient<ISelectEmployeeWageStepDal, SelectEmployeeWageStepDal>();
+            services.AddTransient<IVariableTypeDal, VariableTypeDal>();
+            services.AddTransient<IVariableDal, VariableDal>();
+            services.AddTransient<IGeneralEmployeeWagesInformationStepDal, GeneralEmployeeWagesInformationStepDal>();
+
 
         }
     }

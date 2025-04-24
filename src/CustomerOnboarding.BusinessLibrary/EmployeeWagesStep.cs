@@ -246,7 +246,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 StepIndex = 3;
                 IsCompleted = false;
                 CurrentStepIndex = 0;
-                var _factory = await factory.GetPortal<EmployeeWagesStepStepsFactory>().FetchAsync(new[] { 28,29,31 }, CurrentStepIndex);
+                var _factory = await factory.GetPortal<EmployeeWagesStepStepsFactory>().FetchAsync(new[] { 28}, CurrentStepIndex);
                 Steps = _factory.Steps;
             }
 
@@ -264,6 +264,9 @@ namespace CustomerOnboarding.BusinessLibrary
                 {
                     TenantId = parent.TenantId,
                     StepId = this.Id,
+                    EmployeeId=((Steps)Parent).Where(r=>r is AddEmployeeEmploymentDetailsStep)
+                                .Select(r=>(AddEmployeeEmploymentDetailsStep)r).FirstOrDefault()?
+                                .EmployeeEmploymentDetails.EmployeeId!,
                     StepIndex = this.StepIndex,
                     IsCompleted = this.IsCompleted, // Only mark as completed if it's the current step
                     CurrentStepIndex = this.CurrentStepIndex,
@@ -289,6 +292,9 @@ namespace CustomerOnboarding.BusinessLibrary
                 {
                     TenantId = parent.TenantId,
                     StepId = this.Id,
+                    EmployeeId = ((Steps)Parent).Where(r => r is AddEmployeeEmploymentDetailsStep)
+                                .Select(r => (AddEmployeeEmploymentDetailsStep)r).FirstOrDefault()?
+                                .EmployeeEmploymentDetails.EmployeeId!,
                     StepIndex = this.StepIndex,
                     IsCompleted = this.IsCompleted, // Only mark as completed if it's the current step
                     CurrentStepIndex = this.CurrentStepIndex,
@@ -305,14 +311,14 @@ namespace CustomerOnboarding.BusinessLibrary
 
         [FetchChild]
         private async Task FetchAsync(
-          string tenantId, int id, int currentStepIndex,
+          string tenantId, int id,string employeeId, int currentStepIndex,
           [Inject] IEmployeeWagesStepDal dal,
           [Inject] IDataPortalFactory factory,
             [Inject] IChildDataPortalFactory portal)
         {
             using (BypassPropertyChecks)
             {
-                var data = dal.Fetch(tenantId, id);
+                var data = dal.Fetch(tenantId, id,employeeId);
                 Id = data.StepId;
                 Name = data.Name;
                 Type = (StepTypes)Enum.Parse(typeof(StepTypes), data.Type.ToString());
@@ -320,7 +326,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 IsCompleted = data.IsCompleted;
                 CurrentStepIndex = data.CurrentStepIndex;
                 TimeStamp = data.LastChanged;
-                var _factory = await factory.GetPortal<EmployeeWagesStepStepsFactory>().FetchAsync(tenantId, CurrentStepIndex);
+                var _factory = await factory.GetPortal<EmployeeWagesStepStepsFactory>().FetchAsync(tenantId,employeeId, CurrentStepIndex);
                 Steps = _factory.Steps;
 
             }

@@ -127,7 +127,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 };
                 dal.Insert(data);
                 this.TimeStamp = data.LastChanged!;
-                await portal.UpdateChildAsync(Variables, this);
+                await portal.UpdateChildAsync(Variables, parent);
 
 
             }
@@ -171,7 +171,7 @@ namespace CustomerOnboarding.BusinessLibrary
                 };
                 dal.Update(data);
                 TimeStamp = data.LastChanged;
-                await portal.UpdateChildAsync(Variables, this);
+                await portal.UpdateChildAsync(Variables, parent);
 
 
             }

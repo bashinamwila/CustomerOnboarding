@@ -9,7 +9,7 @@ namespace CustomerOnboarding.Dal
 {
     public interface ISelectEmployeeWageStepDal
     {
-        public SelectEmployeeWageStepDto Fetch(string tenantId, int id, int counter);
+        public SelectEmployeeWageStepDto Fetch(string tenantId, int id, string employeeId);
         public void Insert(SelectEmployeeWageStepDto dto);
         public void Update(SelectEmployeeWageStepDto dto);
     }

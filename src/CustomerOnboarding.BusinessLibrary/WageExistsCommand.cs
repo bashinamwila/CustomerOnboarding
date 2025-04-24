@@ -21,9 +21,10 @@ namespace CustomerOnboarding.BusinessLibrary
 
         
         [Execute]
-        private void Execute(string id,[Inject] IWageDal dal)
+        private void Execute(string tenantId,string id,[Inject] IWageDal dal)
         {
-            Exists = dal.Exists(id);
+            
+            Exists = dal.Exists(tenantId,id);
         }
 
     }

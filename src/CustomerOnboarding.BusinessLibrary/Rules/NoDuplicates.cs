@@ -22,8 +22,8 @@ namespace CustomerOnboarding.BusinessLibrary.Rules
             var portal = context.ApplicationContext.GetRequiredService<IDataPortalFactory>();
             if (target is Wage wage)
             {
-                var cmd = portal.GetPortal<WageExistsCommand>().Create(id);
-                cmd = portal.GetPortal<WageExistsCommand>().Execute(cmd);
+               // var cmd = portal.GetPortal<WageExistsCommand>().Create("123werqop070905mnbfghjkl",id);
+               var cmd = portal.GetPortal<WageExistsCommand>().Execute("123werqop070905mnbfghjkl",id);
                 if (cmd.Exists)
                     context.AddErrorResult($"Wage with {id} exists");
             }

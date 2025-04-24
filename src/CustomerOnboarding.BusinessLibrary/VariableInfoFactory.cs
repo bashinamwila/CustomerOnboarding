@@ -27,7 +27,6 @@ namespace CustomerOnboarding.BusinessLibrary
 
             var info = portal.Fetch(id);
             var fullTypeName = info.FullTypeName;
-            fullTypeName = fullTypeName.Replace(".Admin", "");
             fullTypeName = fullTypeName.Replace(info.Name, $"{info.Name}Info");
             var t = Type.GetType(fullTypeName);
             var dpType = typeof(IChildDataPortal<>).MakeGenericType(t!);
